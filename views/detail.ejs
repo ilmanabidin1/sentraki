@@ -1,0 +1,52 @@
+<%- include('partials/head', { title: item.judul }) %>
+<%- include('partials/nav', { active: 'direktori' }) %>
+
+<div class="breadcrumb"><a href="/direktori">Direktori KI</a> / <b><%= item.judul %></b></div>
+<div class="detail-wrap">
+  <div>
+    <div class="docket">
+      <% if (item.jenis === 'Paten') { %>No. Permohonan: <%= item.no_permohonan || '-' %><% if (item.no_reg) { %> &middot; No. Paten: <%= item.no_reg %><% } %>
+      <% } else if (item.jenis === 'Hak Cipta') { %>No. Pencatatan: <%= item.no_reg || item.no_permohonan || '-' %>
+      <% } else { %>No. Permohonan: <%= item.no_permohonan || item.no_reg || '-' %>
+      <% } %>
+    </div>
+    <h1><%= item.judul %></h1>
+    <div class="status-row">
+      <span class="badge badge-jenis"><%= item.jenis %><%= item.subtipe ? ' · ' + item.subtipe : '' %></span>
+      <span class="badge badge-<%= item.status %>"><%= item.status === 'granted' ? 'Granted / Tercatat' : (item.status === 'ditolak' ? 'Ditolak' : 'Dalam Proses (' + (item.status_raw || 'Terdaftar') + ')') %></span>
+    </div>
+    <p class="detail-desc">
+      <%= item.jenis %><%= item.subtipe ? ' (' + item.subtipe + ')' : '' %> hasil riset <%= item.fakultas %> UNISBA atas nama <%= item.inventor %><%= item.tahun ? ', diajukan/tercatat tahun ' + item.tahun : '' %>.
+      <% if (item.status === 'granted') { %>Status resmi di DJKI: <%= item.status_raw || 'Granted' %>.<% } %>
+    </p>
+    <div class="tag-row">
+      <span class="tag-pill"><%= item.jenis %></span>
+      <% if (item.subtipe) { %><span class="tag-pill"><%= item.subtipe %></span><% } %>
+      <% if (item.tahun) { %><span class="tag-pill">Tahun <%= item.tahun %></span><% } %>
+    </div>
+    <a class="btn-primary" href="/ajukan-minat?ki=<%= item.id %>">Ajukan Minat Kerja Sama</a>
+  </div>
+  <div>
+    <div class="side-card">
+      <h4>Inventor</h4>
+      <div class="inventor-row">
+        <div class="avatar"><%= item.inventor.charAt(0) %></div>
+        <div>
+          <div class="name"><%= item.inventor %></div>
+          <div class="role"><%= item.fakultas %></div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--brass-dark);font-family:'IBM Plex Mono',monospace;">✓ Data tersinkron dari rekap resmi LPPM</div>
+    </div>
+    <div class="side-card">
+      <h4>Tautan Resmi</h4>
+      <% if (item.link) { %>
+        <div class="doc-row"><span>Detail Resmi di PDKI (DJKI)</span><a class="dl" href="<%= item.link %>" target="_blank" rel="noopener">Buka &rarr;</a></div>
+      <% } else { %>
+        <p style="font-size:12.5px;color:var(--slate);margin:0;">Tautan resmi belum tersedia untuk entri ini.</p>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

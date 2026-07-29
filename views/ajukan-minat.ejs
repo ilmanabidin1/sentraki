@@ -1,0 +1,44 @@
+<%- include('partials/head', { title: 'Ajukan Minat Kerja Sama' }) %>
+<%- include('partials/nav', { active: 'direktori' }) %>
+
+<div class="section section-narrow">
+  <div class="eyebrow">Formulir Kerja Sama</div>
+  <h2 class="serif" style="font-size:24px;color:var(--navy);margin:0 0 8px;font-weight:500;">Ajukan Minat Kerja Sama</h2>
+  <p style="color:var(--slate);font-size:13.5px;margin:0 0 26px;">Pengajuan akan diverifikasi lebih dulu oleh tim P2KI sebelum diteruskan ke inventor terkait.</p>
+
+  <% if (typeof success !== 'undefined' && success) { %>
+    <div class="success-box">✓ Pengajuan Anda telah diterima. Tim P2KI akan menghubungi dalam 3–5 hari kerja.</div>
+  <% } %>
+  <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
+    <div class="error-box"><%= errorMsg %></div>
+  <% } %>
+
+  <% if (kiItem) { %>
+    <div class="sso-box" style="border-color:var(--line);background:var(--paper-2);">
+      <div class="left">
+        <div class="sso-icon" style="background:var(--navy-2);">KI</div>
+        <div><h4>KI Terkait</h4><p><%= kiItem.judul %> — <%= kiItem.inventor %></p></div>
+      </div>
+    </div>
+  <% } %>
+
+  <form class="form-card" method="POST" action="/ajukan-minat">
+    <input type="hidden" name="ki_item_id" value="<%= kiItem ? kiItem.id : '' %>">
+    <div class="form-row"><label>Nama Lengkap</label><input type="text" name="nama" required placeholder="Nama pemohon"></div>
+    <div class="form-row"><label>Institusi / Perusahaan</label><input type="text" name="institusi" placeholder="Nama institusi atau perusahaan"></div>
+    <div class="form-row"><label>Email</label><input type="email" name="email" placeholder="nama@institusi.com"></div>
+    <div class="form-row">
+      <label>Jenis Kebutuhan</label>
+      <div class="radio-grid">
+        <label class="radio-opt"><input type="radio" name="jenis_kebutuhan" value="Lisensi KI" checked> Lisensi KI</label>
+        <label class="radio-opt"><input type="radio" name="jenis_kebutuhan" value="Investasi"> Investasi</label>
+        <label class="radio-opt"><input type="radio" name="jenis_kebutuhan" value="Riset Bersama"> Riset Bersama</label>
+        <label class="radio-opt"><input type="radio" name="jenis_kebutuhan" value="Distribusi / Produksi"> Distribusi / Produksi</label>
+      </div>
+    </div>
+    <div class="form-row"><label>Pesan Singkat</label><textarea name="pesan" placeholder="Jelaskan kebutuhan kerja sama Anda..."></textarea></div>
+    <button class="btn-primary" type="submit">Kirim Pengajuan</button>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,60 @@
+<%- include('partials/head', { title: 'Dasbor Admin' }) %>
+<div class="admin-topbar">
+  <div class="l">DASBOR INTERNAL — TIDAK PUBLIK</div>
+  <div>Masuk sebagai: <%= username %> &middot; <a href="/admin/logout">Keluar</a> &middot; <a href="/">Lihat Situs Publik</a></div>
+</div>
+<div class="kpi-row">
+  <div class="kpi-card"><div class="n"><%= kpi.totalKI.toLocaleString('id-ID') %></div><div class="l">Total KI Tercatat (Data LPPM)</div></div>
+  <div class="kpi-card"><div class="n"><%= kpi.pendingReview %></div><div class="l">Menunggu Tinjauan Konten</div></div>
+  <div class="kpi-card"><div class="n"><%= kpi.interestCount %></div><div class="l">Pengajuan Minat Kerja Sama</div></div>
+  <div class="kpi-card"><div class="n"><%= kpi.challengeActive %></div><div class="l">Tantangan Industri Aktif</div></div>
+</div>
+
+<div class="table-wrap">
+  <div class="table-head-row"><h4 style="font-size:13px;color:var(--navy);margin:0;">Tantangan Industri &amp; Solusi Peneliti Masuk</h4></div>
+  <table>
+    <tr><th>Kode</th><th>Kebutuhan</th><th>Perusahaan</th><th>Solusi Masuk</th><th>Status</th></tr>
+    <% challenges.forEach(c => { %>
+      <tr>
+        <td><%= c.kode %></td>
+        <td><%= c.judul %></td>
+        <td><%= c.perusahaan %></td>
+        <td><%= c.solusi_count %></td>
+        <td><span class="status-pill" style="background:<%= c.status === 'terbuka' ? 'var(--green-bg)' : 'var(--amber-bg)' %>;color:<%= c.status === 'terbuka' ? 'var(--green)' : 'var(--amber)' %>;"><%= c.status === 'terbuka' ? 'Terbuka' : 'Segera Ditutup' %></span></td>
+      </tr>
+    <% }) %>
+  </table>
+</div>
+
+<div class="table-wrap">
+  <div class="table-head-row"><h4 style="font-size:13px;color:var(--navy);margin:0;">Pengajuan Minat Kerja Sama Terbaru</h4></div>
+  <table>
+    <tr><th>Pemohon</th><th>KI Terkait</th><th>Jenis Kebutuhan</th><th>Status</th></tr>
+    <% if (interests.length === 0) { %><tr><td colspan="4" style="color:var(--slate);">Belum ada pengajuan.</td></tr><% } %>
+    <% interests.forEach(i => { %>
+      <tr>
+        <td><%= i.institusi || i.nama %></td>
+        <td><%= i.judul || '-' %></td>
+        <td><%= i.jenis_kebutuhan %></td>
+        <td><span class="status-pill" style="background:var(--amber-bg);color:var(--amber);"><%= i.status %></span></td>
+      </tr>
+    <% }) %>
+  </table>
+</div>
+
+<div class="table-wrap">
+  <div class="table-head-row"><h4 style="font-size:13px;color:var(--navy);margin:0;">KI Berstatus &quot;Dalam Proses&quot; — Menunggu Keputusan/Tinjauan</h4></div>
+  <table>
+    <tr><th>Judul</th><th>Inventor</th><th>Fakultas</th><th>Status DJKI</th></tr>
+    <% pendingKI.forEach(k => { %>
+      <tr>
+        <td><%= k.judul %></td>
+        <td><%= k.inventor %></td>
+        <td><%= k.fakultas %></td>
+        <td><%= k.jenis %> &middot; <%= k.status_raw || 'Terdaftar' %></td>
+      </tr>
+    <% }) %>
+  </table>
+</div>
+
+<%- include('partials/footer') %>

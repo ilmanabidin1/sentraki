@@ -1,0 +1,43 @@
+<%- include('partials/head', { title: 'Konsultasi' }) %>
+<%- include('partials/nav', { active: 'konsultasi' }) %>
+
+<div class="section">
+  <div class="eyebrow">Satu Pintu Layanan</div>
+  <h2 class="serif" style="font-size:24px;color:var(--navy);margin:0 0 6px;font-weight:500;">Konsultasi dengan Admin P2KI</h2>
+  <p style="color:var(--slate);font-size:13.5px;margin:0 0 24px;">Tanya langsung ke tim P2KI soal pendaftaran KI, status berkas, atau kerja sama industri, tanpa perlu keluar dari platform.</p>
+
+  <div class="chat-shell">
+    <div class="chat-sidebar">
+      <h4>Percakapan</h4>
+      <div class="chat-contact">
+        <span class="status-dot"></span>
+        <div><div class="name">Admin P2KI</div><div class="last">Sesi konsultasi Anda</div></div>
+      </div>
+    </div>
+    <div class="chat-main">
+      <div class="chat-header">
+        <div class="avatar" style="background:var(--navy-2);width:32px;height:32px;font-size:13px;">P2</div>
+        <div><div class="name">Admin P2KI</div><div class="role">● Online &middot; biasanya membalas dalam 1 jam</div></div>
+      </div>
+      <div class="chat-body" id="chatBody">
+        <% messages.forEach(m => { %>
+          <div class="chat-bubble-row <%= m.sender === 'user' ? 'me' : 'them' %>">
+            <div><div class="chat-bubble"><%= m.message %></div><div class="chat-time"><%= new Date(m.created_at).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) %></div></div>
+          </div>
+        <% }) %>
+      </div>
+      <div class="chat-quick-row">
+        <div class="chat-quick" onclick="sendConsult('Saya mau tanya status pendaftaran KI saya')">Status pendaftaran KI</div>
+        <div class="chat-quick" onclick="sendConsult('Saya mau tanya soal kerja sama dengan industri')">Kerja sama industri</div>
+        <div class="chat-quick" onclick="sendConsult('Saya mau tanya soal pembagian manfaat ekonomi')">Pembagian manfaat ekonomi</div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="Tulis pesan Anda..." onkeydown="if(event.key==='Enter'){sendConsultFromInput();}">
+        <button class="chat-send" onclick="sendConsultFromInput()">Kirim</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/main.js"></script>
+<%- include('partials/footer') %>

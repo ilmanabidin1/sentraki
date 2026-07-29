@@ -1,0 +1,54 @@
+<%- include('partials/head', { title: 'Tantangan Industri' }) %>
+<%- include('partials/nav', { active: 'tantangan' }) %>
+
+<div class="dir-layout">
+  <form class="filter-box" method="GET" action="/tantangan-industri" id="filterForm">
+    <input class="search-box" type="text" name="q" value="<%= query.q || '' %>" placeholder="Cari kata kunci masalah...">
+    <div class="filter-group">
+      <h4>Bidang</h4>
+      <% bidangList.forEach(b => { %>
+        <label class="filter-opt">
+          <input type="checkbox" name="bidang" value="<%= b %>" onchange="document.getElementById('filterForm').submit()" <%= (query.bidang || bidangList).includes(b) ? 'checked' : '' %>>
+          <%= b %>
+        </label>
+      <% }) %>
+    </div>
+    <div class="filter-group">
+      <h4>Status</h4>
+      <label class="filter-opt"><input type="checkbox" name="status" value="terbuka" onchange="document.getElementById('filterForm').submit()" <%= (query.status || ['terbuka','segera']).includes('terbuka') ? 'checked' : '' %>> Terbuka</label>
+      <label class="filter-opt"><input type="checkbox" name="status" value="segera" onchange="document.getElementById('filterForm').submit()" <%= (query.status || ['terbuka','segera']).includes('segera') ? 'checked' : '' %>> Segera Ditutup</label>
+    </div>
+  </form>
+  <div>
+    <div class="dir-results-head">
+      <p>Menampilkan <b><%= items.length %></b> tantangan industri</p>
+      <select class="sort-select" onchange="window.location.href=this.value">
+        <option value="?<%= qs %>&sort=deadline" <%= sort === 'deadline' ? 'selected' : '' %>>Urutkan: Batas Waktu Terdekat</option>
+        <option value="?<%= qs %>&sort=terbaru" <%= sort === 'terbaru' ? 'selected' : '' %>>Terbaru Diposting</option>
+      </select>
+    </div>
+    <div class="dir-grid">
+      <% if (items.length === 0) { %><p class="empty-note">Tidak ada tantangan yang cocok dengan filter ini.</p><% } %>
+      <% items.forEach(c => { %>
+        <a class="ki-card" href="/tantangan-industri/<%= c.kode %>">
+          <div class="company-row">
+            <div class="company-logo"><%= c.perusahaan.split(' ')[0].slice(0,2).toUpperCase() %></div>
+            <div class="company-name"><%= c.perusahaan %></div>
+          </div>
+          <div class="ki-top">
+            <span class="badge badge-jenis"><%= c.bidang %></span>
+            <span class="badge <%= c.status === 'terbuka' ? 'badge-granted' : 'badge-proses' %>"><%= c.status === 'terbuka' ? 'Terbuka' : 'Segera Ditutup' %></span>
+          </div>
+          <h3><%= c.judul %></h3>
+          <div class="deadline-row"><span>Batas pengajuan solusi</span><span class="dl-date"><%= c.deadline_fmt %></span></div>
+        </a>
+      <% }) %>
+    </div>
+    <div class="post-cta">
+      <div><h4>Punya masalah yang butuh solusi riset?</h4><p>Industri terverifikasi dapat memasang kebutuhan langsung ke civitas akademik UNISBA.</p></div>
+      <a class="btn-gold" href="/pasang-kebutuhan">Pasang Kebutuhan</a>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,30 @@
+<%- include('partials/head', { title: 'Login Admin' }) %>
+<div class="topnav">
+  <div class="brand">
+    <svg class="brand-seal" viewBox="0 0 60 60" fill="none">
+      <circle cx="30" cy="30" r="27" stroke="#B8935B" stroke-width="1.4"/>
+      <circle cx="30" cy="30" r="21" stroke="#B8935B" stroke-width="1"/>
+      <path d="M30 12 L33 22 L44 22 L35 28 L38 39 L30 32 L22 39 L25 28 L16 22 L27 22 Z" fill="#B8935B" opacity="0.9"/>
+    </svg>
+    <div class="brand-text">
+      <div class="t1">P2KI · UNISBA</div>
+      <div class="t2">Pusat Pengembangan &amp; Pelayanan KI</div>
+    </div>
+  </div>
+  <div class="nav-right"><a class="admin-link" href="/">Kembali ke Situs</a></div>
+</div>
+
+<div class="login-shell">
+  <h2>Login Admin P2KI</h2>
+  <p>Dasbor internal — tidak untuk publik.</p>
+  <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
+    <div class="error-box"><%= errorMsg %></div>
+  <% } %>
+  <form class="form-card" style="padding:0;border:none;" method="POST" action="/admin/login">
+    <div class="form-row"><label>Username</label><input type="text" name="username" required></div>
+    <div class="form-row"><label>Password</label><input type="password" name="password" required></div>
+    <button class="btn-primary" type="submit" style="width:100%;text-align:center;">Masuk</button>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

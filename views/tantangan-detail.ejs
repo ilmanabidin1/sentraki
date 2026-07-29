@@ -1,0 +1,38 @@
+<%- include('partials/head', { title: item.judul }) %>
+<%- include('partials/nav', { active: 'tantangan' }) %>
+
+<div class="breadcrumb"><a href="/tantangan-industri">Tantangan Industri</a> / <b><%= item.judul %></b></div>
+<div class="detail-wrap">
+  <div>
+    <div class="docket">Kode Tantangan: <%= item.kode %></div>
+    <h1><%= item.judul %></h1>
+    <div class="status-row">
+      <span class="badge badge-jenis"><%= item.bidang %></span>
+      <span class="badge <%= item.status === 'terbuka' ? 'badge-granted' : 'badge-proses' %>"><%= item.status === 'terbuka' ? 'Terbuka' : 'Segera Ditutup' %></span>
+    </div>
+    <p class="detail-desc"><%= item.deskripsi %></p>
+    <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin:0 0 12px;font-weight:600;">Kebutuhan Spesifik</h4>
+    <ul class="req-list">
+      <% item.kebutuhan_spesifik.split('\n').forEach(line => { %><li><%= line %></li><% }) %>
+    </ul>
+    <a class="btn-primary" href="/ajukan-solusi?challenge=<%= item.id %>">Ajukan Solusi</a>
+  </div>
+  <div>
+    <div class="side-card">
+      <h4>Perusahaan</h4>
+      <div class="inventor-row">
+        <div class="avatar" style="background:var(--navy-2);"><%= item.perusahaan.charAt(0) %></div>
+        <div><div class="name"><%= item.perusahaan %></div><div class="role">Mitra Industri</div></div>
+      </div>
+    </div>
+    <div class="side-card">
+      <h4>Skema Kerja Sama</h4>
+      <div class="reward-box">
+        <div class="item"><div class="l">Batas Waktu</div><div class="v"><%= item.deadline_fmt %></div></div>
+        <div class="item"><div class="l">Skema</div><div class="v"><%= item.skema %></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

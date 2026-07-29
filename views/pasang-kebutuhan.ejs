@@ -1,0 +1,42 @@
+<%- include('partials/head', { title: 'Pasang Kebutuhan' }) %>
+<%- include('partials/nav', { active: 'tantangan' }) %>
+
+<div class="section section-narrow">
+  <div class="eyebrow">Untuk Industri &amp; Investor</div>
+  <h2 class="serif" style="font-size:24px;color:var(--navy);margin:0 0 8px;font-weight:500;">Pasang Kebutuhan Riset</h2>
+  <p style="color:var(--slate);font-size:13.5px;margin:0 0 26px;">Kebutuhan akan diverifikasi P2KI sebelum tayang ke civitas akademik.</p>
+
+  <% if (typeof success !== 'undefined' && success) { %>
+    <div class="success-box">✓ Kebutuhan Anda telah diterima dan akan ditinjau tim P2KI dalam 2–3 hari kerja.</div>
+  <% } %>
+
+  <form class="form-card" method="POST" action="/pasang-kebutuhan">
+    <div class="form-row"><label>Nama Perusahaan</label><input type="text" name="perusahaan" placeholder="PT / CV / Koperasi..." required></div>
+    <div class="form-row"><label>Kontak Person &amp; Email</label><input type="text" name="kontak" placeholder="Nama - email@perusahaan.com"></div>
+    <div class="form-row"><label>Judul Kebutuhan</label><input type="text" name="judul" placeholder="Contoh: Solusi Pengawetan Alami untuk Produk UMKM" required></div>
+    <div class="form-row">
+      <label>Bidang</label>
+      <select name="bidang">
+        <option>Teknologi & Manufaktur</option>
+        <option>Kesehatan & Farmasi</option>
+        <option>Ekonomi Syariah</option>
+        <option>Pertanian & Lingkungan</option>
+      </select>
+    </div>
+    <div class="form-row"><label>Deskripsi Masalah</label><textarea name="deskripsi" placeholder="Jelaskan masalah industri yang membutuhkan solusi riset..." required></textarea></div>
+    <div class="form-row"><label>Kebutuhan Spesifik (satu per baris)</label><textarea name="kebutuhan_spesifik" placeholder="- Bahan bersumber lokal&#10;- Skalabel untuk produksi UMKM"></textarea></div>
+    <div class="form-row"><label>Batas Waktu Pengajuan Solusi</label><input type="date" name="deadline"></div>
+    <div class="form-row">
+      <label>Skema Kerja Sama yang Ditawarkan</label>
+      <div class="radio-grid">
+        <label class="radio-opt"><input type="radio" name="skema" value="Lisensi Hasil Riset" checked> Lisensi Hasil Riset</label>
+        <label class="radio-opt"><input type="radio" name="skema" value="Pendanaan Riset Bersama"> Pendanaan Riset Bersama</label>
+        <label class="radio-opt"><input type="radio" name="skema" value="Konsultasi Berbayar"> Konsultasi Berbayar</label>
+        <label class="radio-opt"><input type="radio" name="skema" value="Akuisisi KI"> Akuisisi KI</label>
+      </div>
+    </div>
+    <button class="btn-primary" type="submit">Kirim untuk Ditinjau P2KI</button>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

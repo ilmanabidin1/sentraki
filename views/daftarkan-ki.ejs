@@ -1,0 +1,59 @@
+<%- include('partials/head', { title: 'Daftarkan KI' }) %>
+<%- include('partials/nav', { active: 'daftar' }) %>
+
+<div class="section section-narrow">
+  <div class="eyebrow">Untuk Dosen &amp; Peneliti</div>
+  <h2 class="serif" style="font-size:24px;color:var(--navy);margin:0 0 22px;font-weight:500;">Daftarkan KI Anda</h2>
+
+  <% if (typeof success !== 'undefined' && success) { %>
+    <div class="success-box">✓ Pengajuan KI Anda telah dikirim dan akan melalui tinjauan P2KI sebelum tayang.</div>
+  <% } %>
+  <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
+    <div class="error-box"><%= errorMsg %></div>
+  <% } %>
+
+  <div class="sso-box">
+    <div class="left">
+      <div class="sso-icon">SISFO</div>
+      <div><h4>Masuk dengan Akun SISFO</h4><p>Data NIDN, nama, dan fakultas terisi otomatis</p></div>
+    </div>
+    <button class="btn-gold" type="button" onclick="sisfoLogin()" id="sisfoBtn">Masuk</button>
+  </div>
+
+  <form class="form-card" method="POST" action="/daftarkan-ki">
+    <div class="form-row"><label>Nama Inventor</label><input type="text" name="nama" id="fNama" placeholder="Terisi otomatis setelah masuk SISFO" required></div>
+    <div class="form-row"><label>NIDN</label><input type="text" id="fNidn" placeholder="Terisi otomatis setelah masuk SISFO"></div>
+    <div class="form-row"><label>Fakultas</label><input type="text" name="fakultas" id="fFakultas" placeholder="Terisi otomatis setelah masuk SISFO" required></div>
+    <div class="form-row"><label>Judul KI</label><input type="text" name="judul" placeholder="Judul paten / karya / merek" required></div>
+    <div class="form-row">
+      <label>Jenis KI</label>
+      <select name="jenis" required>
+        <option value="Paten">Paten</option>
+        <option value="Hak Cipta">Hak Cipta</option>
+        <option value="Merek">Merek</option>
+        <option value="Desain Industri">Desain Industri</option>
+        <option value="KI Komunal">KI Komunal</option>
+      </select>
+    </div>
+    <div class="form-row"><label>Deskripsi Non-Teknis</label><textarea name="deskripsi" placeholder="Deskripsi ringkas yang dapat dipublikasikan (hindari klaim teknis rinci sebelum granted)"></textarea></div>
+    <button class="btn-primary" type="submit">Kirim untuk Ditinjau P2KI</button>
+    <p class="form-hint">Pengajuan akan melalui alur tinjauan P2KI sebelum tayang di direktori publik.</p>
+  </form>
+</div>
+
+<script>
+function sisfoLogin(){
+  document.getElementById('fNama').value = 'Dr. Ilman Abidin, S.H., M.H.';
+  document.getElementById('fNidn').value = '0412088701';
+  document.getElementById('fFakultas').value = 'Fakultas Hukum';
+  ['fNama','fFakultas'].forEach(id=>{
+    document.getElementById(id).classList.add('locked-field');
+  });
+  document.getElementById('fNidn').classList.add('locked-field');
+  document.getElementById('sisfoBtn').textContent = 'Terhubung ✓';
+  document.getElementById('sisfoBtn').style.opacity = 0.7;
+  document.getElementById('sisfoBtn').disabled = true;
+}
+</script>
+
+<%- include('partials/footer') %>

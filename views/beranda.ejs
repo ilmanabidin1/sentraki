@@ -1,0 +1,59 @@
+<%- include('partials/head', { title: 'Beranda' }) %>
+<%- include('partials/nav', { active: 'beranda' }) %>
+
+<div class="hero">
+  <div>
+    <div class="eyebrow">Direktori Resmi Kekayaan Intelektual</div>
+    <h1>Inovasi civitas akademik UNISBA, satu pintu ke industri.</h1>
+    <p>P2KI menghubungkan paten, hak cipta, merek, dan KI komunal hasil riset dosen dengan mitra, investor, dan industri yang siap berkolaborasi — terverifikasi langsung dari data SISFO UNISBA.</p>
+    <div class="cta-row">
+      <a class="btn-primary" href="/direktori">Jelajahi Direktori KI</a>
+      <a class="btn-secondary" href="/daftarkan-ki">Daftarkan KI Anda</a>
+    </div>
+  </div>
+  <div class="hero-panel">
+    <div class="hero-stat"><div class="num"><%= stats.total.toLocaleString('id-ID') %></div><div class="lbl">Total KI tercatat (Paten, Desain Industri, Merek, Hak Cipta)</div></div>
+    <div class="hero-stat"><div class="num"><%= stats.grantedPatenDI.toLocaleString('id-ID') %></div><div class="lbl">Paten &amp; Desain Industri berstatus Granted</div></div>
+    <div class="hero-stat"><div class="num"><%= stats.fakultas %></div><div class="lbl">Fakultas dengan KI tercatat di data LPPM</div></div>
+    <div class="hero-stat"><div class="num">4</div><div class="lbl">Jenis KI tercakup: Paten, Desain Industri, Merek, Hak Cipta</div></div>
+  </div>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <div class="roman">TAHAP I</div>
+    <h3>Telusuri</h3>
+    <p>Industri, investor, atau sesama peneliti menelusuri direktori KI berdasarkan bidang, jenis, dan status hilirisasi.</p>
+  </div>
+  <div class="step">
+    <div class="roman">TAHAP II</div>
+    <h3>Ajukan Minat</h3>
+    <p>Pihak yang tertarik mengajukan minat kerja sama lewat formulir terstruktur — langsung masuk ke dasbor P2KI, bukan ke inventor secara langsung.</p>
+  </div>
+  <div class="step">
+    <div class="roman">TAHAP III</div>
+    <h3>Tindak Lanjut</h3>
+    <p>P2KI memverifikasi kecocokan, menghubungkan dengan inventor, dan mengawal proses hingga perjanjian lisensi atau kerja sama.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="featured-head">
+    <h2>KI Unggulan</h2>
+    <a class="link-more" href="/direktori">Lihat semua &rarr;</a>
+  </div>
+  <div class="card-grid">
+    <% featured.forEach(item => { %>
+      <a class="ki-card" href="/direktori/<%= item.id %>">
+        <div class="ki-top">
+          <span class="badge badge-jenis"><%= item.jenis %></span>
+          <span class="badge badge-<%= item.status %>"><%= item.status === 'granted' ? 'Granted' : (item.status === 'ditolak' ? 'Ditolak' : 'Dalam Proses') %></span>
+        </div>
+        <h3><%= item.judul %></h3>
+        <div class="ki-meta"><%= item.inventor %><span class="dot-sep">&middot;</span><%= item.fakultas %></div>
+      </a>
+    <% }) %>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

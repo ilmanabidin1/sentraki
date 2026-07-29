@@ -1,0 +1,79 @@
+<%- include('partials/head', { title: 'Direktori KI' }) %>
+<%- include('partials/nav', { active: 'direktori' }) %>
+
+<div class="dir-layout">
+  <form class="filter-box" method="GET" action="/direktori" id="filterForm">
+    <input class="search-box" type="text" name="q" value="<%= query.q || '' %>" placeholder="Cari judul, kata kunci...">
+
+    <div class="filter-group">
+      <h4>Jenis KI</h4>
+      <% jenisList.forEach(j => { %>
+        <label class="filter-opt">
+          <input type="checkbox" name="jenis" value="<%= j %>" onchange="document.getElementById('filterForm').submit()" <%= (query.jenis || jenisList).includes(j) ? 'checked' : '' %>>
+          <%= j %>
+        </label>
+      <% }) %>
+    </div>
+
+    <div class="filter-group">
+      <h4>Fakultas</h4>
+      <% fakultasList.forEach(f => { %>
+        <label class="filter-opt">
+          <input type="checkbox" name="fakultas" value="<%= f %>" onchange="document.getElementById('filterForm').submit()" <%= (query.fakultas || fakultasList).includes(f) ? 'checked' : '' %>>
+          <%= f %>
+        </label>
+      <% }) %>
+    </div>
+
+    <div class="filter-group">
+      <h4>Status Hilirisasi</h4>
+      <label class="filter-opt"><input type="checkbox" name="status" value="proses" onchange="document.getElementById('filterForm').submit()" <%= (query.status || ['proses','granted']).includes('proses') ? 'checked' : '' %>> Terdaftar / Dalam Proses</label>
+      <label class="filter-opt"><input type="checkbox" name="status" value="granted" onchange="document.getElementById('filterForm').submit()" <%= (query.status || ['proses','granted']).includes('granted') ? 'checked' : '' %>> Granted / Tercatat</label>
+    </div>
+    <noscript><button class="btn-secondary" type="submit">Terapkan Filter</button></noscript>
+  </form>
+
+  <div>
+    <div class="dir-results-head">
+      <p>Menampilkan <b><%= items.length %></b> dari <%= total.toLocaleString('id-ID') %> KI tercatat (halaman <%= page %> dari <%= totalPages %>)</p>
+      <form method="GET" action="/direktori" id="sortForm">
+        <input type="hidden" name="q" value="<%= query.q || '' %>">
+        <% (query.jenis || jenisList).forEach(j => { %><input type="hidden" name="jenis" value="<%= j %>"><% }) %>
+        <% (query.fakultas || fakultasList).forEach(f => { %><input type="hidden" name="fakultas" value="<%= f %>"><% }) %>
+        <% (query.status || ['proses','granted']).forEach(s => { %><input type="hidden" name="status" value="<%= s %>"><% }) %>
+        <select class="sort-select" name="sort" onchange="document.getElementById('sortForm').submit()">
+          <option value="terbaru" <%= sort === 'terbaru' ? 'selected' : '' %>>Urutkan: Terbaru</option>
+          <option value="az" <%= sort === 'az' ? 'selected' : '' %>>Abjad A-Z</option>
+          <option value="za" <%= sort === 'za' ? 'selected' : '' %>>Abjad Z-A</option>
+        </select>
+      </form>
+    </div>
+
+    <div class="dir-grid">
+      <% if (items.length === 0) { %>
+        <p class="empty-note">Tidak ada KI yang cocok dengan filter ini.</p>
+      <% } %>
+      <% items.forEach(item => { %>
+        <a class="ki-card" href="/direktori/<%= item.id %>">
+          <div class="ki-top">
+            <span class="badge badge-jenis"><%= item.jenis %></span>
+            <span class="badge badge-<%= item.status %>"><%= item.status === 'granted' ? 'Granted' : (item.status === 'ditolak' ? 'Ditolak' : 'Dalam Proses') %></span>
+          </div>
+          <h3><%= item.judul %></h3>
+          <div class="ki-meta"><%= item.inventor %><span class="dot-sep">&middot;</span><%= item.fakultas %></div>
+        </a>
+      <% }) %>
+    </div>
+
+    <% if (totalPages > 1) { %>
+      <div style="display:flex;gap:8px;margin-top:24px;justify-content:center;">
+        <% for (let p = 1; p <= totalPages; p++) { %>
+          <a class="btn-secondary" style="padding:8px 14px;font-size:12px;<%= p === page ? 'background:var(--navy);color:var(--paper);' : '' %>"
+             href="/direktori?<%= baseQueryString %>&page=<%= p %>"><%= p %></a>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

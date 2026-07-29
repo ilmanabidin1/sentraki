@@ -1,0 +1,52 @@
+<%- include('partials/head', { title: 'Pelajari KI' }) %>
+<%- include('partials/nav', { active: 'pelajari' }) %>
+
+<div class="section section-narrow" style="max-width:820px;">
+  <div class="eyebrow">Akademi KI P2KI</div>
+  <h2 class="serif" style="font-size:24px;color:var(--navy);margin:0 0 6px;font-weight:500;">Pelajari Kekayaan Intelektual</h2>
+  <p style="color:var(--slate);font-size:13.5px;margin:0 0 28px;">Rangkuman materi dari pelatihan bersama DJKI (Direktorat Jenderal Kekayaan Intelektual), disusun ulang P2KI agar mudah dipelajari civitas akademik.</p>
+
+  <div id="moduleList">
+    <% modules.forEach((m, i) => { %>
+      <div class="module-card" id="module-<%= i %>">
+        <div class="module-head" onclick="toggleModule(<%= i %>)">
+          <div class="left">
+            <div class="module-num"><%= String(i+1).padStart(2,'0') %></div>
+            <div><h3><%= m.title %></h3><div class="meta"><%= m.meta %></div></div>
+          </div>
+          <div class="module-chevron">⌄</div>
+        </div>
+        <div class="module-body">
+          <div class="module-body-inner">
+            <ul><% m.points.forEach(p => { %><li><%= p %></li><% }) %></ul>
+            <span class="source-note">Disarikan dari materi pelatihan bersama DJKI</span>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <div class="ai-widget">
+    <div class="ai-head">
+      <div class="ai-icon">AI</div>
+      <div><h4>Tanya AI P2KI</h4><p>Asisten belajar KI, terlatih dari materi modul di atas. Coba tanyakan sesuatu.</p></div>
+    </div>
+    <div class="ai-chips">
+      <span class="ai-chip" onclick="askAI('Apa bedanya paten dan paten sederhana?')">Beda paten &amp; paten sederhana?</span>
+      <span class="ai-chip" onclick="askAI('Berapa lama proses hak cipta?')">Berapa lama proses hak cipta?</span>
+      <span class="ai-chip" onclick="askAI('Apa itu KI komunal?')">Apa itu KI komunal?</span>
+      <span class="ai-chip" onclick="askAI('Bagaimana pembagian royalti KI?')">Bagaimana pembagian royalti?</span>
+    </div>
+    <div class="ai-log" id="aiLog">
+      <div class="ai-msg bot"><div class="who">AI P2KI</div><div class="bubble">Halo! Tanyakan apa saja seputar jenis KI, alur pendaftaran, atau pembagian manfaat ekonomi.</div></div>
+    </div>
+    <div class="ai-input-row">
+      <input type="text" id="aiInput" placeholder="Ketik pertanyaan seputar KI..." onkeydown="if(event.key==='Enter'){sendAIQuestion();}">
+      <button class="ai-send" onclick="sendAIQuestion()">Tanya</button>
+    </div>
+    <div class="ai-disclaimer" id="aiDisclaimer"><%= aiEnabled ? 'Terhubung ke model AI Claude.' : 'Mode jawaban berbasis aturan (set ANTHROPIC_API_KEY untuk mengaktifkan AI penuh).' %></div>
+  </div>
+</div>
+
+<script src="/js/main.js"></script>
+<%- include('partials/footer') %>

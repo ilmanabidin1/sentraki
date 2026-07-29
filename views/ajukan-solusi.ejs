@@ -1,0 +1,52 @@
+<%- include('partials/head', { title: 'Ajukan Solusi' }) %>
+<%- include('partials/nav', { active: 'tantangan' }) %>
+
+<div class="section section-narrow">
+  <div class="eyebrow">Untuk Dosen &amp; Peneliti</div>
+  <h2 class="serif" style="font-size:24px;color:var(--navy);margin:0 0 8px;font-weight:500;">Ajukan Solusi Riset</h2>
+  <p style="color:var(--slate);font-size:13.5px;margin:0 0 26px;">Solusi akan ditinjau P2KI sebelum diteruskan ke perusahaan pemasang kebutuhan.</p>
+
+  <% if (typeof success !== 'undefined' && success) { %>
+    <div class="success-box">✓ Proposal solusi Anda telah dikirim ke P2KI untuk ditinjau.</div>
+  <% } %>
+
+  <% if (challengeItem) { %>
+    <div class="sso-box" style="border-color:var(--line);background:var(--paper-2);">
+      <div class="left">
+        <div class="sso-icon" style="background:var(--navy-2);">TI</div>
+        <div><h4>Tantangan Terkait</h4><p><%= challengeItem.judul %> — <%= challengeItem.perusahaan %></p></div>
+      </div>
+    </div>
+  <% } %>
+
+  <div class="sso-box">
+    <div class="left">
+      <div class="sso-icon">SISFO</div>
+      <div><h4>Masuk dengan Akun SISFO</h4><p>Data peneliti terisi otomatis</p></div>
+    </div>
+    <button class="btn-gold" type="button" onclick="sisfoLoginSolusi()" id="sisfoBtnSolusi">Masuk</button>
+  </div>
+
+  <form class="form-card" method="POST" action="/ajukan-solusi">
+    <input type="hidden" name="challenge_id" value="<%= challengeItem ? challengeItem.id : '' %>">
+    <div class="form-row"><label>Nama Peneliti</label><input type="text" name="nama_peneliti" id="sNama" placeholder="Terisi otomatis setelah masuk SISFO" required></div>
+    <div class="form-row"><label>Fakultas</label><input type="text" name="fakultas" id="sFakultas" placeholder="Terisi otomatis setelah masuk SISFO"></div>
+    <div class="form-row"><label>Ringkasan Pendekatan Solusi</label><textarea name="ringkasan" placeholder="Jelaskan pendekatan atau riset yang relevan dengan kebutuhan ini..." required></textarea></div>
+    <div class="form-row"><label>KI Terkait yang Sudah Terdaftar (opsional)</label><input type="text" name="ki_terkait" placeholder="Contoh: Sistem Deteksi Dini Kualitas Air"></div>
+    <button class="btn-primary" type="submit">Kirim Proposal Solusi</button>
+  </form>
+</div>
+
+<script>
+function sisfoLoginSolusi(){
+  document.getElementById('sNama').value = 'Dr. Ilman Abidin, S.H., M.H.';
+  document.getElementById('sFakultas').value = 'Fakultas Hukum';
+  document.getElementById('sNama').classList.add('locked-field');
+  document.getElementById('sFakultas').classList.add('locked-field');
+  document.getElementById('sisfoBtnSolusi').textContent = 'Terhubung ✓';
+  document.getElementById('sisfoBtnSolusi').style.opacity = 0.7;
+  document.getElementById('sisfoBtnSolusi').disabled = true;
+}
+</script>
+
+<%- include('partials/footer') %>
