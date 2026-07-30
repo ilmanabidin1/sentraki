@@ -36,6 +36,11 @@ app.use((err, req, res, next) => {
   res.status(500).send('Terjadi kesalahan pada server. Silakan coba lagi.');
 });
 
-app.listen(PORT, () => {
-  console.log(`P2KI UNISBA berjalan di http://localhost:${PORT}`);
-});
+require('./scripts/seed')
+  .seedIfEmpty()
+  .catch(err => console.error('Seeding awal gagal:', err))
+  .finally(() => {
+    app.listen(PORT, () => {
+      console.log(`P2KI UNISBA berjalan di http://localhost:${PORT}`);
+    });
+  });

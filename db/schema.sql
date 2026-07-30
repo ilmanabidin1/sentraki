@@ -1,7 +1,7 @@
--- Skema database P2KI UNISBA
+-- Skema database P2KI UNISBA (SQLite)
 
 CREATE TABLE IF NOT EXISTS ki_items (
-  id SERIAL PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   jenis TEXT NOT NULL,               -- Paten, Desain Industri, Merek, Hak Cipta, KI Komunal
   subtipe TEXT,                      -- mis. Paten Biasa / Paten Sederhana / Merek Dagang
   judul TEXT NOT NULL,
@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS ki_items (
   tahun INTEGER,
   link TEXT,
   deskripsi TEXT,
-  tayang BOOLEAN DEFAULT true,        -- apakah tampil di direktori publik
-  created_at TIMESTAMP DEFAULT NOW()
+  tayang BOOLEAN DEFAULT 1,          -- apakah tampil di direktori publik
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_ki_jenis ON ki_items (jenis);
@@ -23,7 +23,7 @@ CREATE INDEX IF NOT EXISTS idx_ki_fakultas ON ki_items (fakultas);
 CREATE INDEX IF NOT EXISTS idx_ki_status ON ki_items (status);
 
 CREATE TABLE IF NOT EXISTS interest_requests (
-  id SERIAL PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   ki_item_id INTEGER REFERENCES ki_items(id) ON DELETE SET NULL,
   nama TEXT NOT NULL,
   institusi TEXT,
@@ -31,11 +31,11 @@ CREATE TABLE IF NOT EXISTS interest_requests (
   jenis_kebutuhan TEXT,
   pesan TEXT,
   status TEXT DEFAULT 'baru',        -- baru | diproses | mou_terjalin | ditolak
-  created_at TIMESTAMP DEFAULT NOW()
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS challenges (
-  id SERIAL PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   kode TEXT UNIQUE NOT NULL,
   judul TEXT NOT NULL,
   perusahaan TEXT NOT NULL,
@@ -46,32 +46,32 @@ CREATE TABLE IF NOT EXISTS challenges (
   skema TEXT,
   deadline DATE,
   status TEXT DEFAULT 'menunggu_tinjauan', -- menunggu_tinjauan | terbuka | segera_ditutup | ditutup
-  created_at TIMESTAMP DEFAULT NOW()
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS solutions (
-  id SERIAL PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   challenge_id INTEGER REFERENCES challenges(id) ON DELETE CASCADE,
   nama_peneliti TEXT NOT NULL,
   fakultas TEXT,
   ringkasan TEXT,
   ki_terkait TEXT,
   status TEXT DEFAULT 'baru',
-  created_at TIMESTAMP DEFAULT NOW()
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS consult_messages (
-  id SERIAL PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   session_id TEXT NOT NULL,
   sender TEXT NOT NULL,              -- user | admin
   message TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW()
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS ai_qna_log (
-  id SERIAL PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   pertanyaan TEXT NOT NULL,
   jawaban TEXT NOT NULL,
   sumber TEXT DEFAULT 'rule_based', -- rule_based | anthropic_api
-  created_at TIMESTAMP DEFAULT NOW()
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

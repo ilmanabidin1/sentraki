@@ -1,0 +1,6 @@
+node_modules/
+.env
+data/p2ki.db
+data/p2ki.db-journal
+data/p2ki.db-wal
+data/p2ki.db-shm

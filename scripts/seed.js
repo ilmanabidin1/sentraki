@@ -1,5 +1,4 @@
 require('dotenv').config();
-const fs = require('fs');
 const path = require('path');
 const XLSX = require('xlsx');
 const pool = require('../src/db');
@@ -54,7 +53,7 @@ function titleCase(str) {
   return cleaned.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 }
 
-async function seedPaten(client) {
+async function seedPaten(pool) {
   const { header, data } = readSheet('rekap_paten.xlsx');
   const iNama = col(header, 'Nama');
   const iFakultas = col(header, 'Fakulltas');
@@ -72,7 +71,7 @@ async function seedPaten(client) {
     const judul = (r[iJudulBaru] || r[iJudul] || '').toString().trim();
     if (!judul) continue;
     const statusRaw = r[iStatus] ? r[iStatus].toString().trim() : null;
-    await client.query(
+    await pool.query(
       `INSERT INTO ki_items (jenis, subtipe, judul, inventor, fakultas, no_permohonan, no_reg, status_raw, status, tahun, link)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
       [
@@ -94,7 +93,7 @@ async function seedPaten(client) {
   return count;
 }
 
-async function seedDesainIndustri(client) {
+async function seedDesainIndustri(pool) {
   const { header, data } = readSheet('rekap_desain_industri.xlsx');
   const iNama = col(header, 'Nama');
   const iFakultas = col(header, 'Fakulltas');
@@ -110,7 +109,7 @@ async function seedDesainIndustri(client) {
     const judul = (r[iJudul] || '').toString().trim();
     if (!judul) continue;
     const statusRaw = r[iStatus] ? r[iStatus].toString().trim() : null;
-    await client.query(
+    await pool.query(
       `INSERT INTO ki_items (jenis, subtipe, judul, inventor, fakultas, no_permohonan, no_reg, status_raw, status, tahun, link)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
       [
@@ -132,7 +131,7 @@ async function seedDesainIndustri(client) {
   return count;
 }
 
-async function seedMerek(client) {
+async function seedMerek(pool) {
   const { header, data } = readSheet('rekap_merek.xlsx');
   const iNama = col(header, 'Nama');
   const iFakultas = col(header, 'Fakulltas');
@@ -148,7 +147,7 @@ async function seedMerek(client) {
     const judul = (r[iJudul] || '').toString().trim();
     if (!judul) continue;
     const statusRaw = r[iStatus] ? r[iStatus].toString().trim() : null;
-    await client.query(
+    await pool.query(
       `INSERT INTO ki_items (jenis, subtipe, judul, inventor, fakultas, no_permohonan, no_reg, status_raw, status, tahun, link)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
       [
@@ -170,7 +169,7 @@ async function seedMerek(client) {
   return count;
 }
 
-async function seedHakCipta(client) {
+async function seedHakCipta(pool) {
   const { header, data } = readSheet('rekap_hak_cipta.xlsx');
   const iNama = col(header, 'Nama');
   const iFakultas = col(header, 'Fakultas');
@@ -185,7 +184,7 @@ async function seedHakCipta(client) {
   for (const r of data) {
     const judul = (r[iJudul] || '').toString().trim();
     if (!judul) continue;
-    await client.query(
+    await pool.query(
       `INSERT INTO ki_items (jenis, subtipe, judul, inventor, fakultas, no_permohonan, no_reg, status_raw, status, tahun, link)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
       [
@@ -216,15 +215,15 @@ const SAMPLE_CHALLENGES = [
   { kode: 'TI-2026-0015', judul: 'Platform Verifikasi Sertifikasi Halal Rantai Pasok', perusahaan: 'Koperasi Produsen Halal Jabar', kontak: 'sekretariat@koperasihalaljabar.id', bidang: 'Ekonomi Syariah', deskripsi: 'Koperasi membutuhkan sistem verifikasi digital untuk melacak status kehalalan bahan baku di sepanjang rantai pasok anggota koperasi.', kebutuhan_spesifik: 'Dapat diakses anggota koperasi dengan literasi digital terbatas\nTerintegrasi dengan basis data sertifikasi halal resmi\nBiaya operasional rendah', skema: 'Lisensi Hasil Riset', deadline: '2026-08-10', status: 'segera' }
 ];
 
-async function seedChallenges(client) {
-  const { rows } = await client.query('SELECT COUNT(*)::int AS n FROM challenges');
+async function seedChallenges(pool) {
+  const { rows } = await pool.query('SELECT COUNT(*)::int AS n FROM challenges');
   if (rows[0].n > 0) {
     console.log('Tabel challenges sudah berisi data, lewati seeding tantangan industri.');
     return 0;
   }
   let count = 0;
   for (const c of SAMPLE_CHALLENGES) {
-    await client.query(
+    await pool.query(
       `INSERT INTO challenges (kode, judul, perusahaan, kontak, bidang, deskripsi, kebutuhan_spesifik, skema, deadline, status)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
       [c.kode, c.judul, c.perusahaan, c.kontak, c.bidang, c.deskripsi, c.kebutuhan_spesifik, c.skema, c.deadline, c.status]
@@ -234,46 +233,43 @@ async function seedChallenges(client) {
   return count;
 }
 
-async function main() {
-  const client = await pool.connect();
-  try {
-    console.log('Menjalankan skema database...');
-    const schema = fs.readFileSync(path.join(__dirname, '..', 'db', 'schema.sql'), 'utf8');
-    await client.query(schema);
+// Skema database sudah otomatis dibuat saat modul src/db.js di-require.
+async function seedIfEmpty() {
+  const { rows } = await pool.query('SELECT COUNT(*)::int AS n FROM ki_items');
+  if (rows[0].n > 0) {
+    console.log(`Tabel ki_items sudah berisi ${rows[0].n} baris. Lewati seeding.`);
+  } else {
+    console.log('Membaca dan memasukkan data Paten...');
+    const nPaten = await seedPaten(pool);
+    console.log(`  -> ${nPaten} baris`);
 
-    const { rows } = await client.query('SELECT COUNT(*)::int AS n FROM ki_items');
-    if (rows[0].n > 0) {
-      console.log(`Tabel ki_items sudah berisi ${rows[0].n} baris. Lewati seeding (hapus data manual dulu jika ingin re-seed).`);
-    } else {
-      console.log('Membaca dan memasukkan data Paten...');
-      const nPaten = await seedPaten(client);
-      console.log(`  -> ${nPaten} baris`);
+    console.log('Membaca dan memasukkan data Desain Industri...');
+    const nDI = await seedDesainIndustri(pool);
+    console.log(`  -> ${nDI} baris`);
 
-      console.log('Membaca dan memasukkan data Desain Industri...');
-      const nDI = await seedDesainIndustri(client);
-      console.log(`  -> ${nDI} baris`);
+    console.log('Membaca dan memasukkan data Merek...');
+    const nMerek = await seedMerek(pool);
+    console.log(`  -> ${nMerek} baris`);
 
-      console.log('Membaca dan memasukkan data Merek...');
-      const nMerek = await seedMerek(client);
-      console.log(`  -> ${nMerek} baris`);
+    console.log('Membaca dan memasukkan data Hak Cipta...');
+    const nHC = await seedHakCipta(pool);
+    console.log(`  -> ${nHC} baris`);
 
-      console.log('Membaca dan memasukkan data Hak Cipta...');
-      const nHC = await seedHakCipta(client);
-      console.log(`  -> ${nHC} baris`);
-
-      console.log(`Selesai. Total ${nPaten + nDI + nMerek + nHC} KI dimasukkan ke database.`);
-    }
-
-    console.log('Menyiapkan contoh data Tantangan Industri...');
-    const nChallenge = await seedChallenges(client);
-    console.log(`  -> ${nChallenge} tantangan contoh dimasukkan.`);
-  } catch (err) {
-    console.error('Seeding gagal:', err);
-    process.exitCode = 1;
-  } finally {
-    client.release();
-    await pool.end();
+    console.log(`Selesai. Total ${nPaten + nDI + nMerek + nHC} KI dimasukkan ke database.`);
   }
+
+  console.log('Menyiapkan contoh data Tantangan Industri...');
+  const nChallenge = await seedChallenges(pool);
+  console.log(`  -> ${nChallenge} tantangan contoh dimasukkan.`);
 }
 
-main();
+module.exports = { seedIfEmpty };
+
+if (require.main === module) {
+  seedIfEmpty()
+    .then(() => process.exit(0))
+    .catch(err => {
+      console.error('Seeding gagal:', err);
+      process.exit(1);
+    });
+}
