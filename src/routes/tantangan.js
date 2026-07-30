@@ -16,6 +16,9 @@ function fmtDeadline(d) {
 
 router.get('/tantangan-industri', async (req, res, next) => {
   try {
+    const totalAllRes = await pool.query('SELECT COUNT(*)::int AS n FROM challenges');
+    const totalAll = totalAllRes.rows[0].n;
+
     const q = (req.query.q || '').trim();
     const bidang = toArray(req.query.bidang) || BIDANG_LIST;
     const status = toArray(req.query.status) || ['terbuka', 'segera'];
@@ -45,6 +48,7 @@ router.get('/tantangan-industri', async (req, res, next) => {
 
     res.render('tantangan-industri', {
       items,
+      totalAll,
       bidangList: BIDANG_LIST,
       query: { q, bidang, status },
       sort,

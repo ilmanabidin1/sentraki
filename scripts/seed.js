@@ -206,34 +206,9 @@ async function seedHakCipta(pool) {
   return count;
 }
 
-const SAMPLE_CHALLENGES = [
-  { kode: 'TI-2026-0031', judul: 'Solusi Pengawetan Alami untuk Produk UMKM Pangan', perusahaan: 'CV Pangan Sehat Nusantara', kontak: 'kontak@pangansehat.co.id', bidang: 'Teknologi & Manufaktur', deskripsi: 'Perusahaan mencari metode pengawetan alami non-kimia untuk memperpanjang umur simpan produk olahan pangan UMKM tanpa mengubah cita rasa asli.', kebutuhan_spesifik: 'Bahan pengawet bersumber dari kearifan lokal\nAman dikonsumsi dan tersertifikasi halal\nDapat diproduksi dalam skala UMKM', skema: 'Lisensi Hasil Riset', deadline: '2026-09-30', status: 'terbuka' },
-  { kode: 'TI-2026-0028', judul: 'Sistem Prediksi Gagal Bayar untuk Pembiayaan Mikro Syariah', perusahaan: 'BPRS Amanah Jabar', kontak: 'humas@amanahjabar.co.id', bidang: 'Ekonomi Syariah', deskripsi: 'Lembaga pembiayaan mikro syariah membutuhkan model prediksi risiko gagal bayar nasabah yang sesuai prinsip syariah untuk memperbaiki keputusan pembiayaan.', kebutuhan_spesifik: 'Model sesuai prinsip pembiayaan syariah\nDapat diintegrasikan ke sistem inti yang sudah berjalan\nInterpretasi hasil mudah dipahami tim non-teknis', skema: 'Konsultasi Berbayar', deadline: '2026-08-18', status: 'segera' },
-  { kode: 'TI-2026-0025', judul: 'Kemasan Biodegradable Pengganti Plastik Sekali Pakai', perusahaan: 'PT Kemasan Hijau Lestari', kontak: 'riset@kemasanhijau.id', bidang: 'Pertanian & Lingkungan', deskripsi: 'Perusahaan mencari mitra riset untuk mengembangkan kemasan biodegradable berbahan serat alami yang siap diproduksi massal bagi UMKM makanan dan minuman.', kebutuhan_spesifik: 'Bahan baku serat alami lokal\nBiaya produksi kompetitif terhadap plastik konvensional\nTeruji tahan terhadap kelembapan', skema: 'Pendanaan Riset Bersama', deadline: '2026-10-12', status: 'terbuka' },
-  { kode: 'TI-2026-0022', judul: 'Alat Skrining Dini Gangguan Tumbuh Kembang Anak', perusahaan: 'Klinik Tumbuh Kembang Ceria', kontak: 'info@tumbuhkembangceria.id', bidang: 'Kesehatan & Farmasi', deskripsi: 'Klinik mencari alat bantu skrining dini yang praktis digunakan tenaga kesehatan non-spesialis untuk mendeteksi indikasi gangguan tumbuh kembang anak usia dini.', kebutuhan_spesifik: 'Mudah digunakan oleh kader posyandu\nBerbasis indikator yang tervalidasi klinis\nBiaya implementasi terjangkau', skema: 'Akuisisi KI', deadline: '2026-11-05', status: 'terbuka' },
-  { kode: 'TI-2026-0019', judul: 'Optimalisasi Rantai Pasok Bahan Baku Herbal Lokal', perusahaan: 'PT Herbal Nusantara Jaya', kontak: 'kemitraan@herbalnusantara.id', bidang: 'Kesehatan & Farmasi', deskripsi: 'Perusahaan membutuhkan kajian dan model optimalisasi rantai pasok bahan baku herbal dari petani lokal untuk menjaga konsistensi kualitas dan pasokan.', kebutuhan_spesifik: 'Melibatkan data petani mitra eksisting\nModel dapat direplikasi ke komoditas herbal lain\nMempertimbangkan aspek keberlanjutan', skema: 'Konsultasi Berbayar', deadline: '2026-09-20', status: 'terbuka' },
-  { kode: 'TI-2026-0015', judul: 'Platform Verifikasi Sertifikasi Halal Rantai Pasok', perusahaan: 'Koperasi Produsen Halal Jabar', kontak: 'sekretariat@koperasihalaljabar.id', bidang: 'Ekonomi Syariah', deskripsi: 'Koperasi membutuhkan sistem verifikasi digital untuk melacak status kehalalan bahan baku di sepanjang rantai pasok anggota koperasi.', kebutuhan_spesifik: 'Dapat diakses anggota koperasi dengan literasi digital terbatas\nTerintegrasi dengan basis data sertifikasi halal resmi\nBiaya operasional rendah', skema: 'Lisensi Hasil Riset', deadline: '2026-08-10', status: 'segera' }
-];
-
-async function seedChallenges(pool) {
-  const { rows } = await pool.query('SELECT COUNT(*)::int AS n FROM challenges');
-  if (rows[0].n > 0) {
-    console.log('Tabel challenges sudah berisi data, lewati seeding tantangan industri.');
-    return 0;
-  }
-  let count = 0;
-  for (const c of SAMPLE_CHALLENGES) {
-    await pool.query(
-      `INSERT INTO challenges (kode, judul, perusahaan, kontak, bidang, deskripsi, kebutuhan_spesifik, skema, deadline, status)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
-      [c.kode, c.judul, c.perusahaan, c.kontak, c.bidang, c.deskripsi, c.kebutuhan_spesifik, c.skema, c.deadline, c.status]
-    );
-    count++;
-  }
-  return count;
-}
-
 // Skema database sudah otomatis dibuat saat modul src/db.js di-require.
+// Tabel challenges (Tantangan Industri) sengaja dibiarkan kosong sampai ada
+// industri yang benar-benar mendaftar lewat halaman "Pasang Kebutuhan".
 async function seedIfEmpty() {
   const { rows } = await pool.query('SELECT COUNT(*)::int AS n FROM ki_items');
   if (rows[0].n > 0) {
@@ -257,10 +232,6 @@ async function seedIfEmpty() {
 
     console.log(`Selesai. Total ${nPaten + nDI + nMerek + nHC} KI dimasukkan ke database.`);
   }
-
-  console.log('Menyiapkan contoh data Tantangan Industri...');
-  const nChallenge = await seedChallenges(pool);
-  console.log(`  -> ${nChallenge} tantangan contoh dimasukkan.`);
 }
 
 module.exports = { seedIfEmpty };

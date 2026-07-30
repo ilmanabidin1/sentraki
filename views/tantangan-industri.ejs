@@ -28,7 +28,14 @@
       </select>
     </div>
     <div class="dir-grid">
-      <% if (items.length === 0) { %><p class="empty-note">Tidak ada tantangan yang cocok dengan filter ini.</p><% } %>
+      <% if (items.length === 0 && totalAll === 0) { %>
+        <div class="empty-note empty-note-block">
+          <h4>Belum ada tantangan industri yang terdaftar</h4>
+          <p>Saat ini belum ada industri yang memasang kebutuhan riset. Jika perusahaan Anda punya tantangan yang ingin dicarikan solusi dari civitas akademik UNISBA, silakan pasang kebutuhan lewat tombol di bawah.</p>
+        </div>
+      <% } else if (items.length === 0) { %>
+        <p class="empty-note">Tidak ada tantangan yang cocok dengan filter ini.</p>
+      <% } %>
       <% items.forEach(c => { %>
         <a class="ki-card" href="/tantangan-industri/<%= c.kode %>">
           <div class="company-row">
