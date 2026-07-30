@@ -43,6 +43,19 @@ function normalizeStatusUmum(raw) {
   return 'proses';
 }
 
+// Kolom "URL"/"LINK" di file rekap sumber kadang berisi tanggal (mis. "22-11-2024")
+// alih-alih tautan PDKI yang sebenarnya, atau tautan placeholder kosong yang sama
+// untuk banyak baris berbeda. Hanya simpan nilai yang benar-benar berupa URL http(s) valid.
+const EMPTY_PLACEHOLDER_LINK = 'https://pdki-indonesia.dgip.go.id/detail/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+
+function sanitizeLink(value) {
+  if (!value) return null;
+  const trimmed = value.toString().trim();
+  if (!/^https?:\/\//i.test(trimmed)) return null;
+  if (trimmed === EMPTY_PLACEHOLDER_LINK) return null;
+  return trimmed;
+}
+
 const ACRONYMS = ['MIPA'];
 
 function titleCase(str) {
@@ -85,7 +98,7 @@ async function seedPaten(pool) {
         statusRaw,
         normalizeStatusPaten(statusRaw),
         r[iTahun] ? parseInt(r[iTahun], 10) : extractYear(r[iNoPermohonan]),
-        r[iLink] || null
+        sanitizeLink(r[iLink])
       ]
     );
     count++;
@@ -123,7 +136,7 @@ async function seedDesainIndustri(pool) {
         statusRaw,
         normalizeStatusUmum(statusRaw),
         extractYear(r[iTglTerima]),
-        r[iLink] || null
+        sanitizeLink(r[iLink])
       ]
     );
     count++;
@@ -161,7 +174,7 @@ async function seedMerek(pool) {
         statusRaw,
         normalizeStatusUmum(statusRaw),
         r[iTahun] ? parseInt(r[iTahun], 10) : null,
-        r[iLink] || null
+        sanitizeLink(r[iLink])
       ]
     );
     count++;
@@ -198,7 +211,7 @@ async function seedHakCipta(pool) {
         'Tercatat',
         'granted',
         r[iTahun] ? parseInt(r[iTahun], 10) : null,
-        r[iLink] || null
+        sanitizeLink(r[iLink])
       ]
     );
     count++;
