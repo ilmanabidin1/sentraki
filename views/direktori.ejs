@@ -9,8 +9,11 @@
       <h4>Jenis KI</h4>
       <% jenisList.forEach(j => { %>
         <label class="filter-opt">
-          <input type="checkbox" name="jenis" value="<%= j %>" onchange="document.getElementById('filterForm').submit()" <%= (query.jenis || jenisList).includes(j) ? 'checked' : '' %>>
-          <%= j %>
+          <span class="filter-opt-label">
+            <input type="checkbox" name="jenis" value="<%= j %>" onchange="document.getElementById('filterForm').submit()" <%= selected.jenis && selected.jenis.includes(j) ? 'checked' : '' %>>
+            <%= j %>
+          </span>
+          <span class="filter-opt-count"><%= (jenisCounts[j] || 0).toLocaleString('id-ID') %></span>
         </label>
       <% }) %>
     </div>
@@ -19,17 +22,34 @@
       <h4>Fakultas</h4>
       <% fakultasList.forEach(f => { %>
         <label class="filter-opt">
-          <input type="checkbox" name="fakultas" value="<%= f %>" onchange="document.getElementById('filterForm').submit()" <%= (query.fakultas || fakultasList).includes(f) ? 'checked' : '' %>>
-          <%= f %>
+          <span class="filter-opt-label">
+            <input type="checkbox" name="fakultas" value="<%= f %>" onchange="document.getElementById('filterForm').submit()" <%= selected.fakultas && selected.fakultas.includes(f) ? 'checked' : '' %>>
+            <%= f %>
+          </span>
+          <span class="filter-opt-count"><%= (fakultasCounts[f] || 0).toLocaleString('id-ID') %></span>
         </label>
       <% }) %>
     </div>
 
     <div class="filter-group">
       <h4>Status Hilirisasi</h4>
-      <label class="filter-opt"><input type="checkbox" name="status" value="proses" onchange="document.getElementById('filterForm').submit()" <%= (query.status || ['proses','granted']).includes('proses') ? 'checked' : '' %>> Terdaftar / Dalam Proses</label>
-      <label class="filter-opt"><input type="checkbox" name="status" value="granted" onchange="document.getElementById('filterForm').submit()" <%= (query.status || ['proses','granted']).includes('granted') ? 'checked' : '' %>> Granted / Tercatat</label>
+      <label class="filter-opt">
+        <span class="filter-opt-label">
+          <input type="checkbox" name="status" value="proses" onchange="document.getElementById('filterForm').submit()" <%= selected.status && selected.status.includes('proses') ? 'checked' : '' %>>
+          Terdaftar / Dalam Proses
+        </span>
+      </label>
+      <label class="filter-opt">
+        <span class="filter-opt-label">
+          <input type="checkbox" name="status" value="granted" onchange="document.getElementById('filterForm').submit()" <%= selected.status && selected.status.includes('granted') ? 'checked' : '' %>>
+          Granted / Tercatat
+        </span>
+      </label>
     </div>
+
+    <% if (hasActiveFilter) { %>
+      <a class="filter-reset" href="/direktori">Reset semua filter</a>
+    <% } %>
     <noscript><button class="btn-secondary" type="submit">Terapkan Filter</button></noscript>
   </form>
 
@@ -38,9 +58,9 @@
       <p>Menampilkan <b><%= items.length %></b> dari <%= total.toLocaleString('id-ID') %> KI tercatat (halaman <%= page %> dari <%= totalPages %>)</p>
       <form method="GET" action="/direktori" id="sortForm">
         <input type="hidden" name="q" value="<%= query.q || '' %>">
-        <% (query.jenis || jenisList).forEach(j => { %><input type="hidden" name="jenis" value="<%= j %>"><% }) %>
-        <% (query.fakultas || fakultasList).forEach(f => { %><input type="hidden" name="fakultas" value="<%= f %>"><% }) %>
-        <% (query.status || ['proses','granted']).forEach(s => { %><input type="hidden" name="status" value="<%= s %>"><% }) %>
+        <% (selected.jenis || []).forEach(j => { %><input type="hidden" name="jenis" value="<%= j %>"><% }) %>
+        <% (selected.fakultas || []).forEach(f => { %><input type="hidden" name="fakultas" value="<%= f %>"><% }) %>
+        <% (selected.status || []).forEach(s => { %><input type="hidden" name="status" value="<%= s %>"><% }) %>
         <select class="sort-select" name="sort" onchange="document.getElementById('sortForm').submit()">
           <option value="terbaru" <%= sort === 'terbaru' ? 'selected' : '' %>>Urutkan: Terbaru</option>
           <option value="az" <%= sort === 'az' ? 'selected' : '' %>>Abjad A-Z</option>
@@ -60,13 +80,16 @@
             <span class="badge badge-<%= item.status %>"><%= item.status === 'granted' ? 'Granted' : (item.status === 'ditolak' ? 'Ditolak' : 'Dalam Proses') %></span>
           </div>
           <h3><%= item.judul %></h3>
-          <div class="ki-meta"><%= item.inventor %><span class="dot-sep">&middot;</span><%= item.fakultas %></div>
+          <div class="ki-meta">
+            <div class="ki-meta-row"><%= item.inventor %></div>
+            <div class="ki-meta-row ki-meta-fakultas"><%= item.fakultas %></div>
+          </div>
         </a>
       <% }) %>
     </div>
 
     <% if (totalPages > 1) { %>
-      <div style="display:flex;gap:8px;margin-top:24px;justify-content:center;">
+      <div style="display:flex;gap:8px;margin-top:24px;justify-content:center;flex-wrap:wrap;">
         <% for (let p = 1; p <= totalPages; p++) { %>
           <a class="btn-secondary" style="padding:8px 14px;font-size:12px;<%= p === page ? 'background:var(--navy);color:var(--paper);' : '' %>"
              href="/direktori?<%= baseQueryString %>&page=<%= p %>"><%= p %></a>

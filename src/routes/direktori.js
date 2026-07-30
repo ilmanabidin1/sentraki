@@ -13,14 +13,25 @@ function toArray(v) {
 router.get('/direktori', async (req, res, next) => {
   try {
     const fakultasAllRes = await pool.query(
-      `SELECT fakultas, COUNT(*)::int AS n FROM ki_items GROUP BY fakultas ORDER BY n DESC`
+      `SELECT fakultas, COUNT(*)::int AS n FROM ki_items WHERE tayang = true GROUP BY fakultas ORDER BY n DESC`
     );
     const fakultasList = fakultasAllRes.rows.map(r => r.fakultas);
+    const fakultasCounts = {};
+    fakultasAllRes.rows.forEach(r => { fakultasCounts[r.fakultas] = r.n; });
+
+    const jenisCountRes = await pool.query(
+      `SELECT jenis, COUNT(*)::int AS n FROM ki_items WHERE tayang = true GROUP BY jenis`
+    );
+    const jenisCounts = {};
+    jenisCountRes.rows.forEach(r => { jenisCounts[r.jenis] = r.n; });
 
     const q = (req.query.q || '').trim();
-    const jenis = toArray(req.query.jenis) || JENIS_LIST;
-    const fakultas = toArray(req.query.fakultas) || fakultasList;
-    const status = toArray(req.query.status) || ['proses', 'granted'];
+    const jenisSelected = toArray(req.query.jenis);
+    const fakultasSelected = toArray(req.query.fakultas);
+    const statusSelected = toArray(req.query.status);
+    const jenis = jenisSelected || JENIS_LIST;
+    const fakultas = fakultasSelected || fakultasList;
+    const status = statusSelected || ['proses', 'granted'];
     const sort = req.query.sort || 'terbaru';
     const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
 
@@ -50,9 +61,9 @@ router.get('/direktori', async (req, res, next) => {
 
     const baseParams = new URLSearchParams();
     if (q) baseParams.set('q', q);
-    jenis.forEach(j => baseParams.append('jenis', j));
-    fakultas.forEach(f => baseParams.append('fakultas', f));
-    status.forEach(s => baseParams.append('status', s));
+    (jenisSelected || []).forEach(j => baseParams.append('jenis', j));
+    (fakultasSelected || []).forEach(f => baseParams.append('fakultas', f));
+    (statusSelected || []).forEach(s => baseParams.append('status', s));
     if (sort !== 'terbaru') baseParams.set('sort', sort);
 
     res.render('direktori', {
@@ -63,7 +74,13 @@ router.get('/direktori', async (req, res, next) => {
       sort,
       jenisList: JENIS_LIST,
       fakultasList,
+      jenisCounts,
+      fakultasCounts,
       query: { q, jenis, fakultas, status },
+      // status seleksi asli dari URL (bukan hasil fallback) — dipakai supaya checkbox
+      // hanya tercentang saat pengguna benar-benar memilihnya, bukan saat filter kosong.
+      selected: { jenis: jenisSelected, fakultas: fakultasSelected, status: statusSelected },
+      hasActiveFilter: !!(q || jenisSelected || fakultasSelected || statusSelected),
       baseQueryString: baseParams.toString()
     });
   } catch (err) { next(err); }
