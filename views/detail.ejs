@@ -43,8 +43,10 @@
       <% if (item.link) { %>
         <div class="doc-row"><span>Detail Resmi di PDKI (DJKI)</span><a class="dl" href="<%= item.link %>" target="_blank" rel="noopener">Buka &rarr;</a></div>
       <% } else { %>
-        <p style="font-size:12.5px;color:var(--slate);margin:0;">Tautan resmi belum tersedia untuk entri ini.</p>
+        <p style="font-size:12.5px;color:var(--slate);margin:0 0 10px;">Tautan resmi langsung belum tersedia untuk entri ini.</p>
       <% } %>
+      <div class="doc-row"><span>Cari di PDKI (DGIP)</span><a class="dl" href="<%= pdkiSearchUrl %>" target="_blank" rel="noopener">Cari &rarr;</a></div>
+      <p style="font-size:11px;color:var(--slate);margin:8px 0 0;">Membuka pencarian resmi PDKI dengan kata kunci <%= item.no_reg || item.no_permohonan ? 'nomor' : 'judul' %> KI ini terisi otomatis.</p>
     </div>
   </div>
 </div>

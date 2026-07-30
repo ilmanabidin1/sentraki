@@ -50,8 +50,13 @@ const EMPTY_PLACEHOLDER_LINK = 'https://pdki-indonesia.dgip.go.id/detail/e3b0c44
 
 function sanitizeLink(value) {
   if (!value) return null;
-  const trimmed = value.toString().trim();
+  let trimmed = value.toString().trim();
+  // Beberapa baris punya prefix ganda seperti "https://pdki-https://pdki-...";
+  // ambil kemunculan terakhir dari "https://"/"http://" sebagai awal URL sebenarnya.
+  const lastProtocolIdx = Math.max(trimmed.lastIndexOf('https://'), trimmed.lastIndexOf('http://'));
+  if (lastProtocolIdx > 0) trimmed = trimmed.slice(lastProtocolIdx);
   if (!/^https?:\/\//i.test(trimmed)) return null;
+  try { new URL(trimmed); } catch { return null; }
   if (trimmed === EMPTY_PLACEHOLDER_LINK) return null;
   return trimmed;
 }

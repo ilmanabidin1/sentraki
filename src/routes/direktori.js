@@ -5,6 +5,25 @@ const pool = require('../db');
 const JENIS_LIST = ['Paten', 'Hak Cipta', 'Merek', 'Desain Industri', 'KI Komunal'];
 const PAGE_SIZE = 12;
 
+// Tipe pencarian di portal PDKI (pdki-indonesia.dgip.go.id) berbeda per jenis KI,
+// disimpulkan dari pola link resmi yang valid pada data yang sudah ada.
+const PDKI_SEARCH_TYPE = {
+  'Paten': 'patent',
+  'Hak Cipta': 'copyright',
+  'Desain Industri': 'di',
+  'Merek': 'trademark'
+};
+
+function buildPdkiSearchUrl(item) {
+  // Cari pakai nomor permohonan/registrasi resmi kalau ada (lebih presisi daripada judul),
+  // baru jatuh ke judul KI kalau nomornya tidak tersedia.
+  const keyword = item.no_reg || item.no_permohonan || item.judul;
+  const params = new URLSearchParams({ keyword });
+  const type = PDKI_SEARCH_TYPE[item.jenis];
+  if (type) params.set('type', type);
+  return `https://pdki-indonesia.dgip.go.id/search?${params.toString()}`;
+}
+
 function toArray(v) {
   if (v === undefined) return undefined;
   return Array.isArray(v) ? v : [v];
@@ -90,7 +109,8 @@ router.get('/direktori/:id', async (req, res, next) => {
   try {
     const result = await pool.query('SELECT * FROM ki_items WHERE id = $1', [req.params.id]);
     if (result.rows.length === 0) return res.status(404).send('KI tidak ditemukan.');
-    res.render('detail', { item: result.rows[0] });
+    const item = result.rows[0];
+    res.render('detail', { item, pdkiSearchUrl: buildPdkiSearchUrl(item) });
   } catch (err) { next(err); }
 });
 
