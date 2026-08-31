@@ -60,6 +60,22 @@ CREATE TABLE IF NOT EXISTS solutions (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Tabel akun admin (password ter-hash bcrypt, bukan plaintext env)
+CREATE TABLE IF NOT EXISTS admin_users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,        -- bcrypt hash
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  last_login DATETIME
+);
+
+CREATE TABLE IF NOT EXISTS login_attempts (
+  ip TEXT NOT NULL,
+  attempted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  success BOOLEAN DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS idx_login_attempts ON login_attempts (ip, attempted_at);
+
 CREATE TABLE IF NOT EXISTS consult_messages (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   session_id TEXT NOT NULL,

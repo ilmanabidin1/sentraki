@@ -11,6 +11,7 @@
   <% } %>
 
   <form class="form-card" method="POST" action="/pasang-kebutuhan">
+    <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
     <div class="form-row"><label>Nama Perusahaan</label><input type="text" name="perusahaan" placeholder="PT / CV / Koperasi..." required></div>
     <div class="form-row"><label>Kontak Person &amp; Email</label><input type="text" name="kontak" placeholder="Nama - email@perusahaan.com"></div>
     <div class="form-row"><label>Judul Kebutuhan</label><input type="text" name="judul" placeholder="Contoh: Solusi Pengawetan Alami untuk Produk UMKM" required></div>

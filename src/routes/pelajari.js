@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 const { askLearningAI } = require('../ai');
+const { validateChatMessage } = require('../validate');
 
 const MODULES = [
   {
@@ -60,7 +61,7 @@ router.get('/pelajari-ki', (req, res) => {
 });
 
 router.post('/api/ai-tanya', async (req, res) => {
-  const question = (req.body.question || '').trim();
+  const question = validateChatMessage(req.body.question);
   if (!question) return res.status(400).json({ error: 'Pertanyaan kosong.' });
 
   const { jawaban, sumber } = await askLearningAI(question);

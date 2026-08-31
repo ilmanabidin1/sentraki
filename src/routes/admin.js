@@ -1,23 +1,36 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db');
-const { requireAdmin } = require('../middleware/auth');
+const { requireAdmin, verifyAdmin, isRateLimited, recordAttempt, touchLastLogin } = require('../middleware/auth');
 
 router.get('/admin/login', (req, res) => {
   res.render('admin-login', {});
 });
 
-router.post('/admin/login', (req, res) => {
-  const { username, password } = req.body;
-  const validUser = process.env.ADMIN_USERNAME || 'admin';
-  const validPass = process.env.ADMIN_PASSWORD || 'admin123';
+router.post('/admin/login', async (req, res, next) => {
+  try {
+    const ip = req.ip || req.connection.remoteAddress;
+    if (await isRateLimited(ip)) {
+      return res.render('admin-login', { errorMsg: 'Terlalu banyak percobaan login gagal. Coba lagi dalam 15 menit.' });
+    }
 
-  if (username === validUser && password === validPass) {
-    req.session.isAdmin = true;
-    req.session.adminUsername = username;
-    return res.redirect('/admin/dashboard');
-  }
-  res.render('admin-login', { errorMsg: 'Username atau password salah.' });
+    const { username, password } = req.body;
+    const admin = await verifyAdmin(username || '', password || '');
+    await recordAttempt(ip, !!admin);
+
+    if (admin) {
+      // Regenerasi session untuk mencegah session fixation.
+      req.session.regenerate(err => {
+        if (err) return next(err);
+        req.session.isAdmin = true;
+        req.session.adminUsername = admin.username;
+        touchLastLogin(admin.id).catch(() => {});
+        return res.redirect('/admin/dashboard');
+      });
+      return;
+    }
+    res.render('admin-login', { errorMsg: 'Username atau password salah.' });
+  } catch (err) { next(err); }
 });
 
 router.get('/admin/logout', (req, res) => {
@@ -29,7 +42,7 @@ router.get('/admin/dashboard', requireAdmin, async (req, res, next) => {
     const totalKI = (await pool.query('SELECT COUNT(*)::int AS n FROM ki_items')).rows[0].n;
     const pendingReview = (await pool.query(`SELECT COUNT(*)::int AS n FROM ki_items WHERE tayang = false`)).rows[0].n;
     const interestCount = (await pool.query('SELECT COUNT(*)::int AS n FROM interest_requests')).rows[0].n;
-    const challengeActive = (await pool.query(`SELECT COUNT(*)::int AS n FROM challenges WHERE status IN ('terbuka','segera')`)).rows[0].n;
+    const challengeActive = (await pool.query(`SELECT COUNT(*)::int AS n FROM challenges WHERE status IN ('terbuka','segera_ditutup')`)).rows[0].n;
 
     const challenges = (await pool.query(
       `SELECT c.*, COALESCE(s.cnt, 0) AS solusi_count

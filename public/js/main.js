@@ -1,3 +1,8 @@
+function csrfToken() {
+  const meta = document.querySelector('meta[name="csrf-token"]');
+  return meta ? meta.content : '';
+}
+
 function toggleModule(i){
   const el = document.getElementById('module-' + i);
   if (el) el.classList.toggle('open');
@@ -26,7 +31,7 @@ async function askAI(question){
   try{
     const res = await fetch('/api/ai-tanya', {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      headers: {'Content-Type':'application/json','x-csrf-token': csrfToken()},
       body: JSON.stringify({ question: q })
     });
     const data = await res.json();
@@ -63,7 +68,7 @@ async function sendConsult(message){
   try{
     const res = await fetch('/api/konsultasi', {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      headers: {'Content-Type':'application/json','x-csrf-token': csrfToken()},
       body: JSON.stringify({ message: msg })
     });
     const data = await res.json();

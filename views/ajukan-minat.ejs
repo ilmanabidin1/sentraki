@@ -23,6 +23,7 @@
   <% } %>
 
   <form class="form-card" method="POST" action="/ajukan-minat">
+    <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
     <input type="hidden" name="ki_item_id" value="<%= kiItem ? kiItem.id : '' %>">
     <div class="form-row"><label>Nama Lengkap</label><input type="text" name="nama" required placeholder="Nama pemohon"></div>
     <div class="form-row"><label>Institusi / Perusahaan</label><input type="text" name="institusi" placeholder="Nama institusi atau perusahaan"></div>

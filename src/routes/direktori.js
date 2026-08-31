@@ -127,14 +127,15 @@ router.get('/ajukan-minat', async (req, res, next) => {
 
 router.post('/ajukan-minat', async (req, res, next) => {
   try {
-    const { nama, institusi, email, jenis_kebutuhan, pesan, ki_item_id } = req.body;
-    if (!nama) {
-      return res.render('ajukan-minat', { kiItem: null, success: false, errorMsg: 'Nama lengkap wajib diisi.' });
+    const { validateAjukanMinat } = require('../validate');
+    const { errors, values } = validateAjukanMinat(req.body);
+    if (errors.length > 0) {
+      return res.render('ajukan-minat', { kiItem: null, success: false, errorMsg: errors.join(' ') });
     }
     await pool.query(
       `INSERT INTO interest_requests (ki_item_id, nama, institusi, email, jenis_kebutuhan, pesan)
        VALUES ($1,$2,$3,$4,$5,$6)`,
-      [ki_item_id || null, nama, institusi || null, email || null, jenis_kebutuhan || null, pesan || null]
+      [values.ki_item_id, values.nama, values.institusi, values.email, values.jenis_kebutuhan, values.pesan]
     );
     res.render('ajukan-minat', { kiItem: null, success: true });
   } catch (err) { next(err); }
@@ -146,14 +147,15 @@ router.get('/daftarkan-ki', (req, res) => {
 
 router.post('/daftarkan-ki', async (req, res, next) => {
   try {
-    const { nama, fakultas, judul, jenis, deskripsi } = req.body;
-    if (!nama || !fakultas || !judul || !jenis) {
-      return res.render('daftarkan-ki', { success: false, errorMsg: 'Mohon lengkapi seluruh kolom wajib.' });
+    const { validateDaftarkanKI } = require('../validate');
+    const { errors, values } = validateDaftarkanKI(req.body);
+    if (errors.length > 0) {
+      return res.render('daftarkan-ki', { success: false, errorMsg: errors.join(' ') });
     }
     await pool.query(
       `INSERT INTO ki_items (jenis, judul, inventor, fakultas, status_raw, status, deskripsi, tayang)
        VALUES ($1,$2,$3,$4,'Menunggu Tinjauan','proses',$5,false)`,
-      [jenis, judul, nama, fakultas, deskripsi || null]
+      [values.jenis, values.judul, values.nama, values.fakultas, values.deskripsi]
     );
     res.render('daftarkan-ki', { success: true });
   } catch (err) { next(err); }

@@ -21,6 +21,7 @@
     <div class="error-box"><%= errorMsg %></div>
   <% } %>
   <form class="form-card" style="padding:0;border:none;" method="POST" action="/admin/login">
+    <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
     <div class="form-row"><label>Username</label><input type="text" name="username" required></div>
     <div class="form-row"><label>Password</label><input type="password" name="password" required></div>
     <button class="btn-primary" type="submit" style="width:100%;text-align:center;">Masuk</button>

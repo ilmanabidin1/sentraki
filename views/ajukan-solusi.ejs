@@ -28,6 +28,7 @@
   </div>
 
   <form class="form-card" method="POST" action="/ajukan-solusi">
+    <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
     <input type="hidden" name="challenge_id" value="<%= challengeItem ? challengeItem.id : '' %>">
     <div class="form-row"><label>Nama Peneliti</label><input type="text" name="nama_peneliti" id="sNama" placeholder="Terisi otomatis setelah masuk SISFO" required></div>
     <div class="form-row"><label>Fakultas</label><input type="text" name="fakultas" id="sFakultas" placeholder="Terisi otomatis setelah masuk SISFO"></div>
