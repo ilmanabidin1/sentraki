@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
-const JENIS_LIST = ['Paten', 'Hak Cipta', 'Merek', 'Desain Industri', 'KI Komunal'];
-const PAGE_SIZE = 12;
 
 // Tipe pencarian di portal PDKI (pdki-indonesia.dgip.go.id) berbeda per jenis KI,
 // disimpulkan dari pola link resmi yang valid pada data yang sudah ada.
@@ -24,84 +22,11 @@ function buildPdkiSearchUrl(item) {
   return `https://pdki-indonesia.dgip.go.id/search?${params.toString()}`;
 }
 
-function toArray(v) {
-  if (v === undefined) return undefined;
-  return Array.isArray(v) ? v : [v];
-}
+const { directoryData } = require('../directory-filters');
 
 router.get('/direktori', async (req, res, next) => {
   try {
-    const fakultasAllRes = await pool.query(
-      `SELECT fakultas, COUNT(*)::int AS n FROM ki_items WHERE tayang = true GROUP BY fakultas ORDER BY n DESC`
-    );
-    const fakultasList = fakultasAllRes.rows.map(r => r.fakultas);
-    const fakultasCounts = {};
-    fakultasAllRes.rows.forEach(r => { fakultasCounts[r.fakultas] = r.n; });
-
-    const jenisCountRes = await pool.query(
-      `SELECT jenis, COUNT(*)::int AS n FROM ki_items WHERE tayang = true GROUP BY jenis`
-    );
-    const jenisCounts = {};
-    jenisCountRes.rows.forEach(r => { jenisCounts[r.jenis] = r.n; });
-
-    const q = (req.query.q || '').trim();
-    const jenisSelected = toArray(req.query.jenis);
-    const fakultasSelected = toArray(req.query.fakultas);
-    const statusSelected = toArray(req.query.status);
-    const jenis = jenisSelected || JENIS_LIST;
-    const fakultas = fakultasSelected || fakultasList;
-    const status = statusSelected || ['proses', 'granted'];
-    const sort = req.query.sort || 'terbaru';
-    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
-
-    const conditions = ['jenis = ANY($1)', 'fakultas = ANY($2)', 'status = ANY($3)', 'tayang = true'];
-    const params = [jenis, fakultas, status];
-    if (q) {
-      params.push(`%${q}%`);
-      conditions.push(`(judul ILIKE $${params.length} OR inventor ILIKE $${params.length})`);
-    }
-
-    let orderBy = 'id DESC';
-    if (sort === 'az') orderBy = 'judul ASC';
-    if (sort === 'za') orderBy = 'judul DESC';
-
-    const countRes = await pool.query(
-      `SELECT COUNT(*)::int AS n FROM ki_items WHERE ${conditions.join(' AND ')}`,
-      params
-    );
-    const total = countRes.rows[0].n;
-    const totalPages = Math.max(Math.ceil(total / PAGE_SIZE), 1);
-
-    params.push(PAGE_SIZE, (page - 1) * PAGE_SIZE);
-    const itemsRes = await pool.query(
-      `SELECT * FROM ki_items WHERE ${conditions.join(' AND ')} ORDER BY ${orderBy} LIMIT $${params.length - 1} OFFSET $${params.length}`,
-      params
-    );
-
-    const baseParams = new URLSearchParams();
-    if (q) baseParams.set('q', q);
-    (jenisSelected || []).forEach(j => baseParams.append('jenis', j));
-    (fakultasSelected || []).forEach(f => baseParams.append('fakultas', f));
-    (statusSelected || []).forEach(s => baseParams.append('status', s));
-    if (sort !== 'terbaru') baseParams.set('sort', sort);
-
-    res.render('direktori', {
-      items: itemsRes.rows,
-      total,
-      totalPages,
-      page,
-      sort,
-      jenisList: JENIS_LIST,
-      fakultasList,
-      jenisCounts,
-      fakultasCounts,
-      query: { q, jenis, fakultas, status },
-      // status seleksi asli dari URL (bukan hasil fallback) — dipakai supaya checkbox
-      // hanya tercentang saat pengguna benar-benar memilihnya, bukan saat filter kosong.
-      selected: { jenis: jenisSelected, fakultas: fakultasSelected, status: statusSelected },
-      hasActiveFilter: !!(q || jenisSelected || fakultasSelected || statusSelected),
-      baseQueryString: baseParams.toString()
-    });
+    res.render('direktori', await directoryData(pool, req.query));
   } catch (err) { next(err); }
 });
 

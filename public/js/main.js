@@ -81,3 +81,9 @@ async function sendConsult(message){
     body.scrollTop = body.scrollHeight;
   }
 }
+
+// Keep the overview reachable on smaller screens; filters remain available in one tap.
+const directoryFilters = document.getElementById('directoryFilters');
+if (directoryFilters && window.matchMedia('(max-width: 900px)').matches) {
+  directoryFilters.open = false;
+}
