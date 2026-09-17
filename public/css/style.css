@@ -28,7 +28,9 @@ h1,h2,h3,.serif{font-family:'Newsreader',serif;}
 a{text-decoration:none;color:inherit;}
 button{font-family:'Inter',sans-serif;cursor:pointer;border:none;}
 
-.app-shell{max-width:1180px;margin:0 auto;background:var(--paper);min-height:80vh;}
+.app-shell{width:100%;max-width:none;margin:0;background:var(--paper);min-height:100vh;}
+/* Navigation and footer are full-bleed; page content stays readable on wide screens. */
+.hero,.steps,.section,.dir-layout,.page-main,.breadcrumb,.detail-wrap{max-width:1280px;margin-left:auto;margin-right:auto;}
 
 /* top nav */
 .topnav{
