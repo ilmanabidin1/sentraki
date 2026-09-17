@@ -30,6 +30,10 @@ router.get('/direktori', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+router.get('/status-paten', async (req, res, next) => {
+  try { res.render('status-paten', await directoryData(pool, req.query)); } catch (err) { next(err); }
+});
+
 router.get('/direktori/:id', async (req, res, next) => {
   try {
     const result = await pool.query('SELECT * FROM ki_items WHERE id = $1', [req.params.id]);

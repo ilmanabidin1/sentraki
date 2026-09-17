@@ -1,0 +1,16 @@
+<section class="patent-summary" aria-labelledby="patent-summary-title">
+  <div class="patent-summary-heading"><div><div class="eyebrow">Ringkasan data paten</div><h1 id="patent-summary-title">Pantau status paten</h1>
+  <p>Rekap tahun pengajuan dan status terkini paten yang tampil di direktori.</p></div>
+  <a href="<%= filterUrl({ jenis: ['Paten'], status: [], tahun: [] }) %>">Lihat semua paten →</a></div>
+  <div class="patent-stats">
+    <% [['total', 'Total paten'], ['granted', 'Granted'], ['proses', 'Dalam proses'], ['ditolak', 'Ditolak / Ditarik']].forEach(([key, label]) => { %>
+    <a class="patent-stat patent-stat-<%= key %>" href="<%= filterUrl({ jenis: ['Paten'], status: key === 'total' ? [] : [key], tahun: [] }) %>"><span><%= label %></span><strong><%= patentTotals[key].toLocaleString('id-ID') %></strong><small>Lihat paten →</small></a>
+    <% }) %>
+  </div>
+  <details class="patent-breakdown" open><summary>Rincian status per tahun pengajuan</summary>
+    <p class="filter-help">Klik angka untuk membuka daftar paten sesuai tahun dan status.</p>
+    <div class="patent-table-wrap"><table class="patent-table"><caption>Jumlah paten berdasarkan tahun pengajuan</caption><thead><tr><th>Tahun pengajuan</th><th>Granted</th><th>Dalam proses</th><th>Ditolak / Ditarik</th><th>Total</th></tr></thead><tbody>
+      <% patentYears.forEach(row => { %><tr><th><%= row.tahun === 'unknown' ? 'Belum tersedia' : row.tahun %></th><% ['granted','proses','ditolak','total'].forEach(key => { %><td><a href="<%= filterUrl({ jenis: ['Paten'], status: key === 'total' ? [] : [key], tahun: [row.tahun] }) %>"><%= row[key].toLocaleString('id-ID') %></a></td><% }) %></tr><% }) %>
+    </tbody></table></div>
+  </details>
+</section>
