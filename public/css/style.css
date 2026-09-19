@@ -673,6 +673,54 @@ input, select, textarea {
   pointer-events: none;
 }
 
+.hero-glow-center {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 740px;
+  max-width: 92vw;
+  height: 380px;
+  background: radial-gradient(ellipse at center, rgba(37, 99, 235, 0.22) 0%, rgba(217, 119, 6, 0.1) 45%, transparent 75%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Hero Artwork Background Banner */
+.hero-artwork-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/hero-artwork-white.png');
+  background-repeat: repeat;
+  background-position: center top;
+  background-size: 512px auto;
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: 1;
+  mask-image: radial-gradient(ellipse 95% 82% at 50% 32%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0.5) 65%, transparent 95%);
+  -webkit-mask-image: radial-gradient(ellipse 95% 82% at 50% 32%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0.5) 65%, transparent 95%);
+  animation: heroArtworkDrift 90s linear infinite;
+}
+
+@keyframes heroArtworkDrift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 512px 256px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-artwork-bg {
+    animation: none;
+  }
+}
+
 .hero-container {
   max-width: 1080px;
   margin: 0 auto;
@@ -703,6 +751,8 @@ input, select, textarea {
   letter-spacing: -0.03em;
   margin-bottom: 20px;
   color: #ffffff;
+  position: relative;
+  text-shadow: 0 4px 24px rgba(7, 13, 30, 0.9), 0 0 50px rgba(11, 20, 45, 0.7);
 }
 
 .gradient-text {
@@ -717,6 +767,8 @@ input, select, textarea {
   color: #cbd5e1;
   max-width: 760px;
   margin: 0 auto 36px;
+  position: relative;
+  text-shadow: 0 2px 14px rgba(7, 13, 30, 0.9);
 }
 
 /* Hero Search Form */
@@ -4567,6 +4619,7 @@ input, select, textarea {
 
 @media (max-width: 640px) {
   .hero-section { padding: 60px 18px 48px; }
+  .hero-artwork-bg { background-size: 340px auto; opacity: 0.15; }
   .hero-title { font-size: 32px; }
   .hero-desc { font-size: 15px; }
   .hero-stats-grid { grid-template-columns: 1fr; }
