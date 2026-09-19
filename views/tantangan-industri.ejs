@@ -1,61 +1,165 @@
 <%- include('partials/head', { title: 'Tantangan Industri' }) %>
 <%- include('partials/nav', { active: 'tantangan' }) %>
 
-<div class="dir-layout">
-  <form class="filter-box" method="GET" action="/tantangan-industri" id="filterForm">
-    <input class="search-box" type="text" name="q" value="<%= query.q || '' %>" placeholder="Cari kata kunci masalah...">
-    <div class="filter-group">
-      <h4>Bidang</h4>
-      <% bidangList.forEach(b => { %>
-        <label class="filter-opt">
-          <input type="checkbox" name="bidang" value="<%= b %>" onchange="document.getElementById('filterForm').submit()" <%= (query.bidang || bidangList).includes(b) ? 'checked' : '' %>>
-          <%= b %>
-        </label>
-      <% }) %>
-    </div>
-    <div class="filter-group">
-      <h4>Status</h4>
-      <label class="filter-opt"><input type="checkbox" name="status" value="terbuka" onchange="document.getElementById('filterForm').submit()" <%= (query.status || ['terbuka','segera']).includes('terbuka') ? 'checked' : '' %>> Terbuka</label>
-      <label class="filter-opt"><input type="checkbox" name="status" value="segera" onchange="document.getElementById('filterForm').submit()" <%= (query.status || ['terbuka','segera']).includes('segera') ? 'checked' : '' %>> Segera Ditutup</label>
-    </div>
-  </form>
-  <div>
-    <div class="dir-results-head">
-      <p>Menampilkan <b><%= items.length %></b> tantangan industri</p>
-      <select class="sort-select" onchange="window.location.href=this.value">
-        <option value="?<%= qs %>&sort=deadline" <%= sort === 'deadline' ? 'selected' : '' %>>Urutkan: Batas Waktu Terdekat</option>
-        <option value="?<%= qs %>&sort=terbaru" <%= sort === 'terbaru' ? 'selected' : '' %>>Terbaru Diposting</option>
-      </select>
-    </div>
-    <div class="dir-grid">
-      <% if (items.length === 0 && totalAll === 0) { %>
-        <div class="empty-note empty-note-block">
-          <h4>Belum ada tantangan industri yang terdaftar</h4>
-          <p>Saat ini belum ada industri yang memasang kebutuhan riset. Jika perusahaan Anda punya tantangan yang ingin dicarikan solusi dari civitas akademik UNISBA, silakan pasang kebutuhan lewat tombol di bawah.</p>
-        </div>
-      <% } else if (items.length === 0) { %>
-        <p class="empty-note">Tidak ada tantangan yang cocok dengan filter ini.</p>
-      <% } %>
-      <% items.forEach(c => { %>
-        <a class="ki-card" href="/tantangan-industri/<%= c.kode %>">
-          <div class="company-row">
-            <div class="company-logo"><%= c.perusahaan.split(' ')[0].slice(0,2).toUpperCase() %></div>
-            <div class="company-name"><%= c.perusahaan %></div>
-          </div>
-          <div class="ki-top">
-            <span class="badge badge-jenis"><%= c.bidang %></span>
-            <span class="badge <%= c.status === 'terbuka' ? 'badge-granted' : 'badge-proses' %>"><%= c.status === 'terbuka' ? 'Terbuka' : 'Segera Ditutup' %></span>
-          </div>
-          <h3><%= c.judul %></h3>
-          <div class="deadline-row"><span>Batas pengajuan solusi</span><span class="dl-date"><%= c.deadline_fmt %></span></div>
+<main class="page-container">
+  <header class="page-header">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Beranda</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">Tantangan Kebutuhan Industri</span>
+    </nav>
+    <div class="page-header-row">
+      <div>
+        <h1 class="page-title">Tantangan Kebutuhan Industri</h1>
+        <p class="page-desc">Program Link &amp; Match: Industri mempublikasikan permasalahan riil yang membutuhkan solusi riset dari para peneliti dan laboratorium UNISBA.</p>
+      </div>
+      <div class="page-header-action">
+        <a href="/pasang-kebutuhan" class="btn-primary-glow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Pasang Kebutuhan Baru</span>
         </a>
-      <% }) %>
+      </div>
     </div>
-    <div class="post-cta">
-      <div><h4>Punya masalah yang butuh solusi riset?</h4><p>Industri terverifikasi dapat memasang kebutuhan langsung ke civitas akademik UNISBA.</p></div>
-      <a class="btn-gold" href="/pasang-kebutuhan">Pasang Kebutuhan</a>
-    </div>
+  </header>
+
+  <div class="dir-layout">
+    <!-- FILTER ASIDE -->
+    <aside class="filter-sidebar">
+      <details class="filter-disclosure" open>
+        <summary class="filter-disclosure-summary">
+          <div class="summary-left">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            <span>Filter Kebutuhan</span>
+          </div>
+          <span class="disclosure-chevron">▾</span>
+        </summary>
+
+        <form class="filter-box" method="GET" action="/tantangan-industri" id="filterForm">
+          <div class="filter-group">
+            <label class="filter-heading" for="challenge-search">Cari Masalah / Perusahaan</label>
+            <div class="filter-search-wrap">
+              <input id="challenge-search" class="filter-search-input" type="text" name="q" value="<%= query.q || '' %>" placeholder="Kata kunci masalah...">
+            </div>
+            <button class="btn-filter-apply" type="submit">Cari</button>
+          </div>
+
+          <div class="filter-group">
+            <h4 class="filter-heading">Bidang Fokus</h4>
+            <div class="filter-options-list">
+              <% bidangList.forEach(b => { %>
+                <label class="filter-checkbox-item">
+                  <input type="checkbox" name="bidang" value="<%= b %>" onchange="this.form.submit()" <%= (query.bidang || bidangList).includes(b) ? 'checked' : '' %>>
+                  <span class="custom-check"></span>
+                  <span class="filter-item-name"><%= b %></span>
+                </label>
+              <% }) %>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h4 class="filter-heading">Status Pengajuan</h4>
+            <div class="filter-options-list">
+              <label class="filter-checkbox-item">
+                <input type="checkbox" name="status" value="terbuka" onchange="this.form.submit()" <%= (query.status || ['terbuka','segera']).includes('terbuka') ? 'checked' : '' %>>
+                <span class="custom-check"></span>
+                <span class="filter-item-name">Terbuka</span>
+              </label>
+              <label class="filter-checkbox-item">
+                <input type="checkbox" name="status" value="segera" onchange="this.form.submit()" <%= (query.status || ['terbuka','segera']).includes('segera') ? 'checked' : '' %>>
+                <span class="custom-check"></span>
+                <span class="filter-item-name">Segera Ditutup</span>
+              </label>
+            </div>
+          </div>
+        </form>
+      </details>
+    </aside>
+
+    <!-- CONTENT MAIN -->
+    <section class="dir-content">
+      <div class="dir-controls-bar">
+        <div class="results-count-text">
+          Menampilkan <strong><%= items.length %></strong> Tantangan Industri
+        </div>
+        <div class="sort-select-wrap">
+          <select class="sort-select" onchange="window.location.href=this.value" aria-label="Urutan tantangan">
+            <option value="?<%= qs %>&sort=deadline" <%= sort === 'deadline' ? 'selected' : '' %>>Batas Waktu Terdekat</option>
+            <option value="?<%= qs %>&sort=terbaru" <%= sort === 'terbaru' ? 'selected' : '' %>>Terbaru Diposting</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="dir-grid">
+        <% if (items.length === 0 && totalAll === 0) { %>
+          <div class="empty-state-card">
+            <div class="empty-state-icon">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+            <h3 class="empty-state-title">Belum Ada Tantangan Industri Aktif</h3>
+            <p class="empty-state-desc">Saat ini belum ada industri yang memasang kebutuhan riset terbuka. Jika perusahaan Anda memiliki permasalahan teknis atau pasar yang ingin dipecahkan civitas UNISBA, silakan pasang kebutuhan Anda.</p>
+            <a href="/pasang-kebutuhan" class="btn-primary-glow" style="margin-top:16px;">
+              <span>Pasang Kebutuhan Industri</span>
+            </a>
+          </div>
+        <% } else if (items.length === 0) { %>
+          <div class="empty-state-card">
+            <div class="empty-state-icon">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            </div>
+            <h3 class="empty-state-title">Tidak Ada Tantangan yang Sesuai Filter</h3>
+            <p class="empty-state-desc">Silakan ubah filter atau kata kunci pencarian Anda untuk melihat kebutuhan industri lainnya.</p>
+          </div>
+        <% } %>
+
+        <% items.forEach(c => { %>
+          <article class="challenge-modern-card">
+            <div class="challenge-header">
+              <div class="company-brand">
+                <div class="company-avatar-box">
+                  <%= c.perusahaan.split(' ')[0].slice(0,2).toUpperCase() %>
+                </div>
+                <div class="company-meta">
+                  <div class="company-name"><%= c.perusahaan %></div>
+                  <div class="company-field-tag"><%= c.bidang %></div>
+                </div>
+              </div>
+              <span class="badge-status-pill <%= c.status === 'terbuka' ? 'badge-granted' : 'badge-proses' %>">
+                <span class="status-dot"></span>
+                <span><%= c.status === 'terbuka' ? 'Terbuka' : 'Segera Ditutup' %></span>
+              </span>
+            </div>
+
+            <h3 class="challenge-title">
+              <a href="/tantangan-industri/<%= c.kode %>"><%= c.judul %></a>
+            </h3>
+
+            <div class="challenge-meta-footer">
+              <div class="deadline-info">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>Batas: <strong><%= c.deadline_fmt %></strong></span>
+              </div>
+              <a href="/tantangan-industri/<%= c.kode %>" class="btn-challenge-action">
+                <span>Rincian &amp; Ajukan Solusi &rarr;</span>
+              </a>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+
+      <!-- POST CHALLENGE BANNER -->
+      <div class="post-cta-banner">
+        <div class="post-cta-info">
+          <div class="badge-pill-gold">Mitra Industri UNISBA</div>
+          <h3 class="post-cta-title">Punya Masalah Produksi, Bahan Baku, atau Regulasi?</h3>
+          <p class="post-cta-desc">Dapatkan akses ke lebih dari 500 pakar, doktor, dan laboratorium riset terakreditasi di UNISBA. Pasang tantangan Anda secara gratis.</p>
+        </div>
+        <a class="btn-gold-action" href="/pasang-kebutuhan">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Pasang Kebutuhan Industri</span>
+        </a>
+      </div>
+    </section>
   </div>
-</div>
+</main>
 
 <%- include('partials/footer') %>

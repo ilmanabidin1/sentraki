@@ -1,31 +1,52 @@
 <%- include('partials/head', { title: 'Login Admin' }) %>
-<div class="topnav">
-  <div class="brand">
-    <svg class="brand-seal" viewBox="0 0 60 60" fill="none">
-      <circle cx="30" cy="30" r="27" stroke="#B8935B" stroke-width="1.4"/>
-      <circle cx="30" cy="30" r="21" stroke="#B8935B" stroke-width="1"/>
-      <path d="M30 12 L33 22 L44 22 L35 28 L38 39 L30 32 L22 39 L25 28 L16 22 L27 22 Z" fill="#B8935B" opacity="0.9"/>
-    </svg>
-    <div class="brand-text">
-      <div class="t1">P2KI · UNISBA</div>
-      <div class="t2">Pusat Pengembangan &amp; Pelayanan KI</div>
+
+<div class="auth-page-container">
+  <div class="auth-card">
+    <div class="auth-brand-center">
+      <img src="/images-lambang-unisba.png" alt="UNISBA" width="48" height="48" class="auth-logo">
+      <h1 class="auth-title">SENTRA KI UNISBA</h1>
+      <p class="auth-subtitle">Portal Manajemen Internal &amp; Kurasi LPPM</p>
+    </div>
+
+    <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
+      <div class="alert-box alert-danger" style="margin-bottom: 20px;">
+        <svg class="alert-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div><%= errorMsg %></div>
+      </div>
+    <% } %>
+
+    <form class="auth-form" method="POST" action="/admin/login">
+      <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+
+      <div class="form-group">
+        <label class="form-label" for="adminUsername">Username Administrator</label>
+        <div class="auth-input-wrap">
+          <svg class="auth-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <input type="text" class="form-input with-icon" name="username" id="adminUsername" placeholder="Ketik username admin" required autofocus>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="adminPassword">Kata Sandi</label>
+        <div class="auth-input-wrap">
+          <svg class="auth-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input type="password" class="form-input with-icon" name="password" id="adminPassword" placeholder="••••••••" required>
+        </div>
+      </div>
+
+      <button class="btn-primary-glow btn-block" type="submit" style="margin-top: 12px;">
+        <span>Masuk ke Dasbor Internal</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </form>
+
+    <div class="auth-footer-links">
+      <a href="/" class="auth-back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        <span>Kembali ke Beranda Publik</span>
+      </a>
     </div>
   </div>
-  <div class="nav-right"><a class="admin-link" href="/">Kembali ke Situs</a></div>
-</div>
-
-<div class="login-shell">
-  <h2>Login Admin P2KI</h2>
-  <p>Dasbor internal — tidak untuk publik.</p>
-  <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
-    <div class="error-box"><%= errorMsg %></div>
-  <% } %>
-  <form class="form-card" style="padding:0;border:none;" method="POST" action="/admin/login">
-    <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
-    <div class="form-row"><label>Username</label><input type="text" name="username" required></div>
-    <div class="form-row"><label>Password</label><input type="password" name="password" required></div>
-    <button class="btn-primary" type="submit" style="width:100%;text-align:center;">Masuk</button>
-  </form>
 </div>
 
 <%- include('partials/footer') %>

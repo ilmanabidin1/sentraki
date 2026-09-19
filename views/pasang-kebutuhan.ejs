@@ -1,43 +1,118 @@
-<%- include('partials/head', { title: 'Pasang Kebutuhan' }) %>
+<%- include('partials/head', { title: 'Pasang Kebutuhan Industri' }) %>
 <%- include('partials/nav', { active: 'tantangan' }) %>
 
-<div class="section section-narrow">
-  <div class="eyebrow">Untuk Industri &amp; Investor</div>
-  <h2 class="serif" style="font-size:24px;color:var(--navy);margin:0 0 8px;font-weight:500;">Pasang Kebutuhan Riset</h2>
-  <p style="color:var(--slate);font-size:13.5px;margin:0 0 26px;">Kebutuhan akan diverifikasi P2KI sebelum tayang ke civitas akademik.</p>
+<main class="page-container section-narrow">
+  <header class="page-header-center">
+    <div class="badge-pill-emerald">Kemitraan Industri &amp; Korporasi</div>
+    <h1 class="page-title">Pasang Kebutuhan Riset Industri</h1>
+    <p class="page-desc">Tuliskan kendala teknis atau kebutuhan inovasi produk industri Anda. P2KI UNISBA akan mempublikasikannya kepada akademisi dan laboratorium yang tepat.</p>
+  </header>
 
   <% if (typeof success !== 'undefined' && success) { %>
-    <div class="success-box">✓ Kebutuhan Anda telah diterima dan akan ditinjau tim P2KI dalam 2–3 hari kerja.</div>
-  <% } %>
-
-  <form class="form-card" method="POST" action="/pasang-kebutuhan">
-    <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
-    <div class="form-row"><label>Nama Perusahaan</label><input type="text" name="perusahaan" placeholder="PT / CV / Koperasi..." required></div>
-    <div class="form-row"><label>Kontak Person &amp; Email</label><input type="text" name="kontak" placeholder="Nama - email@perusahaan.com"></div>
-    <div class="form-row"><label>Judul Kebutuhan</label><input type="text" name="judul" placeholder="Contoh: Solusi Pengawetan Alami untuk Produk UMKM" required></div>
-    <div class="form-row">
-      <label>Bidang</label>
-      <select name="bidang">
-        <option>Teknologi & Manufaktur</option>
-        <option>Kesehatan & Farmasi</option>
-        <option>Ekonomi Syariah</option>
-        <option>Pertanian & Lingkungan</option>
-      </select>
-    </div>
-    <div class="form-row"><label>Deskripsi Masalah</label><textarea name="deskripsi" placeholder="Jelaskan masalah industri yang membutuhkan solusi riset..." required></textarea></div>
-    <div class="form-row"><label>Kebutuhan Spesifik (satu per baris)</label><textarea name="kebutuhan_spesifik" placeholder="- Bahan bersumber lokal&#10;- Skalabel untuk produksi UMKM"></textarea></div>
-    <div class="form-row"><label>Batas Waktu Pengajuan Solusi</label><input type="date" name="deadline"></div>
-    <div class="form-row">
-      <label>Skema Kerja Sama yang Ditawarkan</label>
-      <div class="radio-grid">
-        <label class="radio-opt"><input type="radio" name="skema" value="Lisensi Hasil Riset" checked> Lisensi Hasil Riset</label>
-        <label class="radio-opt"><input type="radio" name="skema" value="Pendanaan Riset Bersama"> Pendanaan Riset Bersama</label>
-        <label class="radio-opt"><input type="radio" name="skema" value="Konsultasi Berbayar"> Konsultasi Berbayar</label>
-        <label class="radio-opt"><input type="radio" name="skema" value="Akuisisi KI"> Akuisisi KI</label>
+    <div class="alert-box alert-success">
+      <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <div>
+        <strong>Kebutuhan Industri Berhasil Didaftarkan!</strong>
+        <p>Kebutuhan Anda telah masuk ke sistem dan akan ditinjau oleh staf kurasi LPPM dalam 2–3 hari kerja sebelum dipublikasikan di kanal Tantangan Industri.</p>
       </div>
     </div>
-    <button class="btn-primary" type="submit">Kirim untuk Ditinjau P2KI</button>
+  <% } %>
+
+  <form class="modern-form-card" method="POST" action="/pasang-kebutuhan">
+    <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+
+    <div class="form-grid-2">
+      <div class="form-group">
+        <label class="form-label" for="cPerusahaan">Nama Perusahaan / Institusi <span class="required-mark">*</span></label>
+        <input type="text" class="form-input" name="perusahaan" id="cPerusahaan" placeholder="PT / CV / BUMN / Koperasi" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="cKontak">Kontak Person &amp; Email Resmi <span class="required-mark">*</span></label>
+        <input type="text" class="form-input" name="kontak" id="cKontak" placeholder="Nama - email@perusahaan.com" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="cJudul">Judul Kebutuhan / Masalah Utama <span class="required-mark">*</span></label>
+      <input type="text" class="form-input" name="judul" id="cJudul" placeholder="Contoh: Pengawetan Alami Daging Olahan Bebas Nitrit untuk Skala Komersial" required>
+    </div>
+
+    <div class="form-grid-2">
+      <div class="form-group">
+        <label class="form-label" for="cBidang">Bidang Sektor Industri <span class="required-mark">*</span></label>
+        <div class="select-wrap">
+          <select class="form-select" name="bidang" id="cBidang" required>
+            <option>Teknologi &amp; Manufaktur</option>
+            <option>Kesehatan &amp; Farmasi</option>
+            <option>Ekonomi Syariah &amp; Keuangan</option>
+            <option>Pertanian, Pangan &amp; Lingkungan</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="cDeadline">Batas Waktu Pengajuan Solusi</label>
+        <input type="date" class="form-input" name="deadline" id="cDeadline">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="cDeskripsi">Deskripsi Masalah / Latar Belakang <span class="required-mark">*</span></label>
+      <textarea class="form-textarea" name="deskripsi" id="cDeskripsi" rows="4" placeholder="Jelaskan kondisi saat ini, kendala teknis atau regulasi yang dihadapi, serta urgensi penyelesaiannya..." required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="cSpesifik">Kebutuhan Spesifik / Batasan Teknis</label>
+      <textarea class="form-textarea" name="kebutuhan_spesifik" id="cSpesifik" rows="3" placeholder="- Bahan bersumber lokal Indonesia&#10;- Biaya produksi efisien&#10;- Siap uji coba skala lab dalam 6 bulan"></textarea>
+      <span class="form-helper">Gunakan tanda strip (-) di setiap baris untuk kriteria terpisah.</span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Skema Kerja Sama yang Ditawarkan <span class="required-mark">*</span></label>
+      <div class="radio-card-grid">
+        <label class="radio-card-item">
+          <input type="radio" name="skema" value="Lisensi Hasil Riset" checked>
+          <div class="radio-card-content">
+            <span class="radio-card-title">Lisensi Komersial</span>
+            <span class="radio-card-desc">Royalti atas hasil inovasi</span>
+          </div>
+        </label>
+
+        <label class="radio-card-item">
+          <input type="radio" name="skema" value="Pendanaan Riset Bersama">
+          <div class="radio-card-content">
+            <span class="radio-card-title">Matching Fund / Joint R&amp;D</span>
+            <span class="radio-card-desc">Pembiayaan riset kolaboratif</span>
+          </div>
+        </label>
+
+        <label class="radio-card-item">
+          <input type="radio" name="skema" value="Konsultasi Berbayar">
+          <div class="radio-card-content">
+            <span class="radio-card-title">Konsultasi Pakar</span>
+            <span class="radio-card-desc">Pendampingan teknis laboratorium</span>
+          </div>
+        </label>
+
+        <label class="radio-card-item">
+          <input type="radio" name="skema" value="Akuisisi KI">
+          <div class="radio-card-content">
+            <span class="radio-card-title">Akuisisi Penuh</span>
+            <span class="radio-card-desc">Pengalihan hak paten secara eksklusif</span>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-footer-action">
+      <button class="btn-primary-glow btn-block" type="submit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span>Kirim Kebutuhan untuk Ditinjau P2KI</span>
+      </button>
+      <p class="form-disclaimer">Informasi kebutuhan akan divalidasi oleh LPPM UNISBA sebelum dipublikasikan ke civitas akademik.</p>
+    </div>
   </form>
-</div>
+</main>
 
 <%- include('partials/footer') %>

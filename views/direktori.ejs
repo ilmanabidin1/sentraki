@@ -1,126 +1,287 @@
 <%- include('partials/head', { title: 'Direktori KI' }) %>
 <%- include('partials/nav', { active: 'direktori' }) %>
 
-<div class="dir-layout">
-  <details class="filter-disclosure" id="directoryFilters" open>
-    <summary>Filter direktori<%= hasActiveFilter ? ' · aktif' : '' %></summary>
-  <form class="filter-box" method="GET" action="/direktori" id="filterForm">
-    <input type="hidden" name="sort" value="<%= sort %>">
-    <label for="directory-search">Cari kekayaan intelektual</label>
-    <input id="directory-search" class="search-box" type="text" name="q" value="<%= query.q || '' %>" placeholder="Judul, inventor, nomor permohonan...">
-
-    <button class="btn-secondary" type="submit">Cari / Terapkan filter</button>
-    <p class="filter-help">Angka pilihan mengikuti filter lain yang aktif. Pilih beberapa opsi untuk menggabungkan hasil.</p>
-    <div class="filter-group">
-      <h4>Jenis KI</h4>
-      <% jenisList.forEach(j => { %>
-        <label class="filter-opt">
-          <span class="filter-opt-label">
-            <input type="checkbox" name="jenis" value="<%= j %>" onchange="document.getElementById('filterForm').submit()" <%= selected.jenis && selected.jenis.includes(j) ? 'checked' : '' %>>
-            <%= j %>
-          </span>
-          <span class="filter-opt-count"><%= (jenisCounts[j] || 0).toLocaleString('id-ID') %></span>
-        </label>
-      <% }) %>
-    </div>
-
-    <div class="filter-group">
-      <h4>Fakultas</h4>
-      <% fakultasList.forEach(f => { %>
-        <label class="filter-opt">
-          <span class="filter-opt-label">
-            <input type="checkbox" name="fakultas" value="<%= f %>" onchange="document.getElementById('filterForm').submit()" <%= selected.fakultas && selected.fakultas.includes(f) ? 'checked' : '' %>>
-            <%= f %>
-          </span>
-          <span class="filter-opt-count"><%= (fakultasCounts[f] || 0).toLocaleString('id-ID') %></span>
-        </label>
-      <% }) %>
-    </div>
-
-    <div class="filter-group">
-      <h4>Status permohonan</h4>
-      <% Object.entries(statusLabels).forEach(([value, label]) => { %>
-        <label class="filter-opt">
-          <span class="filter-opt-label"><input type="checkbox" name="status" value="<%= value %>" onchange="this.form.submit()" <%= selected.status.includes(value) ? 'checked' : '' %>><%= label %></span>
-          <span class="filter-opt-count"><%= (statusCounts[value] || 0).toLocaleString('id-ID') %></span>
-        </label>
-      <% }) %>
-    </div>
-    <div class="filter-group">
-      <h4>Tahun</h4>
-      <p class="filter-help">Paten: tahun pengajuan. KI lain: tahun sesuai rekap sumber.</p>
-      <div class="filter-year-list">
-      <% tahunList.forEach(value => { %>
-        <label class="filter-opt">
-          <span class="filter-opt-label"><input type="checkbox" name="tahun" value="<%= value %>" onchange="this.form.submit()" <%= selected.tahun.includes(value) ? 'checked' : '' %>><%= value === 'unknown' ? 'Belum tersedia' : value %></span>
-          <span class="filter-opt-count"><%= (tahunCounts[value] || 0).toLocaleString('id-ID') %></span>
-        </label>
-      <% }) %>
+<main class="page-container">
+  <!-- DIRECTORY HEADER -->
+  <header class="page-header">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Beranda</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">Direktori Inovasi KI</span>
+    </nav>
+    <div class="page-header-row">
+      <div>
+        <h1 class="page-title">Direktori Kekayaan Intelektual</h1>
+        <p class="page-desc">Katalog terpadu invensi, karya cipta, merek, dan desain industri civitas akademika UNISBA yang tersinkronisasi resmi dari data LPPM dan DJKI.</p>
+      </div>
+      <div class="page-header-action">
+        <a href="/status-paten" class="btn-patent-insight">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span>Pantau status paten &rarr;</span>
+        </a>
       </div>
     </div>
 
-    <% if (hasActiveFilter) { %>
-      <a class="filter-reset" href="/direktori">Reset semua filter</a>
-    <% } %>
-    <noscript><button class="btn-secondary" type="submit">Terapkan Filter</button></noscript>
-  </form>
-  </details>
-
-  <div class="dir-content">
-    <section class="directory-callout"><div><div class="eyebrow">Insight portofolio</div><h2>Butuh ringkasan status paten?</h2><p>Lihat jumlah granted, dalam proses, dan rincian per tahun di satu halaman khusus.</p></div><a class="btn-primary" href="/status-paten">Pantau status paten →</a></section>
-    <% if (activeFilters.length) { %><nav class="filter-chips" aria-label="Filter aktif">
-      <% activeFilters.forEach(filter => { %><a href="<%= filter.url %>" aria-label="Hapus filter <%= filter.label %>"><%= filter.label %> ×</a><% }) %>
-    </nav><% } %>
-    <div class="dir-results-head">
-      <p>Menampilkan <b><%= items.length %></b> dari <%= total.toLocaleString('id-ID') %> KI tercatat (halaman <%= page %> dari <%= totalPages %>)</p>
-      <form method="GET" action="/direktori" id="sortForm">
-        <input type="hidden" name="q" value="<%= query.q || '' %>">
-        <% (selected.jenis || []).forEach(j => { %><input type="hidden" name="jenis" value="<%= j %>"><% }) %>
-        <% (selected.fakultas || []).forEach(f => { %><input type="hidden" name="fakultas" value="<%= f %>"><% }) %>
-        <% (selected.status || []).forEach(s => { %><input type="hidden" name="status" value="<%= s %>"><% }) %>
-        <% selected.tahun.forEach(t => { %><input type="hidden" name="tahun" value="<%= t %>"><% }) %>
-        <select aria-label="Urutan hasil" class="sort-select" name="sort" onchange="document.getElementById('sortForm').submit()">
-          <option value="terbaru" <%= sort === 'terbaru' ? 'selected' : '' %>>Tahun terbaru</option>
-          <option value="terlama" <%= sort === 'terlama' ? 'selected' : '' %>>Tahun terlama</option>
-          <option value="az" <%= sort === 'az' ? 'selected' : '' %>>Abjad A-Z</option>
-          <option value="za" <%= sort === 'za' ? 'selected' : '' %>>Abjad Z-A</option>
-        </select>
-        <noscript><button type="submit" class="btn-secondary">Urutkan</button></noscript>
-      </form>
-    </div>
-
-    <div class="dir-grid">
-      <% if (items.length === 0) { %>
-        <p class="empty-note">Tidak ada KI yang cocok dengan filter ini. <a href="/direktori">Reset filter</a> untuk melihat seluruh KI.</p>
-      <% } %>
-      <% items.forEach(item => { %>
-        <a class="ki-card" href="/direktori/<%= item.id %>">
-          <div class="ki-top">
-            <span class="badge badge-jenis"><%= item.jenis %></span>
-            <span class="badge badge-<%= item.status %>"><%= item.status === 'granted' ? (item.jenis === 'Hak Cipta' ? 'Tercatat' : 'Granted') : (item.status === 'ditolak' ? 'Ditolak / Ditarik' : 'Dalam Proses') %></span>
-          </div>
-          <h3><%= item.judul %></h3>
-          <div class="ki-meta">
-            <div class="ki-meta-row"><%= item.inventor %></div>
-            <div class="ki-meta-row"><%= item.jenis === 'Paten' ? 'Tahun pengajuan' : 'Tahun' %>: <%= item.tahun || 'Belum tersedia' %></div>
-            <% if (item.status_raw) { %><div class="ki-meta-row">Status: <%= item.status_raw %></div><% } %>
-            <% if (item.no_permohonan) { %><div class="ki-meta-row">No. permohonan: <%= item.no_permohonan %></div><% } %>
-            <div class="ki-meta-row ki-meta-fakultas"><%= item.fakultas %></div>
-          </div>
+    <!-- QUICK CATEGORY TABS -->
+    <div class="quick-category-tabs" role="tablist" aria-label="Filter Cepat Kategori">
+      <% 
+        const isAllSelected = !selected.jenis || selected.jenis.length === 0 || selected.jenis.length === jenisList.length;
+      %>
+      <a href="<%= filterUrl({ jenis: [] }) %>" class="category-tab <%= isAllSelected ? 'active' : '' %>">
+        <span class="tab-label">Semua Kategori</span>
+        <span class="tab-count"><%= total.toLocaleString('id-ID') %></span>
+      </a>
+      <% jenisList.forEach(j => { 
+        const isSelected = selected.jenis && selected.jenis.includes(j) && selected.jenis.length === 1;
+      %>
+        <a href="<%= filterUrl({ jenis: [j] }) %>" class="category-tab <%= isSelected ? 'active' : '' %>">
+          <span class="tab-label"><%= j %></span>
+          <span class="tab-count"><%= (jenisCounts[j] || 0).toLocaleString('id-ID') %></span>
         </a>
       <% }) %>
     </div>
+  </header>
 
-    <% if (totalPages > 1) { %>
-      <div style="display:flex;gap:8px;margin-top:24px;justify-content:center;flex-wrap:wrap;">
-        <% for (let p = 1; p <= totalPages; p++) { %>
-          <a class="btn-secondary" style="padding:8px 14px;font-size:12px;<%= p === page ? 'background:var(--navy);color:var(--paper);' : '' %>"
-             aria-label="Halaman <%= p %>" <%- p === page ? 'aria-current="page"' : '' %> href="/direktori?<%= baseQueryString %>&page=<%= p %>"><%= p %></a>
-        <% } %>
+  <!-- DIRECTORY CONTENT LAYOUT -->
+  <div class="dir-layout">
+    <!-- FILTER SIDEBAR -->
+    <aside class="filter-sidebar">
+      <details class="filter-disclosure" id="directoryFilters" open>
+        <summary class="filter-disclosure-summary">
+          <div class="summary-left">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            <span>Filter Pencarian</span>
+          </div>
+          <% if (hasActiveFilter) { %>
+            <span class="filter-active-indicator">Aktif</span>
+          <% } %>
+          <span class="disclosure-chevron">▾</span>
+        </summary>
+
+        <form class="filter-box" method="GET" action="/direktori" id="filterForm">
+          <input type="hidden" name="sort" value="<%= sort %>">
+          
+          <div class="filter-group">
+            <label class="filter-heading" for="directory-search">Kata Kunci</label>
+            <div class="filter-search-wrap">
+              <input id="directory-search" class="filter-search-input" type="text" name="q" value="<%= query.q || '' %>" placeholder="Judul, inventor, nomor..." aria-label="Cari inovasi">
+              <% if (query.q) { %>
+                <button type="button" class="filter-search-clear" onclick="document.getElementById('directory-search').value=''; document.getElementById('filterForm').submit();" aria-label="Hapus kata kunci">×</button>
+              <% } %>
+            </div>
+            <button class="btn-filter-apply" type="submit">Cari Inovasi</button>
+          </div>
+
+          <!-- Jenis KI -->
+          <div class="filter-group">
+            <h4 class="filter-heading">Jenis KI</h4>
+            <div class="filter-options-list">
+              <% jenisList.forEach(j => { %>
+                <label class="filter-checkbox-item">
+                  <input type="checkbox" name="jenis" value="<%= j %>" onchange="this.form.submit()" <%= selected.jenis && selected.jenis.includes(j) ? 'checked' : '' %>>
+                  <span class="custom-check"></span>
+                  <span class="filter-item-name"><%= j %></span>
+                  <span class="filter-item-badge"><%= (jenisCounts[j] || 0).toLocaleString('id-ID') %></span>
+                </label>
+              <% }) %>
+            </div>
+          </div>
+
+          <!-- Fakultas -->
+          <div class="filter-group">
+            <h4 class="filter-heading">Fakultas / Unit Riset</h4>
+            <div class="filter-options-list filter-scrollable">
+              <% fakultasList.forEach(f => { %>
+                <label class="filter-checkbox-item">
+                  <input type="checkbox" name="fakultas" value="<%= f %>" onchange="this.form.submit()" <%= selected.fakultas && selected.fakultas.includes(f) ? 'checked' : '' %>>
+                  <span class="custom-check"></span>
+                  <span class="filter-item-name"><%= f %></span>
+                  <span class="filter-item-badge"><%= (fakultasCounts[f] || 0).toLocaleString('id-ID') %></span>
+                </label>
+              <% }) %>
+            </div>
+          </div>
+
+          <!-- Status Permohonan -->
+          <div class="filter-group">
+            <h4 class="filter-heading">Status Resmi DJKI</h4>
+            <div class="filter-options-list">
+              <% Object.entries(statusLabels).forEach(([value, label]) => { %>
+                <label class="filter-checkbox-item">
+                  <input type="checkbox" name="status" value="<%= value %>" onchange="this.form.submit()" <%= selected.status.includes(value) ? 'checked' : '' %>>
+                  <span class="custom-check"></span>
+                  <span class="filter-item-name">
+                    <span class="status-indicator-dot <%= value %>"></span>
+                    <%= label %>
+                  </span>
+                  <span class="filter-item-badge"><%= (statusCounts[value] || 0).toLocaleString('id-ID') %></span>
+                </label>
+              <% }) %>
+            </div>
+          </div>
+
+          <!-- Tahun -->
+          <div class="filter-group">
+            <h4 class="filter-heading">Tahun Pencatatan / Pengajuan</h4>
+            <div class="filter-options-list filter-scrollable">
+              <% tahunList.forEach(value => { %>
+                <label class="filter-checkbox-item">
+                  <input type="checkbox" name="tahun" value="<%= value %>" onchange="this.form.submit()" <%= selected.tahun.includes(value) ? 'checked' : '' %>>
+                  <span class="custom-check"></span>
+                  <span class="filter-item-name"><%= value === 'unknown' ? 'Belum tersedia' : value %></span>
+                  <span class="filter-item-badge"><%= (tahunCounts[value] || 0).toLocaleString('id-ID') %></span>
+                </label>
+              <% }) %>
+            </div>
+          </div>
+
+          <% if (hasActiveFilter) { %>
+            <div class="filter-reset-wrap">
+              <a class="btn-reset-filters" href="/direktori">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                <span>Reset Semua Filter</span>
+              </a>
+            </div>
+          <% } %>
+        </form>
+      </details>
+    </aside>
+
+    <!-- RESULTS SECTION -->
+    <section class="dir-content">
+      <!-- Active Chips -->
+      <% if (activeFilters.length) { %>
+        <div class="active-chips-bar" aria-label="Filter yang sedang aktif">
+          <span class="chips-label">Filter Aktif:</span>
+          <% activeFilters.forEach(filter => { %>
+            <a href="<%= filter.url %>" class="filter-chip-item" aria-label="Hapus filter <%= filter.label %>">
+              <span><%= filter.label %></span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </a>
+          <% }) %>
+          <a href="/direktori" class="filter-chip-clear-all">Hapus Semua</a>
+        </div>
+      <% } %>
+
+      <!-- Controls Row -->
+      <div class="dir-controls-bar">
+        <div class="results-count-text">
+          Menampilkan <strong><%= items.length %></strong> dari <strong><%= total.toLocaleString('id-ID') %></strong> Inovasi (Halaman <%= page %> dari <%= totalPages %>)
+        </div>
+
+        <form method="GET" action="/direktori" id="sortForm" class="sort-form">
+          <input type="hidden" name="q" value="<%= query.q || '' %>">
+          <% (selected.jenis || []).forEach(j => { %><input type="hidden" name="jenis" value="<%= j %>"><% }) %>
+          <% (selected.fakultas || []).forEach(f => { %><input type="hidden" name="fakultas" value="<%= f %>"><% }) %>
+          <% (selected.status || []).forEach(s => { %><input type="hidden" name="status" value="<%= s %>"><% }) %>
+          <% selected.tahun.forEach(t => { %><input type="hidden" name="tahun" value="<%= t %>"><% }) %>
+
+          <label for="sortSelect" class="sort-label">Urutan:</label>
+          <div class="sort-select-wrap">
+            <select id="sortSelect" class="sort-select" name="sort" onchange="document.getElementById('sortForm').submit()">
+              <option value="terbaru" <%= sort === 'terbaru' ? 'selected' : '' %>>Tahun Terbaru</option>
+              <option value="terlama" <%= sort === 'terlama' ? 'selected' : '' %>>Tahun Terlama</option>
+              <option value="az" <%= sort === 'az' ? 'selected' : '' %>>Abjad A &rarr; Z</option>
+              <option value="za" <%= sort === 'za' ? 'selected' : '' %>>Abjad Z &rarr; A</option>
+            </select>
+          </div>
+        </form>
       </div>
-    <% } %>
-  </div>
-</div>
 
-<script src="/js/main.js" defer></script>
+      <!-- CARDS GRID -->
+      <div class="dir-grid">
+        <% if (items.length === 0) { %>
+          <div class="empty-state-card">
+            <div class="empty-state-icon">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            </div>
+            <h3 class="empty-state-title">Tidak Ada Inovasi yang Cocok</h3>
+            <p class="empty-state-desc">Kombinasi kata kunci atau filter yang Anda pilih tidak menghasilkan data. Coba kurangi filter atau atur ulang pencarian.</p>
+            <a href="/direktori" class="btn-primary-glow" style="margin-top:16px;">
+              <span>Tampilkan Semua Inovasi</span>
+            </a>
+          </div>
+        <% } %>
+
+        <% items.forEach(item => { %>
+          <article class="ki-modern-card">
+            <div class="card-top-row">
+              <span class="badge-type <%= item.jenis.toLowerCase().replace(/\s+/g, '-') %>"><%= item.jenis %></span>
+              <span class="badge-status-pill badge-<%= item.status %>">
+                <span class="status-dot"></span>
+                <span><%= item.status === 'granted' ? (item.jenis === 'Hak Cipta' ? 'Tercatat' : 'Granted') : (item.status === 'ditolak' ? 'Ditolak' : 'Dalam Proses') %></span>
+              </span>
+            </div>
+
+            <h3 class="card-title">
+              <a href="/direktori/<%= item.id %>"><%= item.judul %></a>
+            </h3>
+
+            <div class="card-meta-list">
+              <div class="meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span class="meta-inventor"><%= item.inventor %></span>
+              </div>
+              <div class="meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span class="meta-fakultas"><%= item.fakultas %></span>
+              </div>
+              <div class="meta-item meta-tags-row">
+                <span class="meta-pill-tag">
+                  <%= item.jenis === 'Paten' ? 'Pengajuan' : 'Tahun' %>: <%= item.tahun || '—' %>
+                </span>
+                <% if (item.no_permohonan || item.no_reg) { %>
+                  <span class="meta-pill-tag mono" title="Nomor Permohonan / Registrasi">
+                    #<%= item.no_permohonan || item.no_reg %>
+                  </span>
+                <% } %>
+              </div>
+            </div>
+
+            <div class="card-action-footer">
+              <a href="/direktori/<%= item.id %>" class="card-link-detail">
+                <span>Lihat Detail</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </a>
+              <a href="/ajukan-minat?ki=<%= item.id %>" class="card-btn-action">
+                <span>Ajukan Minat</span>
+              </a>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+
+      <!-- PAGINATION -->
+      <% if (totalPages > 1) { %>
+        <nav class="pagination-bar" aria-label="Navigasi Halaman">
+          <% if (page > 1) { %>
+            <a class="page-nav-btn" href="/direktori?<%= baseQueryString %>&page=<%= page - 1 %>" aria-label="Halaman Sebelumnya">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>Sebelumnya</span>
+            </a>
+          <% } %>
+
+          <div class="page-numbers-group">
+            <% for (let p = 1; p <= totalPages; p++) { %>
+              <a class="page-number-link <%= p === page ? 'active' : '' %>" 
+                 href="/direktori?<%= baseQueryString %>&page=<%= p %>" 
+                 aria-label="Halaman <%= p %>"
+                 <%- p === page ? 'aria-current="page"' : '' %>>
+                <%= p %>
+              </a>
+            <% } %>
+          </div>
+
+          <% if (page < totalPages) { %>
+            <a class="page-nav-btn" href="/direktori?<%= baseQueryString %>&page=<%= page + 1 %>" aria-label="Halaman Berikutnya">
+              <span>Berikutnya</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+          <% } %>
+        </nav>
+      <% } %>
+    </section>
+  </div>
+</main>
+
 <%- include('partials/footer') %>

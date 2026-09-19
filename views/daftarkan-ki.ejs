@@ -1,59 +1,121 @@
 <%- include('partials/head', { title: 'Daftarkan KI' }) %>
 <%- include('partials/nav', { active: 'daftar' }) %>
 
-<div class="section section-narrow">
-  <div class="eyebrow">Untuk Dosen &amp; Peneliti</div>
-  <h2 class="serif" style="font-size:24px;color:var(--navy);margin:0 0 22px;font-weight:500;">Daftarkan KI Anda</h2>
+<main class="page-container section-narrow">
+  <header class="page-header-center">
+    <div class="badge-pill-gold">Layanan Inventor Civitas UNISBA</div>
+    <h1 class="page-title">Daftarkan Kekayaan Intelektual Anda</h1>
+    <p class="page-desc">Ajukan pendaftaran Paten, Hak Cipta, Desain Industri, atau Merek hasil riset Anda untuk diverifikasi dan difasilitasi oleh P2KI LPPM UNISBA ke DJKI.</p>
+  </header>
 
   <% if (typeof success !== 'undefined' && success) { %>
-    <div class="success-box">✓ Pengajuan KI Anda telah dikirim dan akan melalui tinjauan P2KI sebelum tayang.</div>
-  <% } %>
-  <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
-    <div class="error-box"><%= errorMsg %></div>
+    <div class="alert-box alert-success">
+      <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <div>
+        <strong>Pengajuan Berhasil Dikirim!</strong>
+        <p>Inovasi Anda telah tercatat dan akan masuk ke meja tinjauan tim kurasi P2KI sebelum diajukan ke DJKI. Anda dapat memantau statusnya melalui kontak sekretariat.</p>
+      </div>
+    </div>
   <% } %>
 
-  <div class="sso-box">
-    <div class="left">
-      <div class="sso-icon">SISFO</div>
-      <div><h4>Masuk dengan Akun SISFO</h4><p>Data NIDN, nama, dan fakultas terisi otomatis</p></div>
+  <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
+    <div class="alert-box alert-danger">
+      <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div>
+        <strong>Terjadi Kesalahan Pengisian</strong>
+        <p><%= errorMsg %></p>
+      </div>
     </div>
-    <button class="btn-gold" type="button" onclick="sisfoLogin()" id="sisfoBtn">Masuk</button>
+  <% } %>
+
+  <!-- SSO SISFO BOX -->
+  <div class="sso-modern-card" id="ssoCard">
+    <div class="sso-left">
+      <div class="sso-logo-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div>
+        <h3 class="sso-title">Sinkronisasi Otomatis SISFO UNISBA</h3>
+        <p class="sso-subtitle">Masuk sekali klik untuk mengisi Nama, NIDN, dan Fakultas secara terverifikasi.</p>
+      </div>
+    </div>
+    <button class="btn-sso-action" type="button" onclick="sisfoLogin()" id="sisfoBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Tautkan Akun SISFO</span>
+    </button>
   </div>
 
-  <form class="form-card" method="POST" action="/daftarkan-ki">
+  <!-- FORM CARD -->
+  <form class="modern-form-card" method="POST" action="/daftarkan-ki">
     <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
-    <div class="form-row"><label>Nama Inventor</label><input type="text" name="nama" id="fNama" placeholder="Terisi otomatis setelah masuk SISFO" required></div>
-    <div class="form-row"><label>NIDN</label><input type="text" id="fNidn" placeholder="Terisi otomatis setelah masuk SISFO"></div>
-    <div class="form-row"><label>Fakultas</label><input type="text" name="fakultas" id="fFakultas" placeholder="Terisi otomatis setelah masuk SISFO" required></div>
-    <div class="form-row"><label>Judul KI</label><input type="text" name="judul" placeholder="Judul paten / karya / merek" required></div>
-    <div class="form-row">
-      <label>Jenis KI</label>
-      <select name="jenis" required>
-        <option value="Paten">Paten</option>
-        <option value="Hak Cipta">Hak Cipta</option>
-        <option value="Merek">Merek</option>
-        <option value="Desain Industri">Desain Industri</option>
-        <option value="KI Komunal">KI Komunal</option>
-      </select>
+
+    <div class="form-grid-2">
+      <div class="form-group">
+        <label class="form-label" for="fNama">Nama Inventor Utama <span class="required-mark">*</span></label>
+        <input type="text" class="form-input" name="nama" id="fNama" placeholder="Contoh: Dr. Nama Inventor, M.T." required>
+        <span class="form-helper">Nama lengkap beserta gelar akademik</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="fNidn">NIDN / NUPN</label>
+        <input type="text" class="form-input" id="fNidn" placeholder="Contoh: 0412088701">
+        <span class="form-helper">Nomor Induk Dosen Nasional terdaftar di Kemendikbud</span>
+      </div>
     </div>
-    <div class="form-row"><label>Deskripsi Non-Teknis</label><textarea name="deskripsi" placeholder="Deskripsi ringkas yang dapat dipublikasikan (hindari klaim teknis rinci sebelum granted)"></textarea></div>
-    <button class="btn-primary" type="submit">Kirim untuk Ditinjau P2KI</button>
-    <p class="form-hint">Pengajuan akan melalui alur tinjauan P2KI sebelum tayang di direktori publik.</p>
+
+    <div class="form-group">
+      <label class="form-label" for="fFakultas">Fakultas / Unit Asal <span class="required-mark">*</span></label>
+      <input type="text" class="form-input" name="fakultas" id="fFakultas" placeholder="Contoh: Fakultas Teknik / Fakultas Hukum" required>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="fJudul">Judul Kekayaan Intelektual <span class="required-mark">*</span></label>
+      <input type="text" class="form-input" name="judul" id="fJudul" placeholder="Judul invensi, sistem, formula, atau karya cipta" required>
+      <span class="form-helper">Judul harus jelas, ringkas, dan mencerminkan esensi inovasi</span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="fJenis">Kategori Jenis KI <span class="required-mark">*</span></label>
+      <div class="select-wrap">
+        <select class="form-select" name="jenis" id="fJenis" required>
+          <option value="Paten">Paten &amp; Paten Sederhana (Teknologi / Formulasi / Alat)</option>
+          <option value="Hak Cipta">Hak Cipta (Buku, Modul, Perangkat Lunak, Video, Karya Tulis)</option>
+          <option value="Merek">Merek Dagang &amp; Jasa (Nama Brand, Logo Usaha)</option>
+          <option value="Desain Industri">Desain Industri (Bentuk Estetis, Konfigurasi Kemasan)</option>
+          <option value="KI Komunal">KI Komunal (Ekspresi Budaya &amp; Pengetahuan Tradisional)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="fDeskripsi">Deskripsi Non-Teknis &amp; Potensi Hilirisasi</label>
+      <textarea class="form-textarea" name="deskripsi" id="fDeskripsi" rows="4" placeholder="Jelaskan ringkasan masalah yang dipecahkan, keunggulan produk, dan sasaran industri penerima manfaat (hindari mengunggah klaim teknis rinci sebelum paten diajukan)..."></textarea>
+      <span class="form-helper">Deskripsi ini akan digunakan tim LPPM untuk penelusuran awal kebaruan (novelty search).</span>
+    </div>
+
+    <div class="form-footer-action">
+      <button class="btn-primary-glow btn-block" type="submit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span>Kirim Pengajuan Pendaftaran KI</span>
+      </button>
+      <p class="form-disclaimer">Pengajuan akan melalui kurasi formalitas oleh P2KI sebelum diajukan ke portal resmi DJKI Kemenkumham.</p>
+    </div>
   </form>
-</div>
+</main>
 
 <script>
 function sisfoLogin(){
   document.getElementById('fNama').value = 'Dr. Ilman Abidin, S.H., M.H.';
   document.getElementById('fNidn').value = '0412088701';
   document.getElementById('fFakultas').value = 'Fakultas Hukum';
-  ['fNama','fFakultas'].forEach(id=>{
-    document.getElementById(id).classList.add('locked-field');
+  ['fNama','fFakultas','fNidn'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.classList.add('input-locked');
   });
-  document.getElementById('fNidn').classList.add('locked-field');
-  document.getElementById('sisfoBtn').textContent = 'Terhubung ✓';
-  document.getElementById('sisfoBtn').style.opacity = 0.7;
-  document.getElementById('sisfoBtn').disabled = true;
+  const btn = document.getElementById('sisfoBtn');
+  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Terhubung SISFO ✓</span>`;
+  btn.classList.add('connected');
+  btn.disabled = true;
 }
 </script>
 

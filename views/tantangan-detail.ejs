@@ -1,38 +1,117 @@
 <%- include('partials/head', { title: item.judul }) %>
 <%- include('partials/nav', { active: 'tantangan' }) %>
 
-<div class="breadcrumb"><a href="/tantangan-industri">Tantangan Industri</a> / <b><%= item.judul %></b></div>
-<div class="detail-wrap">
-  <div>
-    <div class="docket">Kode Tantangan: <%= item.kode %></div>
-    <h1><%= item.judul %></h1>
-    <div class="status-row">
-      <span class="badge badge-jenis"><%= item.bidang %></span>
-      <span class="badge <%= item.status === 'terbuka' ? 'badge-granted' : 'badge-proses' %>"><%= item.status === 'terbuka' ? 'Terbuka' : 'Segera Ditutup' %></span>
-    </div>
-    <p class="detail-desc"><%= item.deskripsi %></p>
-    <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin:0 0 12px;font-weight:600;">Kebutuhan Spesifik</h4>
-    <ul class="req-list">
-      <% item.kebutuhan_spesifik.split('\n').forEach(line => { %><li><%= line %></li><% }) %>
-    </ul>
-    <a class="btn-primary" href="/ajukan-solusi?challenge=<%= item.id %>">Ajukan Solusi</a>
-  </div>
-  <div>
-    <div class="side-card">
-      <h4>Perusahaan</h4>
-      <div class="inventor-row">
-        <div class="avatar" style="background:var(--navy-2);"><%= item.perusahaan.charAt(0) %></div>
-        <div><div class="name"><%= item.perusahaan %></div><div class="role">Mitra Industri</div></div>
+<main class="page-container">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Beranda</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="/tantangan-industri">Tantangan Industri</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current"><%= item.judul %></span>
+  </nav>
+
+  <div class="detail-layout">
+    <!-- MAIN COLUMN -->
+    <div class="detail-main-col">
+      <div class="detail-header-card">
+        <div class="card-top-row">
+          <span class="badge-type teknologi-manufaktur"><%= item.bidang %></span>
+          <span class="badge-status-pill <%= item.status === 'terbuka' ? 'badge-granted' : 'badge-proses' %>">
+            <span class="status-dot"></span>
+            <span><%= item.status === 'terbuka' ? 'Pengajuan Terbuka' : 'Segera Ditutup' %></span>
+          </span>
+        </div>
+
+        <h1 class="detail-title"><%= item.judul %></h1>
+
+        <div class="docket-chips-row">
+          <div class="docket-chip">
+            <span class="docket-label">Kode Kebutuhan:</span>
+            <strong class="docket-value"><%= item.kode %></strong>
+          </div>
+          <div class="docket-chip">
+            <span class="docket-label">Batas Pengajuan:</span>
+            <strong class="docket-value text-emerald"><%= item.deadline_fmt %></strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- DESKRIPSI KEBUTUHAN -->
+      <div class="detail-section-card">
+        <h2 class="detail-card-heading">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span>Deskripsi Masalah Industri</span>
+        </h2>
+        <div class="detail-text-body">
+          <p><%= item.deskripsi %></p>
+        </div>
+
+        <h3 class="detail-sub-heading">Kriteria Solusi yang Diharapkan:</h3>
+        <ul class="spec-requirement-list">
+          <% (item.kebutuhan_spesifik || '').split('\n').filter(Boolean).forEach(line => { %>
+            <li>
+              <svg class="spec-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span><%= line.replace(/^-\s*/, '') %></span>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+
+      <!-- CTA ACTION -->
+      <div class="detail-cta-card">
+        <div>
+          <h3 class="cta-card-title">Punya Solusi Riset atau Paten Terkait?</h3>
+          <p class="cta-card-desc">Kirimkan proposal solusi ringkas Anda. P2KI akan memverifikasi dan mempertemukan Anda dengan perwakilan industri mitra.</p>
+        </div>
+        <div class="cta-card-buttons">
+          <a class="btn-primary-glow" href="/ajukan-solusi?challenge=<%= item.id %>">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            <span>Ajukan Solusi Riset</span>
+          </a>
+        </div>
       </div>
     </div>
-    <div class="side-card">
-      <h4>Skema Kerja Sama</h4>
-      <div class="reward-box">
-        <div class="item"><div class="l">Batas Waktu</div><div class="v"><%= item.deadline_fmt %></div></div>
-        <div class="item"><div class="l">Skema</div><div class="v"><%= item.skema %></div></div>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="detail-sidebar">
+      <!-- PERUSAHAAN MITRA -->
+      <div class="sidebar-card">
+        <h3 class="sidebar-card-title">Profil Perusahaan Mitra</h3>
+        <div class="inventor-profile">
+          <div class="company-avatar-box large">
+            <%= (item.perusahaan || 'P').split(' ')[0].slice(0,2).toUpperCase() %>
+          </div>
+          <div class="inventor-info">
+            <div class="inventor-name"><%= item.perusahaan %></div>
+            <div class="inventor-faculty">Mitra Industri Terverifikasi</div>
+            <div class="inventor-univ"><%= item.bidang %></div>
+          </div>
+        </div>
+        <div class="verified-badge-row">
+          <span class="verified-icon">✓</span>
+          <span>Kebutuhan telah divalidasi oleh P2KI UNISBA</span>
+        </div>
       </div>
-    </div>
+
+      <!-- SKEMA KERJA SAMA -->
+      <div class="sidebar-card">
+        <h3 class="sidebar-card-title">Skema Kerja Sama</h3>
+        <div class="scheme-box">
+          <div class="scheme-item">
+            <div class="scheme-label">Tenggat Waktu</div>
+            <div class="scheme-value"><%= item.deadline_fmt %></div>
+          </div>
+          <div class="scheme-item">
+            <div class="scheme-label">Model Kolaborasi</div>
+            <div class="scheme-value"><%= item.skema %></div>
+          </div>
+        </div>
+        <p class="sidebar-card-desc" style="margin-top:12px;">
+          Didukung pendampingan kontrak, perlindungan hak kekayaan intelektual bersama, dan insentif hilirisasi LPPM.
+        </p>
+      </div>
+    </aside>
   </div>
-</div>
+</main>
 
 <%- include('partials/footer') %>

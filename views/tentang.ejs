@@ -1,17 +1,89 @@
-<%- include('partials/head', { title: 'Tentang' }) %>
+<%- include('partials/head', { title: 'Tentang Sentra KI' }) %>
 <%- include('partials/nav', { active: 'tentang' }) %>
 
-<div class="section section-narrow">
-  <div class="eyebrow">Profil Unit</div>
-  <h2 class="serif" style="font-size:24px;color:var(--navy);margin:0 0 12px;font-weight:500;">Tentang P2KI</h2>
-  <p style="color:var(--slate);font-size:13.5px;line-height:1.7;">Pusat Pengembangan dan Pelayanan Kekayaan Intelektual (P2KI) adalah unit di bawah LPPM Universitas Islam Bandung yang mengelola pendaftaran, pendampingan, dan hilirisasi kekayaan intelektual hasil riset civitas akademik.</p>
-  <h3 style="font-size:14px;color:var(--navy);margin:26px 0 4px;">Struktur Unit</h3>
-  <div class="org-grid">
-    <div class="org-card"><div class="role">Kepala P2KI</div><div class="who">—</div></div>
-    <div class="org-card"><div class="role">Div. Pendaftaran</div><div class="who">—</div></div>
-    <div class="org-card"><div class="role">Div. Kerja Sama</div><div class="who">—</div></div>
-    <div class="org-card"><div class="role">Div. Data &amp; Sistem</div><div class="who">—</div></div>
+<main class="page-container section-narrow" style="max-width: 860px;">
+  <header class="page-header-center">
+    <div class="badge-pill-gold">Profil Lembaga</div>
+    <h1 class="page-title">Tentang Sentra KI UNISBA</h1>
+    <p class="page-desc">Pusat Pengembangan dan Pelayanan Kekayaan Intelektual (P2KI) di bawah naungan LPPM Universitas Islam Bandung.</p>
+  </header>
+
+  <!-- PROFIL CARD -->
+  <section class="detail-section-card">
+    <h2 class="detail-card-heading">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <span>Mandat &amp; Peran Lembaga</span>
+    </h2>
+    <div class="detail-text-body">
+      <p>
+        <strong>P2KI LPPM UNISBA</strong> bertugas mengelola, melindungi, dan mengkomersialisasikan kekayaan intelektual yang dihasilkan civitas akademika Universitas Islam Bandung (dosen, peneliti, dan mahasiswa).
+      </p>
+      <p>
+        P2KI hadir sebagai jembatan strategis dari laboratorium ke industri, memastikan setiap temuan ilmiah memperoleh perlindungan hukum maksimal dari DJKI Kemenkumham, serta memiliki nilai tambah ekonomi yang berkeadilan bagi inventor dan institusi.
+      </p>
+    </div>
+  </section>
+
+  <!-- 3 PILAR LAYANAN -->
+  <div class="kemitraan-pillars-grid" style="margin: 24px 0;">
+    <div class="pillar-card">
+      <div class="pillar-icon bg-blue-subtle">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3 class="pillar-title" style="font-size: 15px;">Pelayanan &amp; Pendaftaran</h3>
+      <p class="pillar-desc">Fasilitasi drafting deskripsi paten, pencatatan hak cipta, merek dagang, dan desain industri ke DJKI.</p>
+    </div>
+
+    <div class="pillar-card">
+      <div class="pillar-icon bg-emerald-subtle">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      </div>
+      <h3 class="pillar-title" style="font-size: 15px;">Komersialisasi &amp; Lisensi</h3>
+      <p class="pillar-desc">Valuasi teknologi, penyusunan kontrak lisensi dengan mitra industri, serta mediasi pembagian royalti.</p>
+    </div>
+
+    <div class="pillar-card">
+      <div class="pillar-icon bg-amber-subtle">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      </div>
+      <h3 class="pillar-title" style="font-size: 15px;">Akademi &amp; Edukasi KI</h3>
+      <p class="pillar-desc">Sosialisasi, workshop penulisan spesifikasi paten, dan konsultasi terbuka bagi seluruh fakultas.</p>
+    </div>
   </div>
-</div>
+
+  <!-- STRUKTUR UNIT -->
+  <section class="detail-section-card">
+    <h3 class="detail-card-heading">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>Struktur Organisasi Unit</span>
+    </h3>
+
+    <div class="org-modern-grid">
+      <div class="org-modern-card">
+        <div class="org-role-badge">Pimpinan Unit</div>
+        <h4 class="org-person-name">Kepala P2KI LPPM</h4>
+        <div class="org-unit-name">LPPM UNISBA</div>
+      </div>
+
+      <div class="org-modern-card">
+        <div class="org-role-badge">Divisi Teknis</div>
+        <h4 class="org-person-name">Divisi Pendaftaran &amp; Perlindungan KI</h4>
+        <div class="org-unit-name">Fasilitasi DJKI &amp; Drafting Paten</div>
+      </div>
+
+      <div class="org-modern-card">
+        <div class="org-role-badge">Divisi Bisnis</div>
+        <h4 class="org-person-name">Divisi Kerja Sama &amp; Hilirisasi</h4>
+        <div class="org-unit-name">Link &amp; Match Mitra Industri</div>
+      </div>
+
+      <div class="org-modern-card">
+        <div class="org-role-badge">Divisi Teknologi</div>
+        <h4 class="org-person-name">Divisi Data, Sistem &amp; SISFO</h4>
+        <div class="org-unit-name">Integrasi Data &amp; Portal Digital</div>
+      </div>
+    </div>
+  </section>
+</main>
 
 <%- include('partials/footer') %>

@@ -1,52 +1,112 @@
-<%- include('partials/head', { title: 'Ajukan Solusi' }) %>
+<%- include('partials/head', { title: 'Ajukan Solusi Riset' }) %>
 <%- include('partials/nav', { active: 'tantangan' }) %>
 
-<div class="section section-narrow">
-  <div class="eyebrow">Untuk Dosen &amp; Peneliti</div>
-  <h2 class="serif" style="font-size:24px;color:var(--navy);margin:0 0 8px;font-weight:500;">Ajukan Solusi Riset</h2>
-  <p style="color:var(--slate);font-size:13.5px;margin:0 0 26px;">Solusi akan ditinjau P2KI sebelum diteruskan ke perusahaan pemasang kebutuhan.</p>
+<main class="page-container section-narrow">
+  <header class="page-header-center">
+    <div class="badge-pill-gold">Peneliti &amp; Dosen UNISBA</div>
+    <h1 class="page-title">Ajukan Solusi Riset untuk Industri</h1>
+    <p class="page-desc">Tawarkan pendekatan ilmiah, prototipe, atau hasil riset laboratorium Anda untuk menyelesaikan permasalahan nyata mitra industri.</p>
+  </header>
 
   <% if (typeof success !== 'undefined' && success) { %>
-    <div class="success-box">✓ Proposal solusi Anda telah dikirim ke P2KI untuk ditinjau.</div>
-  <% } %>
-
-  <% if (challengeItem) { %>
-    <div class="sso-box" style="border-color:var(--line);background:var(--paper-2);">
-      <div class="left">
-        <div class="sso-icon" style="background:var(--navy-2);">TI</div>
-        <div><h4>Tantangan Terkait</h4><p><%= challengeItem.judul %> — <%= challengeItem.perusahaan %></p></div>
+    <div class="alert-box alert-success">
+      <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <div>
+        <strong>Proposal Solusi Terkirim!</strong>
+        <p>Solusi Anda telah diterima oleh P2KI LPPM dan akan segera direview sebelum dipresentasikan kepada perwakilan perusahaan terkait.</p>
       </div>
     </div>
   <% } %>
 
-  <div class="sso-box">
-    <div class="left">
-      <div class="sso-icon">SISFO</div>
-      <div><h4>Masuk dengan Akun SISFO</h4><p>Data peneliti terisi otomatis</p></div>
+  <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
+    <div class="alert-box alert-danger">
+      <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div>
+        <strong>Pengisian Belum Lengkap</strong>
+        <p><%= errorMsg %></p>
+      </div>
     </div>
-    <button class="btn-gold" type="button" onclick="sisfoLoginSolusi()" id="sisfoBtnSolusi">Masuk</button>
+  <% } %>
+
+  <% if (challengeItem) { %>
+    <div class="selected-entity-card">
+      <div class="entity-icon bg-amber-subtle">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="12 8 8 12 12 16 12 8"/></svg>
+      </div>
+      <div class="entity-meta">
+        <span class="entity-badge">Menjawab Tantangan Industri</span>
+        <h4 class="entity-title"><%= challengeItem.judul %></h4>
+        <p class="entity-sub">Mitra: <strong><%= challengeItem.perusahaan %></strong> · Batas: <%= challengeItem.deadline_fmt %></p>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- SSO SISFO BOX -->
+  <div class="sso-modern-card">
+    <div class="sso-left">
+      <div class="sso-logo-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div>
+        <h3 class="sso-title">Masuk Cepat dengan Akun SISFO</h3>
+        <p class="sso-subtitle">Isi nama peneliti dan fakultas otomatis dari database kepegawaian.</p>
+      </div>
+    </div>
+    <button class="btn-sso-action" type="button" onclick="sisfoLoginSolusi()" id="sisfoBtnSolusi">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Tautkan SISFO</span>
+    </button>
   </div>
 
-  <form class="form-card" method="POST" action="/ajukan-solusi">
+  <form class="modern-form-card" method="POST" action="/ajukan-solusi">
     <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
     <input type="hidden" name="challenge_id" value="<%= challengeItem ? challengeItem.id : '' %>">
-    <div class="form-row"><label>Nama Peneliti</label><input type="text" name="nama_peneliti" id="sNama" placeholder="Terisi otomatis setelah masuk SISFO" required></div>
-    <div class="form-row"><label>Fakultas</label><input type="text" name="fakultas" id="sFakultas" placeholder="Terisi otomatis setelah masuk SISFO"></div>
-    <div class="form-row"><label>Ringkasan Pendekatan Solusi</label><textarea name="ringkasan" placeholder="Jelaskan pendekatan atau riset yang relevan dengan kebutuhan ini..." required></textarea></div>
-    <div class="form-row"><label>KI Terkait yang Sudah Terdaftar (opsional)</label><input type="text" name="ki_terkait" placeholder="Contoh: Sistem Deteksi Dini Kualitas Air"></div>
-    <button class="btn-primary" type="submit">Kirim Proposal Solusi</button>
+
+    <div class="form-grid-2">
+      <div class="form-group">
+        <label class="form-label" for="sNama">Nama Peneliti Utama <span class="required-mark">*</span></label>
+        <input type="text" class="form-input" name="nama_peneliti" id="sNama" placeholder="Terisi otomatis atau ketik manual" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="sFakultas">Fakultas / Laboratorium</label>
+        <input type="text" class="form-input" name="fakultas" id="sFakultas" placeholder="Contoh: F. Kedokteran / Lab Rekayasa">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="sRingkasan">Ringkasan Pendekatan Solusi <span class="required-mark">*</span></label>
+      <textarea class="form-textarea" name="ringkasan" id="sRingkasan" rows="5" placeholder="Jelaskan metode ilmiah, bahan yang digunakan, estimasi durasi, dan keunggulan pendekatan Anda dibandingkan metode konvensional..." required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="sKi">KI Terkait yang Sudah Ada (Opsional)</label>
+      <input type="text" class="form-input" name="ki_terkait" id="sKi" placeholder="Contoh: Paten No. IDS00000... atau Judul KI yang terdaftar">
+      <span class="form-helper">Jika solusi ini merupakan turunan dari paten atau karya cipta yang sudah terdaftar di UNISBA.</span>
+    </div>
+
+    <div class="form-footer-action">
+      <button class="btn-primary-glow btn-block" type="submit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span>Kirim Proposal Solusi Riset</span>
+      </button>
+      <p class="form-disclaimer">Proposal akan dienkripsi dan dijamin kerahasiaan akademisnya oleh LPPM UNISBA.</p>
+    </div>
   </form>
-</div>
+</main>
 
 <script>
 function sisfoLoginSolusi(){
   document.getElementById('sNama').value = 'Dr. Ilman Abidin, S.H., M.H.';
   document.getElementById('sFakultas').value = 'Fakultas Hukum';
-  document.getElementById('sNama').classList.add('locked-field');
-  document.getElementById('sFakultas').classList.add('locked-field');
-  document.getElementById('sisfoBtnSolusi').textContent = 'Terhubung ✓';
-  document.getElementById('sisfoBtnSolusi').style.opacity = 0.7;
-  document.getElementById('sisfoBtnSolusi').disabled = true;
+  ['sNama','sFakultas'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.classList.add('input-locked');
+  });
+  const btn = document.getElementById('sisfoBtnSolusi');
+  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Terhubung SISFO ✓</span>`;
+  btn.classList.add('connected');
+  btn.disabled = true;
 }
 </script>
 

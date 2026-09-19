@@ -1,43 +1,104 @@
-<%- include('partials/head', { title: 'Konsultasi' }) %>
+<%- include('partials/head', { title: 'Konsultasi Online' }) %>
 <%- include('partials/nav', { active: 'konsultasi' }) %>
 
-<div class="section">
-  <div class="eyebrow">Satu Pintu Layanan</div>
-  <h2 class="serif" style="font-size:24px;color:var(--navy);margin:0 0 6px;font-weight:500;">Konsultasi dengan Admin P2KI</h2>
-  <p style="color:var(--slate);font-size:13.5px;margin:0 0 24px;">Tanya langsung ke tim P2KI soal pendaftaran KI, status berkas, atau kerja sama industri, tanpa perlu keluar dari platform.</p>
+<main class="page-container section-narrow" style="max-width: 960px;">
+  <header class="page-header-center">
+    <div class="badge-pill-emerald">Layanan Terpadu Satu Pintu</div>
+    <h1 class="page-title">Konsultasi Daring Sentra KI</h1>
+    <p class="page-desc">Ajukan pertanyaan langsung kepada staf pelayanan P2KI terkait pendaftaran invensi, pemantauan berkas, atau skema kerja sama industri.</p>
+  </header>
 
-  <div class="chat-shell">
-    <div class="chat-sidebar">
-      <h4>Percakapan</h4>
-      <div class="chat-contact">
-        <span class="status-dot"></span>
-        <div><div class="name">Admin P2KI</div><div class="last">Sesi konsultasi Anda</div></div>
+  <div class="messenger-shell">
+    <!-- SIDEBAR -->
+    <aside class="messenger-sidebar">
+      <div class="messenger-sidebar-header">
+        <span class="messenger-sidebar-title">Kanal Layanan</span>
       </div>
-    </div>
-    <div class="chat-main">
-      <div class="chat-header">
-        <div class="avatar" style="background:var(--navy-2);width:32px;height:32px;font-size:13px;">P2</div>
-        <div><div class="name">Admin P2KI</div><div class="role">● Online &middot; biasanya membalas dalam 1 jam</div></div>
+
+      <div class="messenger-contact active">
+        <div class="contact-avatar-wrap">
+          <div class="contact-avatar">KI</div>
+          <span class="contact-status-online"></span>
+        </div>
+        <div class="contact-meta">
+          <div class="contact-name">Tim Pelayanan P2KI</div>
+          <div class="contact-status-text">Sesi Konsultasi Aktif</div>
+        </div>
       </div>
-      <div class="chat-body" id="chatBody">
+
+      <div class="messenger-info-card">
+        <div class="info-card-heading">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Jam Layanan LPPM:</span>
+        </div>
+        <p class="info-card-hours">
+          Senin – Jumat: 08.00 – 16.00 WIB<br>
+          Gedung LPPM UNISBA Lt. 2
+        </p>
+        <div class="info-card-footer">
+          <span>Pesan di luar jam kerja akan direspons pada hari kerja berikutnya.</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CHAT PANE -->
+    <div class="messenger-main">
+      <div class="messenger-top-bar">
+        <div class="officer-profile">
+          <div class="officer-avatar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div>
+            <div class="officer-name">Admin Pelayanan Sentra KI</div>
+            <div class="officer-status">
+              <span class="status-dot"></span>
+              <span>Online · Biasanya membalas seketika</span>
+            </div>
+          </div>
+        </div>
+        <div class="secure-badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Enkripsi Sesi</span>
+        </div>
+      </div>
+
+      <!-- MESSAGES LOG -->
+      <div class="messenger-body" id="chatBody">
+        <% if (messages.length === 0) { %>
+          <div class="chat-system-greeting">
+            <div class="greeting-icon">👋</div>
+            <h4>Selamat Datang di Layanan Konsultasi</h4>
+            <p>Silakan tanyakan status permohonan Anda, syarat dokumen, atau skema lisensi. Anda juga dapat memilih pertanyaan cepat di bawah.</p>
+          </div>
+        <% } %>
+
         <% messages.forEach(m => { %>
           <div class="chat-bubble-row <%= m.sender === 'user' ? 'me' : 'them' %>">
-            <div><div class="chat-bubble"><%= m.message %></div><div class="chat-time"><%= new Date(m.created_at).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) %></div></div>
+            <div class="bubble-content-wrap">
+              <div class="chat-bubble"><%= m.message %></div>
+              <div class="chat-time"><%= new Date(m.created_at).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) %></div>
+            </div>
           </div>
         <% }) %>
       </div>
-      <div class="chat-quick-row">
-        <div class="chat-quick" onclick="sendConsult('Saya mau tanya status pendaftaran KI saya')">Status pendaftaran KI</div>
-        <div class="chat-quick" onclick="sendConsult('Saya mau tanya soal kerja sama dengan industri')">Kerja sama industri</div>
-        <div class="chat-quick" onclick="sendConsult('Saya mau tanya soal pembagian manfaat ekonomi')">Pembagian manfaat ekonomi</div>
+
+      <!-- QUICK CHIPS -->
+      <div class="chat-quick-suggestions">
+        <span class="suggestion-label">Topik Cepat:</span>
+        <button type="button" class="quick-chip-btn" onclick="sendConsult('Bagaimana cara mengetahui status permohonan paten saya?')">Cek Status Paten</button>
+        <button type="button" class="quick-chip-btn" onclick="sendConsult('Bagaimana prosedur kerja sama lisensi dengan industri?')">Prosedur Lisensi</button>
+        <button type="button" class="quick-chip-btn" onclick="sendConsult('Bagaimana proporsi bagi hasil royalti untuk inventor?')">Bagi Hasil Royalti</button>
       </div>
-      <div class="chat-input-row">
-        <input type="text" id="chatInput" placeholder="Tulis pesan Anda..." onkeydown="if(event.key==='Enter'){sendConsultFromInput();}">
-        <button class="chat-send" onclick="sendConsultFromInput()">Kirim</button>
+
+      <!-- INPUT BAR -->
+      <div class="messenger-input-row">
+        <input type="text" id="chatInput" class="messenger-text-input" placeholder="Tuliskan pesan konsultasi Anda di sini..." aria-label="Tulis pesan konsultasi" onkeydown="if(event.key==='Enter'){sendConsultFromInput();}">
+        <button type="button" class="btn-messenger-send" onclick="sendConsultFromInput()" aria-label="Kirim Pesan">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
       </div>
     </div>
   </div>
-</div>
+</main>
 
-<script src="/js/main.js"></script>
 <%- include('partials/footer') %>

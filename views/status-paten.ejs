@@ -1,4 +1,16 @@
-<%- include('partials/head', { title: 'Status Paten' }) %>
+<%- include('partials/head', { title: 'Status & Analitik Paten' }) %>
 <%- include('partials/nav', { active: 'status-paten' }) %>
-<main class="page-main status-page"><div class="page-intro"><div class="eyebrow">Transparansi portofolio KI</div><h1>Status paten UNISBA</h1><p>Gunakan ringkasan ini untuk melihat perkembangan paten berdasarkan tahun pengajuan dan status terkini.</p></div><%- include('partials/patent-summary') %></main>
+
+<main class="page-container status-page-wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Beranda</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Status &amp; Analitik Paten</span>
+  </nav>
+
+  <div class="status-page-content">
+    <%- include('partials/patent-summary') %>
+  </div>
+</main>
+
 <%- include('partials/footer') %>

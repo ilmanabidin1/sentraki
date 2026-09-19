@@ -1,45 +1,117 @@
 <%- include('partials/head', { title: 'Ajukan Minat Kerja Sama' }) %>
 <%- include('partials/nav', { active: 'direktori' }) %>
 
-<div class="section section-narrow">
-  <div class="eyebrow">Formulir Kerja Sama</div>
-  <h2 class="serif" style="font-size:24px;color:var(--navy);margin:0 0 8px;font-weight:500;">Ajukan Minat Kerja Sama</h2>
-  <p style="color:var(--slate);font-size:13.5px;margin:0 0 26px;">Pengajuan akan diverifikasi lebih dulu oleh tim P2KI sebelum diteruskan ke inventor terkait.</p>
+<main class="page-container section-narrow">
+  <header class="page-header-center">
+    <div class="badge-pill-blue">Kemitraan &amp; Alih Teknologi</div>
+    <h1 class="page-title">Ajukan Minat Kerja Sama Inovasi</h1>
+    <p class="page-desc">Sampaikan ketertarikan industri atau institusi Anda terhadap invensi UNISBA. Tim P2KI akan memverifikasi dan memfasilitasi penjajakan komersial secara tertutup.</p>
+  </header>
 
   <% if (typeof success !== 'undefined' && success) { %>
-    <div class="success-box">✓ Pengajuan Anda telah diterima. Tim P2KI akan menghubungi dalam 3–5 hari kerja.</div>
+    <div class="alert-box alert-success">
+      <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <div>
+        <strong>Pengajuan Minat Diterima!</strong>
+        <p>Terima kasih. Permohonan kerja sama Anda telah tercatat. Tim kemitraan P2KI akan menghubungi kontak perwakilan Anda dalam 3–5 hari kerja untuk penjajakan lebih lanjut.</p>
+      </div>
+    </div>
   <% } %>
+
   <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
-    <div class="error-box"><%= errorMsg %></div>
+    <div class="alert-box alert-danger">
+      <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div>
+        <strong>Pengisian Belum Lengkap</strong>
+        <p><%= errorMsg %></p>
+      </div>
+    </div>
   <% } %>
 
   <% if (kiItem) { %>
-    <div class="sso-box" style="border-color:var(--line);background:var(--paper-2);">
-      <div class="left">
-        <div class="sso-icon" style="background:var(--navy-2);">KI</div>
-        <div><h4>KI Terkait</h4><p><%= kiItem.judul %> — <%= kiItem.inventor %></p></div>
+    <div class="selected-entity-card">
+      <div class="entity-icon bg-blue-subtle">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+      </div>
+      <div class="entity-meta">
+        <span class="entity-badge">Kekayaan Intelektual Terkait</span>
+        <h4 class="entity-title"><%= kiItem.judul %></h4>
+        <p class="entity-sub">Inventor: <strong><%= kiItem.inventor %></strong> · <%= kiItem.fakultas %> (<%= kiItem.jenis %>)</p>
       </div>
     </div>
   <% } %>
 
-  <form class="form-card" method="POST" action="/ajukan-minat">
+  <form class="modern-form-card" method="POST" action="/ajukan-minat">
     <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
     <input type="hidden" name="ki_item_id" value="<%= kiItem ? kiItem.id : '' %>">
-    <div class="form-row"><label>Nama Lengkap</label><input type="text" name="nama" required placeholder="Nama pemohon"></div>
-    <div class="form-row"><label>Institusi / Perusahaan</label><input type="text" name="institusi" placeholder="Nama institusi atau perusahaan"></div>
-    <div class="form-row"><label>Email</label><input type="email" name="email" placeholder="nama@institusi.com"></div>
-    <div class="form-row">
-      <label>Jenis Kebutuhan</label>
-      <div class="radio-grid">
-        <label class="radio-opt"><input type="radio" name="jenis_kebutuhan" value="Lisensi KI" checked> Lisensi KI</label>
-        <label class="radio-opt"><input type="radio" name="jenis_kebutuhan" value="Investasi"> Investasi</label>
-        <label class="radio-opt"><input type="radio" name="jenis_kebutuhan" value="Riset Bersama"> Riset Bersama</label>
-        <label class="radio-opt"><input type="radio" name="jenis_kebutuhan" value="Distribusi / Produksi"> Distribusi / Produksi</label>
+
+    <div class="form-grid-2">
+      <div class="form-group">
+        <label class="form-label" for="mNama">Nama Lengkap Perwakilan <span class="required-mark">*</span></label>
+        <input type="text" class="form-input" name="nama" id="mNama" required placeholder="Nama lengkap Anda">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="mEmail">Email Bisnis / Resmi <span class="required-mark">*</span></label>
+        <input type="email" class="form-input" name="email" id="mEmail" required placeholder="contoh@perusahaan.com">
       </div>
     </div>
-    <div class="form-row"><label>Pesan Singkat</label><textarea name="pesan" placeholder="Jelaskan kebutuhan kerja sama Anda..."></textarea></div>
-    <button class="btn-primary" type="submit">Kirim Pengajuan</button>
+
+    <div class="form-group">
+      <label class="form-label" for="mInstitusi">Nama Perusahaan / Institusi <span class="required-mark">*</span></label>
+      <input type="text" class="form-input" name="institusi" id="mInstitusi" required placeholder="PT / CV / Lembaga / Yayasan">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Bentuk Minat Kemitraan <span class="required-mark">*</span></label>
+      <div class="radio-card-grid">
+        <label class="radio-card-item">
+          <input type="radio" name="jenis_kebutuhan" value="Lisensi KI" checked>
+          <div class="radio-card-content">
+            <span class="radio-card-title">Lisensi Komersial</span>
+            <span class="radio-card-desc">Pemanfaatan paten/cipta untuk produksi massal</span>
+          </div>
+        </label>
+
+        <label class="radio-card-item">
+          <input type="radio" name="jenis_kebutuhan" value="Investasi">
+          <div class="radio-card-content">
+            <span class="radio-card-title">Investasi / Pendanaan</span>
+            <span class="radio-card-desc">Dukungan modal pengembangan lanjutan (prototipe ke pasar)</span>
+          </div>
+        </label>
+
+        <label class="radio-card-item">
+          <input type="radio" name="jenis_kebutuhan" value="Riset Bersama">
+          <div class="radio-card-content">
+            <span class="radio-card-title">Riset Kolaboratif</span>
+            <span class="radio-card-desc">Pengembangan bersama laboratorium UNISBA</span>
+          </div>
+        </label>
+
+        <label class="radio-card-item">
+          <input type="radio" name="jenis_kebutuhan" value="Distribusi / Produksi">
+          <div class="radio-card-content">
+            <span class="radio-card-title">Mitra Distribusi</span>
+            <span class="radio-card-desc">Akses pasar, rantai pasok, atau manufaktur</span>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="mPesan">Pesan / Gambaran Kebutuhan</label>
+      <textarea class="form-textarea" name="pesan" id="mPesan" rows="4" placeholder="Ceritakan singkat profil usaha Anda dan bagaimana inovasi ini akan diimplementasikan..."></textarea>
+    </div>
+
+    <div class="form-footer-action">
+      <button class="btn-primary-glow btn-block" type="submit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span>Kirim Minat Kerja Sama</span>
+      </button>
+      <p class="form-disclaimer">Informasi yang disampaikan dijamin kerahasiaannya dan hanya digunakan untuk keperluan penjajakan kerja sama resmi.</p>
+    </div>
   </form>
-</div>
+</main>
 
 <%- include('partials/footer') %>
