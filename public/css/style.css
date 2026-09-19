@@ -376,38 +376,6 @@ input, select, textarea {
   flex-shrink: 0;
 }
 
-.sisfo-badge {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #6ee7b7;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 5px 11px;
-  border-radius: var(--radius-full);
-  font-family: 'JetBrains Mono', monospace;
-  white-space: nowrap;
-}
-
-.live-pulse {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #10b981;
-  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-  animation: pulse-green 2s infinite;
-  display: inline-block;
-  flex-shrink: 0;
-}
-
-@keyframes pulse-green {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-}
-
 .btn-nav-primary {
   display: inline-flex;
   align-items: center;
@@ -552,27 +520,6 @@ input, select, textarea {
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-
-.drawer-sisfo-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  border-radius: var(--radius-md);
-  padding: 12px;
-}
-
-.drawer-sisfo-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: #6ee7b7;
-}
-
-.drawer-sisfo-desc {
-  font-size: 10.5px;
-  color: #94a3b8;
 }
 
 .drawer-nav {
@@ -727,21 +674,6 @@ input, select, textarea {
   text-align: center;
   position: relative;
   z-index: 2;
-}
-
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  padding: 6px 16px;
-  border-radius: var(--radius-full);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--gold-300);
-  margin-bottom: 24px;
 }
 
 .hero-title {
@@ -992,23 +924,6 @@ input, select, textarea {
   line-height: 1.65;
 }
 
-.badge-pill-blue, .badge-pill-gold, .badge-pill-emerald, .badge-pill-indigo {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 14px;
-  border-radius: var(--radius-full);
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.badge-pill-blue { background: var(--blue-50); color: var(--blue-600); border: 1px solid var(--blue-100); }
-.badge-pill-gold { background: var(--gold-50); color: var(--gold-600); border: 1px solid var(--gold-100); }
-.badge-pill-emerald { background: var(--emerald-50); color: var(--emerald-600); border: 1px solid var(--emerald-100); }
-.badge-pill-indigo { background: var(--indigo-50); color: var(--indigo-600); border: 1px solid var(--indigo-100); }
-
 /* Persona Cards */
 .persona-grid {
   display: grid;
@@ -1040,20 +955,6 @@ input, select, textarea {
   border-color: var(--gold-300);
   background: linear-gradient(180deg, #fffdf8 0%, #ffffff 100%);
   box-shadow: 0 10px 25px -5px rgba(217, 119, 6, 0.1);
-}
-
-.card-ribbon {
-  position: absolute;
-  top: 18px;
-  right: 22px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--gold-600);
-  background: var(--gold-100);
-  padding: 3px 10px;
-  border-radius: var(--radius-full);
 }
 
 .persona-icon {
@@ -1467,22 +1368,6 @@ input, select, textarea {
   border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
-}
-
-.ai-cta-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(99, 102, 241, 0.2);
-  border: 1px solid rgba(99, 102, 241, 0.4);
-  color: #a5b4fc;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: var(--radius-full);
-  margin-bottom: 16px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .ai-cta-title {
@@ -4155,15 +4040,11 @@ input, select, textarea {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.admin-badge-pulse {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
+.admin-title {
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--gold-400);
-  font-family: 'JetBrains Mono', monospace;
+  color: #ffffff;
+  letter-spacing: -0.01em;
 }
 
 .admin-topbar-right {
@@ -4479,19 +4360,6 @@ input, select, textarea {
   color: #94a3b8;
   max-width: 380px;
   margin-bottom: 20px;
-}
-
-.footer-sisfo-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
-  font-size: 11px;
-  color: #6ee7b7;
-  font-weight: 600;
 }
 
 .footer-links-group {
