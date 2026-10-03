@@ -13,7 +13,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+// Revalidate cached assets after a day; ETags still pick up subsequent changes.
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: '1d' }));
 
 // Session store persisten (SQLite) — sesi tidak hilang saat restart, aman untuk production.
 const sessionDbPath = process.env.SQLITE_PATH

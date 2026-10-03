@@ -67,3 +67,15 @@ test('pagination and sorting retain every selected value', async () => {
   assert.match(html, /aria-current="page"/);
   assert.match(html, /name="tahun" value="2022"/);
 });
+
+test('large directories keep pagination bounded and preserve the current page', async () => {
+  const data = await directoryData(pool, {});
+  const html = await ejs.renderFile(path.join(__dirname, '../views/direktori.ejs'), {
+    ...data, totalPages: 1000, page: 400, csrfToken: ''
+  });
+  assert.equal((html.match(/class="page-number-link/g) || []).length, 7);
+  assert.match(html, /aria-label="Halaman 400"\s+aria-current="page"/);
+  assert.match(html, /page=1000/);
+  assert.match(html, /page=399/);
+  assert.match(html, /page=401/);
+});

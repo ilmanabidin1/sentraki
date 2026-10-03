@@ -20,7 +20,7 @@
             </div>
           </div>
           <div class="module-toggle-arrow">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            <svg width="18" height="18" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#down"/></svg>
           </div>
         </button>
 
@@ -29,13 +29,13 @@
             <ul class="module-points-list">
               <% m.points.forEach(p => { %>
                 <li>
-                  <svg class="point-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <svg class="point-check-icon sk-icon" width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#check"/></svg>
                   <span><%= p %></span>
                 </li>
               <% }) %>
             </ul>
             <div class="module-source-badge">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <svg width="12" height="12" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#shield"/></svg>
               <span>Disarikan dari silabus kurikulum pelatihan DJKI Kemenkumham</span>
             </div>
           </div>
@@ -46,10 +46,10 @@
 
   <!-- MODERN AI ASSISTANT WIDGET -->
   <section class="ai-assistant-card">
-    <div class="ai-card-glow"></div>
+
     <div class="ai-card-header">
       <div class="ai-avatar-badge">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        <svg width="20" height="20" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#assistant"/></svg>
       </div>
       <div class="ai-header-text">
         <h3 class="ai-title">Tanya Asisten AI Sentra KI</h3>
@@ -69,7 +69,7 @@
     <!-- CHAT LOG -->
     <div class="ai-chat-log" id="aiLog" role="log" aria-live="polite">
       <div class="ai-msg bot">
-        <div class="msg-avatar-mini">AI</div>
+        <div class="msg-avatar-mini"><svg class="sk-icon" width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#assistant"/></svg></div>
         <div class="msg-bubble-wrap">
           <div class="msg-author">Asisten AI Sentra KI</div>
           <div class="bubble">
@@ -83,7 +83,7 @@
     <div class="ai-input-bar">
       <input type="text" id="aiInput" class="ai-text-input" placeholder="Tuliskan pertanyaan seputar KI..." aria-label="Pertanyaan untuk Asisten AI" onkeydown="if(event.key==='Enter'){sendAIQuestion();}">
       <button type="button" class="btn-ai-send" onclick="sendAIQuestion()" aria-label="Kirim Pertanyaan">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <svg width="18" height="18" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#send"/></svg>
       </button>
     </div>
 

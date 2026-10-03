@@ -34,6 +34,35 @@ document.addEventListener('DOMContentLoaded', () => {
   if (toggleBtn) toggleBtn.addEventListener('click', openDrawer);
   if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
   if (backdrop) backdrop.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && drawer && drawer.classList.contains('open')) {
+      closeDrawer();
+      toggleBtn?.focus();
+    }
+  });
+  window.matchMedia('(min-width: 901px)').addEventListener('change', event => {
+    if (event.matches) closeDrawer();
+  });
+  // Small, event-driven dropdown; no polling or scroll listeners.
+  const dropdown = document.querySelector('.nav-dropdown');
+  const dropdownBtn = dropdown?.querySelector('.nav-dropdown-btn');
+  dropdownBtn?.addEventListener('click', () => {
+    const open = dropdown.classList.toggle('is-open');
+    dropdownBtn.setAttribute('aria-expanded', String(open));
+  });
+  function closeDropdown() {
+    dropdown?.classList.remove('is-open');
+    dropdownBtn?.setAttribute('aria-expanded', 'false');
+  }
+  document.addEventListener('click', event => {
+    if (dropdown && !dropdown.contains(event.target)) closeDropdown();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && dropdown?.classList.contains('is-open')) {
+      closeDropdown();
+      dropdownBtn?.blur();
+    }
+  });
 
   // Auto-collapse directory filter on mobile devices
   const dirFilters = document.getElementById('directoryFilters');
@@ -88,7 +117,7 @@ async function askAI(question) {
   loadingMsg.className = 'ai-msg bot ai-loading';
   loadingMsg.id = loadingId;
   loadingMsg.innerHTML = `
-    <div class="msg-avatar-mini">AI</div>
+    <div class="msg-avatar-mini"><svg class="sk-icon" width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#assistant"/></svg></div>
     <div class="msg-bubble-wrap">
       <div class="msg-author">Asisten AI Sentra KI</div>
       <div class="bubble">
