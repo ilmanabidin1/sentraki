@@ -1,7 +1,7 @@
 <%- include('partials/head', { title: 'Direktori KI' }) %>
 <%- include('partials/nav', { active: 'direktori' }) %>
 
-<main class="page-container">
+<main id="mainContent" tabindex="-1" class="page-container">
   <!-- DIRECTORY HEADER -->
   <header class="page-header">
     <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -56,7 +56,7 @@
           <% if (hasActiveFilter) { %>
             <span class="filter-active-indicator">Aktif</span>
           <% } %>
-          <span class="disclosure-chevron">▾</span>
+          <svg class="disclosure-chevron sk-icon" width="16" height="16" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#down"/></svg>
         </summary>
 
         <form class="filter-box" method="GET" action="/direktori" id="filterForm">

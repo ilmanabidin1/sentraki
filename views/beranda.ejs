@@ -1,6 +1,7 @@
 <%- include('partials/head', { title: 'Beranda' }) %>
 <%- include('partials/nav', { active: 'beranda' }) %>
 
+<main id="mainContent" tabindex="-1">
 <!-- HERO SECTION -->
 <section class="hero-section">
   <div class="hero-artwork-bg" aria-hidden="true"></div>
@@ -11,7 +12,7 @@
     </h1>
 
     <p class="hero-desc">
-      Menjembatani lebih dari 1.200 kekayaan intelektual (Paten, Hak Cipta, Merek, Desain Industri) civitas akademika UNISBA dengan kebutuhan pasar, investor, dan mitra industri secara terstruktur dan terverifikasi SISFO.
+      Menjembatani lebih dari 1.200 kekayaan intelektual (Paten, Hak Cipta, Merek, Desain Industri) civitas akademika UNISBA dengan kebutuhan pasar, investor, dan mitra industri melalui direktori dan formulir pengajuan kerja sama.
     </p>
 
     <!-- HERO SEARCH BAR -->
@@ -45,7 +46,7 @@
           <span class="stat-growth-tag">Terdaftar</span>
         </div>
         <div class="hero-stat-num"><%= stats.total.toLocaleString('id-ID') %>+</div>
-        <div class="hero-stat-lbl">Total KI Tercatat Resmi</div>
+        <div class="hero-stat-lbl">Total KI dalam Rekap</div>
         <div class="hero-stat-sub">Paten, Desain, Merek &amp; Hak Cipta</div>
       </div>
 
@@ -54,11 +55,11 @@
           <div class="stat-icon bg-emerald-subtle">
             <svg width="22" height="22" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#certificate"/></svg>
           </div>
-          <span class="stat-growth-tag granted-tag">Siap Lisensi</span>
+          <span class="stat-growth-tag granted-tag">Granted</span>
         </div>
         <div class="hero-stat-num text-emerald"><%= stats.grantedPatenDI.toLocaleString('id-ID') %></div>
         <div class="hero-stat-lbl">Paten &amp; Desain Granted</div>
-        <div class="hero-stat-sub">Kepastian hukum perlindungan DJKI</div>
+        <div class="hero-stat-sub">Status dalam rekap KI Unisba</div>
       </div>
 
       <div class="hero-stat-card">
@@ -101,11 +102,11 @@
       <div class="persona-icon bg-blue-subtle">
         <svg width="28" height="28" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#patent"/></svg>
       </div>
-      <h3 class="persona-title">Cari Inovasi Siap Lisensi</h3>
-      <p class="persona-desc">Telusuri katalog paten teruji, formulasi terdaftar, dan teknologi tepat guna siap komersialisasi dengan pendampingan perjanjian lisensi resmi.</p>
+      <h3 class="persona-title">Cari Inovasi untuk Kolaborasi</h3>
+      <p class="persona-desc">Telusuri karya dalam rekap KI Unisba dan ajukan minat untuk membahas peluang pemanfaatannya.</p>
       <ul class="persona-features">
         <li><svg class="sk-icon" width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#check"/></svg> Akses deskripsi non-teknis terkurasi</li>
-        <li><svg class="sk-icon" width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#check"/></svg> Verifikasi status hukum resmi DJKI</li>
+        <li><svg class="sk-icon" width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#check"/></svg> Tautan penelusuran ke portal PDKI</li>
         <li><svg class="sk-icon" width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#check"/></svg> Fasilitasi skema royalti transparan</li>
       </ul>
       <a href="/direktori" class="persona-btn btn-blue">
@@ -120,11 +121,11 @@
         <svg width="28" height="28" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#book"/></svg>
       </div>
       <h3 class="persona-title">Daftarkan &amp; Lindungi Karya</h3>
-      <p class="persona-desc">Amankan hak cipta dan paten hasil penelitian Anda dengan integrasi SSO SISFO otomatis dan pendampingan substantif tim P2KI LPPM.</p>
+      <p class="persona-desc">Ajukan karya hasil penelitian untuk ditinjau tim P2KI LPPM sebelum dipublikasikan dalam direktori.</p>
       <ul class="persona-features">
-        <li><svg class="sk-icon" width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#check"/></svg> Sinkronisasi NIDN &amp; fakultas 1-klik</li>
+        <li><svg class="sk-icon" width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#check"/></svg> Pengisian identitas dan fakultas</li>
         <li><svg class="sk-icon" width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#check"/></svg> Bantuan penelusuran novelty &amp; drafting</li>
-        <li><svg class="sk-icon" width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#check"/></svg> Hak bagi hasil royalti inventor terjamin</li>
+        <li><svg class="sk-icon" width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#check"/></svg> Informasi skema manfaat ekonomi</li>
       </ul>
       <a href="/daftarkan-ki" class="persona-btn btn-gold">
         <span>Daftarkan KI Sekarang</span>
@@ -167,7 +168,7 @@
           <svg width="24" height="24" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#search"/></svg>
         </div>
         <h3 class="flow-step-title">Eksplorasi Inovasi</h3>
-        <p class="flow-step-desc">Mitra industri menelusuri inovasi berdasarkan bidang fokus, tingkat kesiapan teknologi (TRL), dan status permohonan di DJKI.</p>
+        <p class="flow-step-desc">Mitra industri menelusuri inovasi berdasarkan jenis KI, fakultas, tahun pengajuan, dan status dalam rekap.</p>
         <div class="flow-step-footer">
           <span>Katalog publik terbuka 24/7</span>
         </div>
@@ -181,7 +182,7 @@
         <h3 class="flow-step-title">Pengajuan Minat Resmi</h3>
         <p class="flow-step-desc">Calon mitra mengirimkan formulir minat kerja sama yang langsung masuk ke meja kurasi LPPM, menjaga kerahasiaan inventor.</p>
         <div class="flow-step-footer">
-          <span>Verifikasi dalam 3–5 hari kerja</span>
+          <span>Pengajuan masuk untuk ditinjau</span>
         </div>
       </div>
 
@@ -193,7 +194,7 @@
         <h3 class="flow-step-title">Perjanjian &amp; Lisensi</h3>
         <p class="flow-step-desc">P2KI memfasilitasi temu teknis, negosiasi skema royalti yang berkeadilan, hingga penandatanganan MoU dan kontrak lisensi.</p>
         <div class="flow-step-footer">
-          <span>Kerangka bagi hasil resmi</span>
+          <span>Diskusi skema pemanfaatan</span>
         </div>
       </div>
     </div>
@@ -206,7 +207,7 @@
     <div class="section-head-between">
       <div>
         <h2 class="section-title">Kekayaan Intelektual Unggulan</h2>
-        <p class="section-subtitle">Invensi dengan status Granted dan kesiapan komersialisasi tinggi hasil karya dosen UNISBA.</p>
+        <p class="section-subtitle">Pilihan invensi berstatus granted dalam rekap KI Unisba. Kesiapan komersialisasi memerlukan peninjauan lebih lanjut.</p>
       </div>
       <a class="btn-outline-action" href="/direktori">
         <span>Lihat Semua 1.200+ Inovasi</span>
@@ -261,7 +262,7 @@
     <div class="ai-cta-banner">
       <div class="ai-cta-content">
         <h2 class="ai-cta-title">Masih Bingung Prosedur Pendaftaran atau Royalti?</h2>
-        <p class="ai-cta-desc">Pelajari rangkuman materi pelatihan DJKI, tanyakan pada Asisten AI P2KI yang terlatih khusus, atau lakukan konsultasi langsung dengan tim kami.</p>
+        <p class="ai-cta-desc">Pelajari materi KI atau gunakan panduan otomatis untuk memahami alur pendaftaran dan pemanfaatan karya.</p>
         <div class="ai-cta-actions">
           <a href="/pelajari-ki" class="btn-primary-glow">
             <svg width="16" height="16" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#book"/></svg>
@@ -269,7 +270,7 @@
           </a>
           <a href="/konsultasi" class="btn-secondary-white">
             <svg width="16" height="16" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#consult"/></svg>
-            <span>Konsultasi Daring Langsung</span>
+            <span>Panduan Konsultasi</span>
           </a>
         </div>
       </div>
@@ -294,4 +295,5 @@
   </div>
 </section>
 
+</main>
 <%- include('partials/footer') %>

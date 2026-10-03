@@ -1,7 +1,8 @@
+<% const fv = typeof values !== "undefined" ? values : {}; const fe = typeof fieldErrors !== "undefined" ? fieldErrors : {}; const fieldIds = {"nama": "fNama", "fakultas": "fFakultas", "judul": "fJudul", "jenis": "fJenis", "deskripsi": "fDeskripsi"}; %>
 <%- include('partials/head', { title: 'Daftarkan KI' }) %>
 <%- include('partials/nav', { active: 'daftar' }) %>
 
-<main class="page-container section-narrow">
+<main id="mainContent" tabindex="-1" class="page-container section-narrow">
   <header class="page-header-center">
     <h1 class="page-title">Daftarkan Kekayaan Intelektual Anda</h1>
     <p class="page-desc">Ajukan pendaftaran Paten, Hak Cipta, Desain Industri, atau Merek hasil riset Anda untuk diverifikasi dan difasilitasi oleh P2KI LPPM UNISBA ke DJKI.</p>
@@ -17,78 +18,56 @@
     </div>
   <% } %>
 
-  <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
-    <div class="alert-box alert-danger">
-      <svg class="alert-icon sk-icon" width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#alert"/></svg>
-      <div>
-        <strong>Terjadi Kesalahan Pengisian</strong>
-        <p><%= errorMsg %></p>
-      </div>
-    </div>
-  <% } %>
 
-  <!-- SSO SISFO BOX -->
-  <div class="sso-modern-card" id="ssoCard">
-    <div class="sso-left">
-      <div class="sso-logo-box">
-        <svg width="22" height="22" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#lock"/></svg>
-      </div>
-      <div>
-        <h3 class="sso-title">Sinkronisasi Otomatis SISFO UNISBA</h3>
-        <p class="sso-subtitle">Masuk sekali klik untuk mengisi Nama, NIDN, dan Fakultas secara terverifikasi.</p>
-      </div>
-    </div>
-    <button class="btn-sso-action" type="button" onclick="sisfoLogin()" id="sisfoBtn">
-      <svg width="16" height="16" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#check"/></svg>
-      <span>Tautkan Akun SISFO</span>
-    </button>
-  </div>
+  <p class="service-note">Isi identitas Anda secara manual. Integrasi akun SISFO belum tersedia.</p>
 
   <!-- FORM CARD -->
+  <%- include("partials/form-errors", { fe, fieldIds }) %>
+
   <form class="modern-form-card" method="POST" action="/daftarkan-ki">
     <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
 
     <div class="form-grid-2">
       <div class="form-group">
         <label class="form-label" for="fNama">Nama Inventor Utama <span class="required-mark">*</span></label>
-        <input type="text" class="form-input" name="nama" id="fNama" placeholder="Contoh: Dr. Nama Inventor, M.T." required>
+        <input type="text" class="form-input" name="nama" id="fNama" placeholder="Contoh: Dr. Nama Inventor, M.T." required value="<%= fv.nama || '' %>" maxlength="200" aria-invalid="<%= !!fe.nama %>" <%- fe.nama ? 'aria-describedby="fNama-error"' : '' %>>
+        <% if (fe.nama) { %><span class="field-error" id="fNama-error"><%= fe.nama %></span><% } %>
         <span class="form-helper">Nama lengkap beserta gelar akademik</span>
       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="fNidn">NIDN / NUPN</label>
-        <input type="text" class="form-input" id="fNidn" placeholder="Contoh: 0412088701">
-        <span class="form-helper">Nomor Induk Dosen Nasional terdaftar di Kemendikbud</span>
-      </div>
     </div>
 
     <div class="form-group">
       <label class="form-label" for="fFakultas">Fakultas / Unit Asal <span class="required-mark">*</span></label>
-      <input type="text" class="form-input" name="fakultas" id="fFakultas" placeholder="Contoh: Fakultas Teknik / Fakultas Hukum" required>
+      <input type="text" class="form-input" name="fakultas" id="fFakultas" placeholder="Contoh: Fakultas Teknik / Fakultas Hukum" required value="<%= fv.fakultas || '' %>" maxlength="200" aria-invalid="<%= !!fe.fakultas %>" <%- fe.fakultas ? 'aria-describedby="fFakultas-error"' : '' %>>
+        <% if (fe.fakultas) { %><span class="field-error" id="fFakultas-error"><%= fe.fakultas %></span><% } %>
     </div>
 
     <div class="form-group">
       <label class="form-label" for="fJudul">Judul Kekayaan Intelektual <span class="required-mark">*</span></label>
-      <input type="text" class="form-input" name="judul" id="fJudul" placeholder="Judul invensi, sistem, formula, atau karya cipta" required>
+      <input type="text" class="form-input" name="judul" id="fJudul" placeholder="Judul invensi, sistem, formula, atau karya cipta" required value="<%= fv.judul || '' %>" maxlength="200" aria-invalid="<%= !!fe.judul %>" <%- fe.judul ? 'aria-describedby="fJudul-error"' : '' %>>
+        <% if (fe.judul) { %><span class="field-error" id="fJudul-error"><%= fe.judul %></span><% } %>
       <span class="form-helper">Judul harus jelas, ringkas, dan mencerminkan esensi inovasi</span>
     </div>
 
     <div class="form-group">
       <label class="form-label" for="fJenis">Kategori Jenis KI <span class="required-mark">*</span></label>
       <div class="select-wrap">
-        <select class="form-select" name="jenis" id="fJenis" required>
-          <option value="Paten">Paten &amp; Paten Sederhana (Teknologi / Formulasi / Alat)</option>
-          <option value="Hak Cipta">Hak Cipta (Buku, Modul, Perangkat Lunak, Video, Karya Tulis)</option>
-          <option value="Merek">Merek Dagang &amp; Jasa (Nama Brand, Logo Usaha)</option>
-          <option value="Desain Industri">Desain Industri (Bentuk Estetis, Konfigurasi Kemasan)</option>
-          <option value="KI Komunal">KI Komunal (Ekspresi Budaya &amp; Pengetahuan Tradisional)</option>
+        <select class="form-select" name="jenis" id="fJenis" required aria-invalid="<%= !!fe.jenis %>" <%- fe.jenis ? 'aria-describedby="fJenis-error"' : '' %>>
+          <option value="Paten" <%= fv.jenis === 'Paten' ? "selected" : "" %>>Paten &amp; Paten Sederhana (Teknologi / Formulasi / Alat)</option>
+          <option value="Hak Cipta" <%= fv.jenis === 'Hak Cipta' ? "selected" : "" %>>Hak Cipta (Buku, Modul, Perangkat Lunak, Video, Karya Tulis)</option>
+          <option value="Merek" <%= fv.jenis === 'Merek' ? "selected" : "" %>>Merek Dagang &amp; Jasa (Nama Brand, Logo Usaha)</option>
+          <option value="Desain Industri" <%= fv.jenis === 'Desain Industri' ? "selected" : "" %>>Desain Industri (Bentuk Estetis, Konfigurasi Kemasan)</option>
+          <option value="KI Komunal" <%= fv.jenis === 'KI Komunal' ? "selected" : "" %>>KI Komunal (Ekspresi Budaya &amp; Pengetahuan Tradisional)</option>
         </select>
+        <% if (fe.jenis) { %><span class="field-error" id="fJenis-error"><%= fe.jenis %></span><% } %>
       </div>
     </div>
 
     <div class="form-group">
       <label class="form-label" for="fDeskripsi">Deskripsi Non-Teknis &amp; Potensi Hilirisasi</label>
-      <textarea class="form-textarea" name="deskripsi" id="fDeskripsi" rows="4" placeholder="Jelaskan ringkasan masalah yang dipecahkan, keunggulan produk, dan sasaran industri penerima manfaat (hindari mengunggah klaim teknis rinci sebelum paten diajukan)..."></textarea>
+      <textarea class="form-textarea" name="deskripsi" id="fDeskripsi" rows="4" placeholder="Jelaskan ringkasan masalah yang dipecahkan, keunggulan produk, dan sasaran industri penerima manfaat (hindari mengunggah klaim teknis rinci sebelum paten diajukan)..." aria-invalid="<%= !!fe.deskripsi %>" <%- fe.deskripsi ? 'aria-describedby="fDeskripsi-error"' : '' %> maxlength="5000"><%= fv.deskripsi || '' %></textarea>
+        <% if (fe.deskripsi) { %><span class="field-error" id="fDeskripsi-error"><%= fe.deskripsi %></span><% } %>
       <span class="form-helper">Deskripsi ini akan digunakan tim LPPM untuk penelusuran awal kebaruan (novelty search).</span>
     </div>
 
@@ -102,20 +81,5 @@
   </form>
 </main>
 
-<script>
-function sisfoLogin(){
-  document.getElementById('fNama').value = 'Dr. Ilman Abidin, S.H., M.H.';
-  document.getElementById('fNidn').value = '0412088701';
-  document.getElementById('fFakultas').value = 'Fakultas Hukum';
-  ['fNama','fFakultas','fNidn'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.classList.add('input-locked');
-  });
-  const btn = document.getElementById('sisfoBtn');
-  btn.innerHTML = `<svg width="16" height="16" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#check"/></svg><span>Terhubung SISFO</span>`;
-  btn.classList.add('connected');
-  btn.disabled = true;
-}
-</script>
 
 <%- include('partials/footer') %>

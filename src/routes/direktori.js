@@ -57,9 +57,10 @@ router.get('/ajukan-minat', async (req, res, next) => {
 router.post('/ajukan-minat', async (req, res, next) => {
   try {
     const { validateAjukanMinat } = require('../validate');
-    const { errors, values } = validateAjukanMinat(req.body);
+    const { errors, values, fieldErrors } = validateAjukanMinat(req.body);
     if (errors.length > 0) {
-      return res.render('ajukan-minat', { kiItem: null, success: false, errorMsg: errors.join(' ') });
+      const kiItem = values.ki_item_id ? (await pool.query('SELECT * FROM ki_items WHERE id = $1', [values.ki_item_id])).rows[0] : null;
+      return res.status(400).render('ajukan-minat', { kiItem, success: false, values, fieldErrors });
     }
     await pool.query(
       `INSERT INTO interest_requests (ki_item_id, nama, institusi, email, jenis_kebutuhan, pesan)
@@ -77,9 +78,9 @@ router.get('/daftarkan-ki', (req, res) => {
 router.post('/daftarkan-ki', async (req, res, next) => {
   try {
     const { validateDaftarkanKI } = require('../validate');
-    const { errors, values } = validateDaftarkanKI(req.body);
+    const { errors, values, fieldErrors } = validateDaftarkanKI(req.body);
     if (errors.length > 0) {
-      return res.render('daftarkan-ki', { success: false, errorMsg: errors.join(' ') });
+      return res.status(400).render('daftarkan-ki', { success: false, values, fieldErrors });
     }
     await pool.query(
       `INSERT INTO ki_items (jenis, judul, inventor, fakultas, status_raw, status, deskripsi, tayang)

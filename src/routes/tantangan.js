@@ -80,9 +80,11 @@ router.get('/ajukan-solusi', async (req, res, next) => {
 router.post('/ajukan-solusi', async (req, res, next) => {
   try {
     const { validateAjukanSolusi } = require('../validate');
-    const { errors, values } = validateAjukanSolusi(req.body);
+    const { errors, values, fieldErrors } = validateAjukanSolusi(req.body);
     if (errors.length > 0) {
-      return res.render('ajukan-solusi', { challengeItem: null, success: false, errorMsg: errors.join(' ') });
+      const challenge = values.challenge_id ? (await pool.query('SELECT * FROM challenges WHERE id = $1', [values.challenge_id])).rows[0] : null;
+      const challengeItem = challenge ? { ...challenge, deadline_fmt: fmtDeadline(challenge.deadline) } : null;
+      return res.status(400).render('ajukan-solusi', { challengeItem, success: false, values, fieldErrors });
     }
     await pool.query(
       `INSERT INTO solutions (challenge_id, nama_peneliti, fakultas, ringkasan, ki_terkait)
@@ -100,9 +102,9 @@ router.get('/pasang-kebutuhan', (req, res) => {
 router.post('/pasang-kebutuhan', async (req, res, next) => {
   try {
     const { validatePasangKebutuhan } = require('../validate');
-    const { errors, values } = validatePasangKebutuhan(req.body);
+    const { errors, values, fieldErrors } = validatePasangKebutuhan(req.body);
     if (errors.length > 0) {
-      return res.render('pasang-kebutuhan', { success: false, errorMsg: errors.join(' ') });
+      return res.status(400).render('pasang-kebutuhan', { success: false, values, fieldErrors });
     }
     // Kode unik: pakai MAX(id)+1 berbasis sequence, bukan COUNT(*) — tahan terhadap
     // collision ketika baris pernah dihapus.

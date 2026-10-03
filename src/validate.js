@@ -44,7 +44,12 @@ function validateDaftarkanKI(body) {
   if (!fakultas) errors.push('Fakultas wajib diisi.');
   if (!judul) errors.push('Judul KI wajib diisi.');
   if (!jenis) errors.push('Jenis KI tidak valid.');
-  return { errors, values: { nama, fakultas, judul, jenis, deskripsi } };
+  const fieldErrors = {};
+  if (!nama) fieldErrors.nama = 'Isi nama inventor utama.';
+  if (!fakultas) fieldErrors.fakultas = 'Isi fakultas atau unit asal.';
+  if (!judul) fieldErrors.judul = 'Isi judul KI.';
+  if (!jenis) fieldErrors.jenis = 'Pilih jenis KI yang tersedia.';
+  return { errors, fieldErrors, values: { nama, fakultas, judul, jenis, deskripsi } };
 }
 
 // --- /ajukan-minat ---
@@ -57,8 +62,14 @@ function validateAjukanMinat(body) {
   const jenis_kebutuhan = clip(body.jenis_kebutuhan, MAX.short);
   const pesan = clip(body.pesan, MAX.long);
   if (!nama) errors.push('Nama lengkap wajib diisi.');
+  if (!email) errors.push('Email wajib diisi.');
+  if (!institusi) errors.push('Institusi wajib diisi.');
   if (!validEmail(email)) errors.push('Format email tidak valid.');
-  return { errors, values: { ki_item_id, nama, institusi, email, jenis_kebutuhan, pesan } };
+  const fieldErrors = {};
+  if (!nama) fieldErrors.nama = 'Isi nama perwakilan.';
+  if (!institusi) fieldErrors.institusi = 'Isi nama institusi.';
+  if (!email || !validEmail(email)) fieldErrors.email = 'Isi email yang valid, misalnya nama@institusi.id.';
+  return { errors, fieldErrors, values: { ki_item_id, nama, institusi, email, jenis_kebutuhan, pesan } };
 }
 
 // --- /ajukan-solusi ---
@@ -71,7 +82,10 @@ function validateAjukanSolusi(body) {
   const ki_terkait = clip(body.ki_terkait, MAX.short);
   if (!nama_peneliti) errors.push('Nama peneliti wajib diisi.');
   if (!ringkasan) errors.push('Ringkasan solusi wajib diisi.');
-  return { errors, values: { challenge_id, nama_peneliti, fakultas, ringkasan, ki_terkait } };
+  const fieldErrors = {};
+  if (!nama_peneliti) fieldErrors.nama_peneliti = 'Isi nama peneliti.';
+  if (!ringkasan) fieldErrors.ringkasan = 'Isi ringkasan solusi.';
+  return { errors, fieldErrors, values: { challenge_id, nama_peneliti, fakultas, ringkasan, ki_terkait } };
 }
 
 // --- /pasang-kebutuhan ---
@@ -88,7 +102,14 @@ function validatePasangKebutuhan(body) {
   if (!perusahaan) errors.push('Nama perusahaan wajib diisi.');
   if (!judul) errors.push('Judul kebutuhan wajib diisi.');
   if (!deskripsi) errors.push('Deskripsi masalah wajib diisi.');
-  return { errors, values: { perusahaan, kontak, judul, bidang, deskripsi, kebutuhan_spesifik, skema, deadline } };
+  const fieldErrors = {};
+  if (!perusahaan) fieldErrors.perusahaan = 'Isi nama perusahaan.';
+  if (!kontak) { errors.push('Kontak wajib diisi.'); fieldErrors.kontak = 'Isi nama kontak dan email.'; }
+  if (!judul) fieldErrors.judul = 'Isi judul kebutuhan.';
+  if (!deskripsi) fieldErrors.deskripsi = 'Jelaskan masalah yang ingin diselesaikan.';
+  if (!bidang) { errors.push('Bidang tidak valid.'); fieldErrors.bidang = 'Pilih bidang yang tersedia.'; }
+  if (!validDate(body.deadline)) { errors.push('Tanggal tidak valid.'); fieldErrors.deadline = 'Isi tanggal antara tahun 2000 dan 2100.'; }
+  return { errors, fieldErrors, values: { perusahaan, kontak, judul, bidang, deskripsi, kebutuhan_spesifik, skema, deadline } };
 }
 
 // --- /api/konsultasi & /api/ai-tanya ---

@@ -13,6 +13,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+// Compress public assets; session-specific HTML keeps its existing behavior.
+app.use(['/css', '/js', '/icons'], require('compression')());
 // Revalidate cached assets after a day; ETags still pick up subsequent changes.
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: '1d' }));
 

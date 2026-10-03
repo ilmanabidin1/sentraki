@@ -1,6 +1,26 @@
 # Audit teknis Sentra KI
 
-Tanggal: 3 Oktober 2026. Acuan kode: `0225b06`. Tujuan: kualitas antarmuka untuk dosen/peneliti Unisba.
+Tanggal: 3 Oktober 2026. Acuan audit awal: `0225b06`. Tujuan: kualitas antarmuka untuk dosen/peneliti Unisba. Temuan awal dipertahankan sebagai baseline; status perbaikan ada di bawah.
+
+## Hasil perbaikan sekaligus
+
+Seluruh 11 temuan implementasi ditangani pada pass berikutnya:
+
+- Navigasi ringkas hingga 1360 px, target sentuh 44×44 px, dan input ponsel 16 px.
+- Modul mengikuti tinggi isi; panel tertutup memakai `hidden`. Hierarki heading, landmark main, dan skip link diperbaiki.
+- Drawer modal memindahkan fokus ke tombol tutup, membatasi Tab pada menu, menonaktifkan latar, dan mengembalikan fokus saat ditutup. Transisi visibility dihapus agar fokus awal tidak menunggu animasi.
+- Kontras disclaimer/petunjuk dan state hover status diperbaiki melalui token bersama.
+- Mock pengisian SISFO dihapus; copy integrasi, konsultasi manusia, enkripsi, SLA, dan kesiapan lisensi diselaraskan dengan fungsi yang tersedia. Dokumen unduhan diberi penjelasan contoh/placeholder.
+- Chat memeriksa status HTTP dan payload, memiliki batas waktu, status pengiriman yang menunggu konfirmasi, dan retry pada pesan yang sama.
+- Formulir mempertahankan isian, radio/select, dan konteks KI/tantangan saat validasi gagal; error memiliki tautan dan keterangan field. Nilai sektor industri diselaraskan dengan validator.
+- Token dan pola form didokumentasikan di `docs/ui-patterns.md`. Definisi gradient text lama serta transisi tinggi accordion dihapus; disclosure menggunakan sprite SVG.
+- CSS diminifikasi dengan build yang memperbarui hash URL. Server mengompresi aset publik; logo footer dimuat lazy.
+
+Validasi: **9/9 tes lulus**, 16 GET rute lokal berstatus 200, POST invalid mempertahankan konteks KI dan tantangan, dan detector tidak menemukan pola pada sumber yang dipindai. Browser diuji pada 320, 390, 1024, dan 1440 px: tidak ada overflow halaman pada sampel; hasil filter paten/proses/2025 tetap 18. Materi modul kedua pada 390 px memiliki tinggi isi dan panel yang sama, 733 px. Fokus awal drawer terkonfirmasi `drawerClose`, dan kembali ke `mobileMenuToggle` saat Escape.
+
+Ukuran CSS: baseline 95.493 byte tanpa kompresi → sekitar **12.500 byte melalui gzip**, berkurang sekitar **87%**. Hasil minifikasi terbaru sekitar 78.900 byte sebelum gzip. Angka ini mengukur transfer aset lokal, bukan Core Web Vitals atau kecepatan hosting. Pengujian memakai database sementara dan balasan berbasis aturan, tanpa API AI eksternal. Perangkat fisik, pembaca layar nyata, zoom 200%, dan deployment produksi belum diuji.
+
+Koreksi bukti: README lama menyebut contoh tantangan industri, tetapi seeding aktual tidak membuat tantangan. Label contoh tidak diterapkan pada kebutuhan industri yang masuk melalui formulir. Integrasi SISFO/DJKI belum dibangun oleh perbaikan ini; klaimnya diperbaiki agar sesuai kondisi tersebut.
 
 ## Verdict integritas implementasi
 

@@ -4,6 +4,7 @@
   "description": "Website P2KI UNISBA - Direktori Kekayaan Intelektual, Link and Match Industri, dan Akademi KI",
   "main": "server.js",
   "scripts": {
+    "build": "node scripts/build-assets.js",
     "start": "node server.js",
     "seed": "node scripts/seed.js",
     "test": "node --test"
@@ -15,10 +16,14 @@
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^13.0.3",
     "better-sqlite3-session-store": "^0.1.0",
+    "compression": "^1.8.2",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "clean-css": "^5.3.3"
   }
 }

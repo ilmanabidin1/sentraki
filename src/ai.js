@@ -21,7 +21,7 @@ const RULE_ANSWERS = [
 ];
 
 const RULE_CONSULT = [
-  { kw: ['status', 'pendaftaran'], a: 'Untuk cek status pendaftaran, mohon sertakan judul KI atau nomor permohonan Anda ya, nanti kami bantu telusuri langsung di sistem P2KI.' },
+  { kw: ['status', 'pendaftaran'], a: 'Lihat halaman Status Paten atau cari judul/nomor permohonan pada Direktori KI. Panduan otomatis ini tidak mengakses status terbaru DJKI. Untuk status resmi, gunakan tautan PDKI pada detail KI.' },
   { kw: ['kerja sama', 'industri'], a: 'Baik, untuk kerja sama dengan industri kami arahkan lewat tab Tantangan Industri atau bisa juga ajukan minat lewat halaman Direktori KI. Ada KI atau bidang tertentu yang ingin dijajaki?' },
   { kw: ['manfaat ekonomi', 'royalti', 'bagi hasil'], a: 'Untuk pembagian manfaat ekonomi, panduan lengkapnya ada di halaman Unduhan pada dokumen Kerangka Pembagian Manfaat Ekonomi. Ada bagian spesifik yang ingin didiskusikan lebih lanjut?' }
 ];
@@ -38,6 +38,7 @@ async function callAnthropic(systemPrompt, userMessage) {
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
+      signal: AbortSignal.timeout(20000),
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -64,17 +65,17 @@ async function callAnthropic(systemPrompt, userMessage) {
 async function askLearningAI(question) {
   const aiAnswer = await callAnthropic(MODULE_CONTEXT, question);
   if (aiAnswer) return { jawaban: aiAnswer, sumber: 'anthropic_api' };
-  const fallback = 'Pertanyaan ini menarik. Untuk jawaban yang lebih pasti sesuai kasus Anda, saya sarankan lanjutkan lewat tab Konsultasi agar dijawab langsung oleh Admin P2KI.';
+  const fallback = 'Panduan otomatis belum mencakup pertanyaan ini. Untuk meninjau kasus Anda, hubungi sekretariat P2KI melalui kontak pada bagian bawah halaman.';
   return { jawaban: ruleBasedAnswer(question, RULE_ANSWERS, fallback), sumber: 'rule_based' };
 }
 
 async function autoReplyConsult(message) {
   const aiAnswer = await callAnthropic(
-    'Kamu adalah admin P2KI UNISBA yang membalas konsultasi soal KI, pendaftaran, atau kerja sama industri. Balas singkat, ramah, dan profesional dalam 1-3 kalimat Bahasa Indonesia.',
+    'Kamu adalah asisten otomatis panduan KI UNISBA, bukan staf manusia. Jangan menjanjikan pengecekan status, tindak lanjut, integrasi, atau layanan yang tidak kamu akses. Balas singkat dan profesional dalam Bahasa Indonesia.',
     message
   );
   if (aiAnswer) return aiAnswer;
-  const fallback = 'Terima kasih, pesan Anda sudah kami terima. Admin P2KI akan segera membalas dengan informasi lebih lanjut.';
+  const fallback = 'Ini balasan otomatis. Untuk pembahasan kasus yang belum tersedia dalam panduan, hubungi sekretariat P2KI melalui kontak pada bagian bawah halaman.';
   return ruleBasedAnswer(message, RULE_CONSULT, fallback);
 }
 

@@ -1,7 +1,7 @@
 <%- include('partials/head', { title: 'Tantangan Industri' }) %>
 <%- include('partials/nav', { active: 'tantangan' }) %>
 
-<main class="page-container">
+<main id="mainContent" tabindex="-1" class="page-container">
   <header class="page-header">
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="/">Beranda</a>
@@ -31,7 +31,7 @@
             <svg width="16" height="16" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#filter"/></svg>
             <span>Filter Kebutuhan</span>
           </div>
-          <span class="disclosure-chevron">▾</span>
+          <svg class="disclosure-chevron sk-icon" width="16" height="16" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#down"/></svg>
         </summary>
 
         <form class="filter-box" method="GET" action="/tantangan-industri" id="filterForm">

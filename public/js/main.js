@@ -10,24 +10,34 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeBtn = document.getElementById('drawerClose');
   const backdrop = document.getElementById('mobileBackdrop');
   const drawer = document.getElementById('mobileDrawer');
+  const background = [...document.querySelector('.app-shell').children].filter(el => el !== drawer && el !== backdrop);
+  let returnFocus;
 
   function openDrawer() {
     if (drawer && backdrop) {
+      returnFocus = document.activeElement;
+      drawer.inert = false;
+      background.forEach(el => { el.inert = true; });
       drawer.classList.add('open');
       backdrop.classList.add('open');
       drawer.setAttribute('aria-hidden', 'false');
       toggleBtn && toggleBtn.setAttribute('aria-expanded', 'true');
       document.body.style.overflow = 'hidden';
+      closeBtn?.focus();
     }
   }
 
   function closeDrawer() {
     if (drawer && backdrop) {
+      const wasOpen = drawer.classList.contains('open');
       drawer.classList.remove('open');
       backdrop.classList.remove('open');
       drawer.setAttribute('aria-hidden', 'true');
       toggleBtn && toggleBtn.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
+      drawer.inert = true;
+      background.forEach(el => { el.inert = false; });
+      if (wasOpen) returnFocus?.focus();
     }
   }
 
@@ -35,12 +45,18 @@ document.addEventListener('DOMContentLoaded', () => {
   if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
   if (backdrop) backdrop.addEventListener('click', closeDrawer);
   document.addEventListener('keydown', event => {
+    if (event.key === 'Tab' && drawer?.classList.contains('open')) {
+      const controls = [...drawer.querySelectorAll('a[href],button:not([disabled])')];
+      const first = controls[0], last = controls.at(-1);
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
     if (event.key === 'Escape' && drawer && drawer.classList.contains('open')) {
       closeDrawer();
       toggleBtn?.focus();
     }
   });
-  window.matchMedia('(min-width: 901px)').addEventListener('change', event => {
+  window.matchMedia('(min-width: 1361px)').addEventListener('change', event => {
     if (event.matches) closeDrawer();
   });
   // Small, event-driven dropdown; no polling or scroll listeners.
@@ -60,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && dropdown?.classList.contains('is-open')) {
       closeDropdown();
-      dropdownBtn?.blur();
+      dropdownBtn?.focus();
     }
   });
 
@@ -69,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (dirFilters && window.matchMedia('(max-width: 900px)').matches) {
     dirFilters.open = false;
   }
+  document.getElementById('formErrors')?.focus();
 });
 
 // Learning Modules Accordion
@@ -79,9 +96,40 @@ function toggleModule(i) {
   el.classList.toggle('open');
   const btn = el.querySelector('.module-head-btn');
   if (btn) btn.setAttribute('aria-expanded', !isOpen);
+  const panel = el.querySelector('.module-collapsible-body');
+  if (panel) panel.hidden = isOpen;
 }
 
 // AI Assistant Chat Widget
+async function chatRequest(url, payload) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30000);
+  try {
+    const res = await fetch(url, {
+      method: 'POST', signal: controller.signal,
+      headers: { 'Content-Type': 'application/json', 'x-csrf-token': csrfToken() },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Permintaan belum berhasil. Silakan coba lagi.');
+    const answer = url === '/api/ai-tanya' ? data.jawaban : data.reply;
+    if (typeof answer !== 'string' || !answer.trim()) throw new Error('Jawaban belum tersedia. Silakan coba lagi.');
+    return answer;
+  } catch (error) {
+    if (error.name === 'AbortError') throw new Error('Server belum memberi konfirmasi. Periksa koneksi sebelum mencoba lagi.');
+    if (error instanceof TypeError) throw new Error('Koneksi terputus. Pesan tetap tersimpan di layar; coba lagi setelah tersambung.');
+    throw error;
+  } finally { clearTimeout(timeout); }
+}
+
+function retryControl(container, error, retry) {
+  container.textContent = error.message;
+  const button = document.createElement('button');
+  button.type = 'button'; button.className = 'chat-retry'; button.textContent = 'Coba lagi';
+  button.addEventListener('click', retry, { once: true });
+  container.appendChild(button);
+}
+
 async function sendAIQuestion() {
   const input = document.getElementById('aiInput');
   if (!input) return;
@@ -130,29 +178,19 @@ async function askAI(question) {
   log.appendChild(loadingMsg);
   log.scrollTop = log.scrollHeight;
 
-  try {
-    const res = await fetch('/api/ai-tanya', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-csrf-token': csrfToken()
-      },
-      body: JSON.stringify({ question: q })
-    });
-    const data = await res.json();
-    const loadingEl = document.getElementById(loadingId);
-    if (loadingEl) {
-      loadingEl.classList.remove('ai-loading');
-      loadingEl.querySelector('.bubble').textContent = data.jawaban;
-    }
-  } catch (err) {
-    const loadingEl = document.getElementById(loadingId);
-    if (loadingEl) {
-      loadingEl.classList.remove('ai-loading');
-      loadingEl.querySelector('.bubble').textContent = 'Maaf, terjadi kendala saat memproses pertanyaan ke server. Silakan coba kembali sesaat lagi.';
+  async function deliver() {
+    loadingMsg.classList.add('ai-loading');
+    loadingMsg.querySelector('.bubble').textContent = 'Sedang menyiapkan jawaban…';
+    try {
+      loadingMsg.querySelector('.bubble').textContent = await chatRequest('/api/ai-tanya', { question: q });
+    } catch (err) {
+      retryControl(loadingMsg.querySelector('.bubble'), err, deliver);
+    } finally {
+      loadingMsg.classList.remove('ai-loading');
+      log.scrollTop = log.scrollHeight;
     }
   }
-  log.scrollTop = log.scrollHeight;
+  await deliver();
 }
 
 // Online Consultation Messenger
@@ -184,23 +222,19 @@ async function sendConsult(message) {
   userRow.innerHTML = `
     <div class="bubble-content-wrap">
       <div class="chat-bubble"></div>
-      <div class="chat-time">${time} · Terkirim</div>
+      <div class="chat-time" role="status">${time} · Mengirim…</div>
     </div>
   `;
   userRow.querySelector('.chat-bubble').textContent = msg;
   body.appendChild(userRow);
   body.scrollTop = body.scrollHeight;
 
-  try {
-    const res = await fetch('/api/konsultasi', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-csrf-token': csrfToken()
-      },
-      body: JSON.stringify({ message: msg })
-    });
-    const data = await res.json();
+  async function deliver() {
+    const status = userRow.querySelector('.chat-time');
+    status.textContent = `${time} · Mengirim…`;
+    try {
+    const reply = await chatRequest('/api/konsultasi', { message: msg });
+    status.textContent = `${time} · Terkirim`;
     const replyTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
     const botRow = document.createElement('div');
@@ -211,18 +245,13 @@ async function sendConsult(message) {
         <div class="chat-time">${replyTime}</div>
       </div>
     `;
-    botRow.querySelector('.chat-bubble').textContent = data.reply;
+    botRow.querySelector('.chat-bubble').textContent = reply;
     body.appendChild(botRow);
     body.scrollTop = body.scrollHeight;
   } catch (err) {
-    const botRow = document.createElement('div');
-    botRow.className = 'chat-bubble-row them';
-    botRow.innerHTML = `
-      <div class="bubble-content-wrap">
-        <div class="chat-bubble alert-text">Maaf, pesan Anda gagal terkirim karena kendala jaringan. Silakan segarkan halaman dan coba kembali.</div>
-      </div>
-    `;
-    body.appendChild(botRow);
+    retryControl(status, err, deliver);
     body.scrollTop = body.scrollHeight;
   }
+  }
+  await deliver();
 }

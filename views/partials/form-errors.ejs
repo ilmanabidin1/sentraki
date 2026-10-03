@@ -1,0 +1,11 @@
+<% if (Object.keys(fe).length) { %>
+<div id="formErrors" class="alert-box alert-danger" role="alert" tabindex="-1">
+  <div>
+    <strong>Periksa bagian yang perlu diperbaiki</strong>
+    <p>Isian Anda tetap tersimpan di formulir ini.</p>
+    <ul><% Object.entries(fe).forEach(([field, message]) => { %>
+      <li><a href="#<%= fieldIds[field] %>"><%= message %></a></li>
+    <% }) %></ul>
+  </div>
+</div>
+<% } %>

@@ -1,7 +1,8 @@
+<% const fv = typeof values !== "undefined" ? values : {}; const fe = typeof fieldErrors !== "undefined" ? fieldErrors : {}; const fieldIds = {"nama": "mNama", "email": "mEmail", "institusi": "mInstitusi", "pesan": "mPesan"}; %>
 <%- include('partials/head', { title: 'Ajukan Minat Kerja Sama' }) %>
 <%- include('partials/nav', { active: 'direktori' }) %>
 
-<main class="page-container section-narrow">
+<main id="mainContent" tabindex="-1" class="page-container section-narrow">
   <header class="page-header-center">
     <h1 class="page-title">Ajukan Minat Kerja Sama Inovasi</h1>
     <p class="page-desc">Sampaikan ketertarikan industri atau institusi Anda terhadap invensi UNISBA. Tim P2KI akan memverifikasi dan memfasilitasi penjajakan komersial secara tertutup.</p>
@@ -12,20 +13,11 @@
       <svg class="alert-icon sk-icon" width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#certificate"/></svg>
       <div>
         <strong>Pengajuan Minat Diterima!</strong>
-        <p>Terima kasih. Permohonan kerja sama Anda telah tercatat. Tim kemitraan P2KI akan menghubungi kontak perwakilan Anda dalam 3–5 hari kerja untuk penjajakan lebih lanjut.</p>
+        <p>Terima kasih. Permohonan kerja sama Anda telah tercatat. Pengajuan tersedia untuk ditinjau tim kemitraan P2KI.</p>
       </div>
     </div>
   <% } %>
 
-  <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
-    <div class="alert-box alert-danger">
-      <svg class="alert-icon sk-icon" width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#alert"/></svg>
-      <div>
-        <strong>Pengisian Belum Lengkap</strong>
-        <p><%= errorMsg %></p>
-      </div>
-    </div>
-  <% } %>
 
   <% if (kiItem) { %>
     <div class="selected-entity-card">
@@ -40,6 +32,8 @@
     </div>
   <% } %>
 
+  <%- include("partials/form-errors", { fe, fieldIds }) %>
+
   <form class="modern-form-card" method="POST" action="/ajukan-minat">
     <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
     <input type="hidden" name="ki_item_id" value="<%= kiItem ? kiItem.id : '' %>">
@@ -47,25 +41,28 @@
     <div class="form-grid-2">
       <div class="form-group">
         <label class="form-label" for="mNama">Nama Lengkap Perwakilan <span class="required-mark">*</span></label>
-        <input type="text" class="form-input" name="nama" id="mNama" required placeholder="Nama lengkap Anda">
+        <input type="text" class="form-input" name="nama" id="mNama" required placeholder="Nama lengkap Anda" value="<%= fv.nama || '' %>" maxlength="200" aria-invalid="<%= !!fe.nama %>" <%- fe.nama ? 'aria-describedby="mNama-error"' : '' %>>
+        <% if (fe.nama) { %><span class="field-error" id="mNama-error"><%= fe.nama %></span><% } %>
       </div>
 
       <div class="form-group">
         <label class="form-label" for="mEmail">Email Bisnis / Resmi <span class="required-mark">*</span></label>
-        <input type="email" class="form-input" name="email" id="mEmail" required placeholder="contoh@perusahaan.com">
+        <input type="email" class="form-input" name="email" id="mEmail" required placeholder="contoh@perusahaan.com" value="<%= fv.email || '' %>" maxlength="500" aria-invalid="<%= !!fe.email %>" <%- fe.email ? 'aria-describedby="mEmail-error"' : '' %>>
+        <% if (fe.email) { %><span class="field-error" id="mEmail-error"><%= fe.email %></span><% } %>
       </div>
     </div>
 
     <div class="form-group">
       <label class="form-label" for="mInstitusi">Nama Perusahaan / Institusi <span class="required-mark">*</span></label>
-      <input type="text" class="form-input" name="institusi" id="mInstitusi" required placeholder="PT / CV / Lembaga / Yayasan">
+      <input type="text" class="form-input" name="institusi" id="mInstitusi" required placeholder="PT / CV / Lembaga / Yayasan" value="<%= fv.institusi || '' %>" maxlength="500" aria-invalid="<%= !!fe.institusi %>" <%- fe.institusi ? 'aria-describedby="mInstitusi-error"' : '' %>>
+        <% if (fe.institusi) { %><span class="field-error" id="mInstitusi-error"><%= fe.institusi %></span><% } %>
     </div>
 
     <div class="form-group">
       <label class="form-label">Bentuk Minat Kemitraan <span class="required-mark">*</span></label>
       <div class="radio-card-grid">
         <label class="radio-card-item">
-          <input type="radio" name="jenis_kebutuhan" value="Lisensi KI" checked>
+          <input type="radio" name="jenis_kebutuhan" value="Lisensi KI" <%= fv.jenis_kebutuhan === 'Lisensi KI' || !fv.jenis_kebutuhan ? "checked" : "" %>>
           <div class="radio-card-content">
             <span class="radio-card-title">Lisensi Komersial</span>
             <span class="radio-card-desc">Pemanfaatan paten/cipta untuk produksi massal</span>
@@ -73,7 +70,7 @@
         </label>
 
         <label class="radio-card-item">
-          <input type="radio" name="jenis_kebutuhan" value="Investasi">
+          <input type="radio" name="jenis_kebutuhan" value="Investasi" <%= fv.jenis_kebutuhan === 'Investasi' ? "checked" : "" %>>
           <div class="radio-card-content">
             <span class="radio-card-title">Investasi / Pendanaan</span>
             <span class="radio-card-desc">Dukungan modal pengembangan lanjutan (prototipe ke pasar)</span>
@@ -81,7 +78,7 @@
         </label>
 
         <label class="radio-card-item">
-          <input type="radio" name="jenis_kebutuhan" value="Riset Bersama">
+          <input type="radio" name="jenis_kebutuhan" value="Riset Bersama" <%= fv.jenis_kebutuhan === 'Riset Bersama' ? "checked" : "" %>>
           <div class="radio-card-content">
             <span class="radio-card-title">Riset Kolaboratif</span>
             <span class="radio-card-desc">Pengembangan bersama laboratorium UNISBA</span>
@@ -89,7 +86,7 @@
         </label>
 
         <label class="radio-card-item">
-          <input type="radio" name="jenis_kebutuhan" value="Distribusi / Produksi">
+          <input type="radio" name="jenis_kebutuhan" value="Distribusi / Produksi" <%= fv.jenis_kebutuhan === 'Distribusi / Produksi' ? "checked" : "" %>>
           <div class="radio-card-content">
             <span class="radio-card-title">Mitra Distribusi</span>
             <span class="radio-card-desc">Akses pasar, rantai pasok, atau manufaktur</span>
@@ -100,7 +97,8 @@
 
     <div class="form-group">
       <label class="form-label" for="mPesan">Pesan / Gambaran Kebutuhan</label>
-      <textarea class="form-textarea" name="pesan" id="mPesan" rows="4" placeholder="Ceritakan singkat profil usaha Anda dan bagaimana inovasi ini akan diimplementasikan..."></textarea>
+      <textarea class="form-textarea" name="pesan" id="mPesan" rows="4" placeholder="Ceritakan singkat profil usaha Anda dan bagaimana inovasi ini akan diimplementasikan..." aria-invalid="<%= !!fe.pesan %>" <%- fe.pesan ? 'aria-describedby="mPesan-error"' : '' %> maxlength="5000"><%= fv.pesan || '' %></textarea>
+        <% if (fe.pesan) { %><span class="field-error" id="mPesan-error"><%= fe.pesan %></span><% } %>
     </div>
 
     <div class="form-footer-action">
@@ -108,7 +106,7 @@
         <svg width="18" height="18" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#send"/></svg>
         <span>Kirim Minat Kerja Sama</span>
       </button>
-      <p class="form-disclaimer">Informasi yang disampaikan dijamin kerahasiaannya dan hanya digunakan untuk keperluan penjajakan kerja sama resmi.</p>
+      <p class="form-disclaimer">Sampaikan ringkasan kebutuhan untuk penjajakan kerja sama. Hindari menyertakan informasi rahasia pada tahap ini.</p>
     </div>
   </form>
 </main>

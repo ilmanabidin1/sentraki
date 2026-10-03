@@ -1,7 +1,8 @@
+<% const fv = typeof values !== "undefined" ? values : {}; const fe = typeof fieldErrors !== "undefined" ? fieldErrors : {}; const fieldIds = {"perusahaan": "cPerusahaan", "kontak": "cKontak", "judul": "cJudul", "bidang": "cBidang", "deadline": "cDeadline", "deskripsi": "cDeskripsi", "kebutuhan_spesifik": "cSpesifik"}; %>
 <%- include('partials/head', { title: 'Pasang Kebutuhan Industri' }) %>
 <%- include('partials/nav', { active: 'tantangan' }) %>
 
-<main class="page-container section-narrow">
+<main id="mainContent" tabindex="-1" class="page-container section-narrow">
   <header class="page-header-center">
     <h1 class="page-title">Pasang Kebutuhan Riset Industri</h1>
     <p class="page-desc">Tuliskan kendala teknis atau kebutuhan inovasi produk industri Anda. P2KI UNISBA akan mempublikasikannya kepada akademisi dan laboratorium yang tepat.</p>
@@ -12,10 +13,12 @@
       <svg class="alert-icon sk-icon" width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#certificate"/></svg>
       <div>
         <strong>Kebutuhan Industri Berhasil Didaftarkan!</strong>
-        <p>Kebutuhan Anda telah masuk ke sistem dan akan ditinjau oleh staf kurasi LPPM dalam 2–3 hari kerja sebelum dipublikasikan di kanal Tantangan Industri.</p>
+        <p>Kebutuhan Anda telah masuk ke sistem dan akan ditinjau oleh staf kurasi LPPM sebelum dipublikasikan di kanal Tantangan Industri.</p>
       </div>
     </div>
   <% } %>
+
+  <%- include("partials/form-errors", { fe, fieldIds }) %>
 
   <form class="modern-form-card" method="POST" action="/pasang-kebutuhan">
     <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
@@ -23,47 +26,54 @@
     <div class="form-grid-2">
       <div class="form-group">
         <label class="form-label" for="cPerusahaan">Nama Perusahaan / Institusi <span class="required-mark">*</span></label>
-        <input type="text" class="form-input" name="perusahaan" id="cPerusahaan" placeholder="PT / CV / BUMN / Koperasi" required>
+        <input type="text" class="form-input" name="perusahaan" id="cPerusahaan" placeholder="PT / CV / BUMN / Koperasi" required value="<%= fv.perusahaan || '' %>" maxlength="200" aria-invalid="<%= !!fe.perusahaan %>" <%- fe.perusahaan ? 'aria-describedby="cPerusahaan-error"' : '' %>>
+        <% if (fe.perusahaan) { %><span class="field-error" id="cPerusahaan-error"><%= fe.perusahaan %></span><% } %>
       </div>
 
       <div class="form-group">
         <label class="form-label" for="cKontak">Kontak Person &amp; Email Resmi <span class="required-mark">*</span></label>
-        <input type="text" class="form-input" name="kontak" id="cKontak" placeholder="Nama - email@perusahaan.com" required>
+        <input type="text" class="form-input" name="kontak" id="cKontak" placeholder="Nama - email@perusahaan.com" required value="<%= fv.kontak || '' %>" maxlength="500" aria-invalid="<%= !!fe.kontak %>" <%- fe.kontak ? 'aria-describedby="cKontak-error"' : '' %>>
+        <% if (fe.kontak) { %><span class="field-error" id="cKontak-error"><%= fe.kontak %></span><% } %>
       </div>
     </div>
 
     <div class="form-group">
       <label class="form-label" for="cJudul">Judul Kebutuhan / Masalah Utama <span class="required-mark">*</span></label>
-      <input type="text" class="form-input" name="judul" id="cJudul" placeholder="Contoh: Pengawetan Alami Daging Olahan Bebas Nitrit untuk Skala Komersial" required>
+      <input type="text" class="form-input" name="judul" id="cJudul" placeholder="Contoh: Pengawetan Alami Daging Olahan Bebas Nitrit untuk Skala Komersial" required value="<%= fv.judul || '' %>" maxlength="200" aria-invalid="<%= !!fe.judul %>" <%- fe.judul ? 'aria-describedby="cJudul-error"' : '' %>>
+        <% if (fe.judul) { %><span class="field-error" id="cJudul-error"><%= fe.judul %></span><% } %>
     </div>
 
     <div class="form-grid-2">
       <div class="form-group">
         <label class="form-label" for="cBidang">Bidang Sektor Industri <span class="required-mark">*</span></label>
         <div class="select-wrap">
-          <select class="form-select" name="bidang" id="cBidang" required>
-            <option>Teknologi &amp; Manufaktur</option>
-            <option>Kesehatan &amp; Farmasi</option>
-            <option>Ekonomi Syariah &amp; Keuangan</option>
-            <option>Pertanian, Pangan &amp; Lingkungan</option>
+          <select class="form-select" name="bidang" id="cBidang" required aria-invalid="<%= !!fe.bidang %>" <%- fe.bidang ? 'aria-describedby="cBidang-error"' : '' %>>
+            <option <%= fv.bidang === 'Teknologi & Manufaktur' ? "selected" : "" %>>Teknologi &amp; Manufaktur</option>
+            <option <%= fv.bidang === 'Kesehatan & Farmasi' ? "selected" : "" %>>Kesehatan &amp; Farmasi</option>
+            <option value="Ekonomi Syariah" <%= fv.bidang === 'Ekonomi Syariah' ? "selected" : "" %>>Ekonomi Syariah &amp; Keuangan</option>
+            <option value="Pertanian &amp; Lingkungan" <%= fv.bidang === 'Pertanian & Lingkungan' ? "selected" : "" %>>Pertanian, Pangan &amp; Lingkungan</option>
           </select>
+        <% if (fe.bidang) { %><span class="field-error" id="cBidang-error"><%= fe.bidang %></span><% } %>
         </div>
       </div>
 
       <div class="form-group">
         <label class="form-label" for="cDeadline">Batas Waktu Pengajuan Solusi</label>
-        <input type="date" class="form-input" name="deadline" id="cDeadline">
+        <input type="date" class="form-input" name="deadline" id="cDeadline" value="<%= fv.deadline || '' %>" aria-invalid="<%= !!fe.deadline %>" <%- fe.deadline ? 'aria-describedby="cDeadline-error"' : '' %>>
+        <% if (fe.deadline) { %><span class="field-error" id="cDeadline-error"><%= fe.deadline %></span><% } %>
       </div>
     </div>
 
     <div class="form-group">
       <label class="form-label" for="cDeskripsi">Deskripsi Masalah / Latar Belakang <span class="required-mark">*</span></label>
-      <textarea class="form-textarea" name="deskripsi" id="cDeskripsi" rows="4" placeholder="Jelaskan kondisi saat ini, kendala teknis atau regulasi yang dihadapi, serta urgensi penyelesaiannya..." required></textarea>
+      <textarea class="form-textarea" name="deskripsi" id="cDeskripsi" rows="4" placeholder="Jelaskan kondisi saat ini, kendala teknis atau regulasi yang dihadapi, serta urgensi penyelesaiannya..." required aria-invalid="<%= !!fe.deskripsi %>" <%- fe.deskripsi ? 'aria-describedby="cDeskripsi-error"' : '' %> maxlength="5000"><%= fv.deskripsi || '' %></textarea>
+        <% if (fe.deskripsi) { %><span class="field-error" id="cDeskripsi-error"><%= fe.deskripsi %></span><% } %>
     </div>
 
     <div class="form-group">
       <label class="form-label" for="cSpesifik">Kebutuhan Spesifik / Batasan Teknis</label>
-      <textarea class="form-textarea" name="kebutuhan_spesifik" id="cSpesifik" rows="3" placeholder="- Bahan bersumber lokal Indonesia&#10;- Biaya produksi efisien&#10;- Siap uji coba skala lab dalam 6 bulan"></textarea>
+      <textarea class="form-textarea" name="kebutuhan_spesifik" id="cSpesifik" rows="3" placeholder="- Bahan bersumber lokal Indonesia&#10;- Biaya produksi efisien&#10;- Siap uji coba skala lab dalam 6 bulan" aria-invalid="<%= !!fe.kebutuhan_spesifik %>" <%- fe.kebutuhan_spesifik ? 'aria-describedby="cSpesifik-error"' : '' %> maxlength="5000"><%= fv.kebutuhan_spesifik || '' %></textarea>
+        <% if (fe.kebutuhan_spesifik) { %><span class="field-error" id="cSpesifik-error"><%= fe.kebutuhan_spesifik %></span><% } %>
       <span class="form-helper">Gunakan tanda strip (-) di setiap baris untuk kriteria terpisah.</span>
     </div>
 
@@ -71,7 +81,7 @@
       <label class="form-label">Skema Kerja Sama yang Ditawarkan <span class="required-mark">*</span></label>
       <div class="radio-card-grid">
         <label class="radio-card-item">
-          <input type="radio" name="skema" value="Lisensi Hasil Riset" checked>
+          <input type="radio" name="skema" value="Lisensi Hasil Riset" <%= fv.skema === 'Lisensi Hasil Riset' || !fv.skema ? "checked" : "" %>>
           <div class="radio-card-content">
             <span class="radio-card-title">Lisensi Komersial</span>
             <span class="radio-card-desc">Royalti atas hasil inovasi</span>
@@ -79,7 +89,7 @@
         </label>
 
         <label class="radio-card-item">
-          <input type="radio" name="skema" value="Pendanaan Riset Bersama">
+          <input type="radio" name="skema" value="Pendanaan Riset Bersama" <%= fv.skema === 'Pendanaan Riset Bersama' ? "checked" : "" %>>
           <div class="radio-card-content">
             <span class="radio-card-title">Matching Fund / Joint R&amp;D</span>
             <span class="radio-card-desc">Pembiayaan riset kolaboratif</span>
@@ -87,7 +97,7 @@
         </label>
 
         <label class="radio-card-item">
-          <input type="radio" name="skema" value="Konsultasi Berbayar">
+          <input type="radio" name="skema" value="Konsultasi Berbayar" <%= fv.skema === 'Konsultasi Berbayar' ? "checked" : "" %>>
           <div class="radio-card-content">
             <span class="radio-card-title">Konsultasi Pakar</span>
             <span class="radio-card-desc">Pendampingan teknis laboratorium</span>
@@ -95,7 +105,7 @@
         </label>
 
         <label class="radio-card-item">
-          <input type="radio" name="skema" value="Akuisisi KI">
+          <input type="radio" name="skema" value="Akuisisi KI" <%= fv.skema === 'Akuisisi KI' ? "checked" : "" %>>
           <div class="radio-card-content">
             <span class="radio-card-title">Akuisisi Penuh</span>
             <span class="radio-card-desc">Pengalihan hak paten secara eksklusif</span>

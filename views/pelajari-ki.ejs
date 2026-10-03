@@ -1,7 +1,7 @@
 <%- include('partials/head', { title: 'Pelajari KI & Asisten AI' }) %>
 <%- include('partials/nav', { active: 'pelajari' }) %>
 
-<main class="page-container section-narrow" style="max-width: 860px;">
+<main id="mainContent" tabindex="-1" class="page-container section-narrow" style="max-width: 860px;">
   <header class="page-header-center">
     <h1 class="page-title">Panduan &amp; Pembelajaran KI</h1>
     <p class="page-desc">Disarikan dari modul resmi pelatihan bersama DJKI Kemenkumham RI, disajikan ringkas dan terstruktur untuk memandu inventor kampus dari hulu ke hilir.</p>
@@ -11,11 +11,11 @@
   <div class="learning-modules-list" id="moduleList">
     <% modules.forEach((m, i) => { %>
       <div class="modern-module-card <%= i === 0 ? 'open' : '' %>" id="module-<%= i %>">
-        <button class="module-head-btn" type="button" onclick="toggleModule(<%= i %>)" aria-expanded="<%= i === 0 ? 'true' : 'false' %>">
+        <button class="module-head-btn" type="button" onclick="toggleModule(<%= i %>)" aria-expanded="<%= i === 0 ? 'true' : 'false' %>" aria-controls="module-panel-<%= i %>">
           <div class="module-head-left">
             <div class="module-index-badge"><%= String(i + 1).padStart(2, '0') %></div>
             <div class="module-text-meta">
-              <h3 class="module-title"><%= m.title %></h3>
+              <h2 class="module-title"><%= m.title %></h2>
               <span class="module-duration"><%= m.meta %></span>
             </div>
           </div>
@@ -24,7 +24,7 @@
           </div>
         </button>
 
-        <div class="module-collapsible-body">
+        <div class="module-collapsible-body" id="module-panel-<%= i %>" <%= i === 0 ? '' : 'hidden' %>>
           <div class="module-body-inner">
             <ul class="module-points-list">
               <% m.points.forEach(p => { %>
@@ -52,7 +52,7 @@
         <svg width="20" height="20" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#assistant"/></svg>
       </div>
       <div class="ai-header-text">
-        <h3 class="ai-title">Tanya Asisten AI Sentra KI</h3>
+        <h2 class="ai-title">Tanya Asisten AI Sentra KI</h2>
         <p class="ai-desc">Tanyakan seputar jenis KI, perbedaan paten sederhana, alur pendaftaran, atau pembagian manfaat ekonomi.</p>
       </div>
     </div>
@@ -88,7 +88,7 @@
     </div>
 
     <div class="ai-disclaimer-note" id="aiDisclaimer">
-      <span><%= aiEnabled ? 'Terhubung ke model cerdas AI Sentra KI.' : 'Mode cerdas responsif Sentra KI LPPM UNISBA.' %> Jawaban bersifat edukasi &amp; konsultatif.</span>
+      <span><%= aiEnabled ? 'Terhubung ke model cerdas AI Sentra KI.' : 'Panduan otomatis berbasis kata kunci.' %> Jawaban bersifat edukasi &amp; konsultatif.</span>
     </div>
   </section>
 </main>

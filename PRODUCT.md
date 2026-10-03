@@ -39,7 +39,7 @@ Alur di atas bersumber dari implementasi repository. Ketersediaan operasional la
 - Hindari biaya render yang tidak membantu tugas pengguna, efek terus-menerus, dan dependensi visual berat. Klaim peningkatan performa harus didukung pengukuran; perubahan kode lokal tidak membuktikan kecepatan hosting.
 - Login SISFO masih berupa demonstrasi, bukan SSO yang terhubung ke sistem universitas.
 - Tanya-jawab menggunakan aturan lokal secara default; API AI bersifat opsional. Jangan mengklaim semua jawaban berasal dari model AI atau konsultasi langsung manusia tanpa bukti.
-- Data tantangan industri dan dokumen unduhan mencakup contoh/placeholder menurut dokumentasi repository. Status resmi harus dikonfirmasi sebelum digunakan sebagai bukti layanan.
+- Kode seeding saat ini tidak membuat tantangan industri contoh. Kebutuhan yang dikirim melalui formulir menunggu tinjauan sebelum publikasi. Dokumen unduhan masih perlu dikonfirmasi sebagai dokumen resmi sebelum digunakan.
 
 ## Brand Commitments
 
