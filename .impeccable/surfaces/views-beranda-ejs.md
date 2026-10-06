@@ -13,7 +13,7 @@ Scope: beranda and shared navigation, typography, controls, footer; quieter refi
 
 THESIS: An academic atlas of intellectual property, indexed by real inventions. Replace the equal-card marketing opener with large editorial type, a working catalogue search and an actual portfolio index.
 
-OWN-WORLD: Deep institutional navy, restrained champagne gold, white reading surfaces. Manrope 700 for the modern opening title as requested by the owner; Bodoni Moda 400 for section headlines; Manrope for interface and data. Square-ended rules, lightly rounded controls, no decorative blur or neon glow.
+OWN-WORLD: Deep institutional navy, restrained champagne gold, white reading surfaces. Manrope 700 for all display headings as requested by the owner; Manrope for interface and data. Square-ended rules, lightly rounded controls, no decorative blur or neon glow.
 
 STORY: Recognize Unisba, search its KI, inspect a featured record, continue to the directory or registration. Every number and record comes from existing server data.
 

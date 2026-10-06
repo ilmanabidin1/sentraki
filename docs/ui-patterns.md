@@ -5,7 +5,7 @@ Pertahankan identitas navy/emas, lambang Unisba, logo LPPM, dan sprite `public/i
 - Permukaan: `--bg-page`, `--bg-card`, `--bg-subtle`. Teks pada permukaan terang memakai `--text-heading`, `--text-body`, `--text-muted`, atau `--text-subtle` (warna terakhir juga harus lolos kontras).
 - Permukaan gelap: `--text-white`, `--text-on-dark`, dan `--text-on-dark-muted`. Jangan memakai token permukaan sebagai warna teks.
 - Status: hijau untuk granted, amber untuk proses, rose untuk ditolak/ditarik, dengan label teks. Pada chip interaktif gunakan tingkat 700 bersama teks putih saat hover.
-- Tipografi lokal: Manrope 700 untuk judul pembuka yang modern, Manrope untuk antarmuka/data, dan Bodoni Moda regular untuk judul bagian beranda. Asal font dan lisensi OFL tersedia di `public/fonts/README.md`.
+- Tipografi lokal: Manrope 700 untuk seluruh judul, dan Manrope untuk antarmuka/data. Asal font dan lisensi OFL tersedia di `public/fonts/README.md`.
 - Beranda memakai lembar inovasi: intro terbatas (selesai dalam 750 ms), pilihan portfolio oleh pengguna (350 ms), reveal bagian sekali (450 ms), dan transisi dokumen (180 ms). Reduced motion menampilkan konten statis; animasi skrip berhenti saat halaman tersembunyi.
 - Direktori memakai `minmax(0, 1fr)` dan `min-width: 0`; judul membungkus tanpa melebarkan grid. Metadata inventor/fakultas tetap dipotong dengan ellipsis; detail KI menyediakan konteks lengkap.
 - Logo LPPM dimuat eager agar identitas bawah halaman lengkap pada capture dan cetak. Pertahankan rasio asli.

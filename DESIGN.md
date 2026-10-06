@@ -39,11 +39,11 @@ typography:
     lineHeight: 1.08
     letterSpacing: "-0.035em"
   headline:
-    fontFamily: "'Bodoni Moda', Georgia, serif"
+    fontFamily: "Manrope, system-ui, sans-serif"
     fontSize: "clamp(2rem, 3.5vw, 3.5rem)"
-    fontWeight: 400
+    fontWeight: 700
     lineHeight: 1.15
-    letterSpacing: "-0.01em"
+    letterSpacing: "-0.035em"
   page-title:
     fontFamily: "Manrope, system-ui, sans-serif"
     fontSize: "clamp(1.7rem, 3vw, 2.4rem)"
@@ -142,13 +142,13 @@ components:
 
 **Creative North Star: "The Academic Atlas"**
 
-The Academic Atlas is a descriptive name for the implemented visual world, not a claim that the owner approved this wording. Sentra KI combines a deep institutional frame, champagne gold accents, white reading surfaces and an editorial serif with a precise interface sans. Official Unisba and LPPM marks keep their supplied proportions; custom square-ended SVG linework carries the service identity.
+The Academic Atlas is a descriptive name for the implemented visual world, not a claim that the owner approved this wording. P2KI UNISBA (Sentra KI) combines a deep institutional frame, champagne gold accents, white reading surfaces and one modern sans family across all headings and interface text. The owner-supplied P2KI marks lead the identity; Unisba and LPPM marks keep their original shapes; custom square-ended SVG linework carries the service identity.
 
 The home page is expressive through scale, whitespace and finite movement. Directory, detail and registration interfaces keep a quieter density suited to reading, filtering and form completion. The balanced motion prominence is an implementation assumption; the optional owner preference remained unanswered. This document records the finished code, with source tokens taking precedence over earlier plans.
 
 **Key Characteristics:**
 - Institutional navy and restrained champagne gold.
-- Manrope 700 for the modern home opening; Bodoni Moda for section headlines; Manrope for interface and data.
+- Manrope 700 for all display headings; Manrope for interface and data.
 - Ruled records, lightly rounded controls and factual Indonesian copy.
 - Finite, cancellable animation with a static reduced-motion path.
 
@@ -178,10 +178,10 @@ The palette combines deep blue-black institutional surfaces with warm champagne 
 ## Typography
 
 **Opening Display Font:** Manrope (system-ui, sans-serif fallback), bold (700).
-**Section Display Font:** Bodoni Moda (Georgia, serif fallback), regular (400).
+**Section Display Font:** Manrope (system-ui, sans-serif fallback), bold (700).
 **Body Font:** Manrope (system-ui, sans-serif fallback), variable weights (400–800).
 
-Both Latin WOFF2 files are served locally with `font-display: swap`. Origins and OFL license files are recorded in `public/fonts/README.md`; they are not runtime Google Fonts dependencies.
+The Manrope Latin WOFF2 file is served locally with `font-display: swap`. Origins and OFL license files are recorded in `public/fonts/README.md`; they are not runtime Google Fonts dependencies.
 
 ### Hierarchy
 
@@ -193,7 +193,7 @@ Both Latin WOFF2 files are served locally with `font-display: swap`. Origins and
 - **Body:** base text follows the frontmatter role. Descriptions use line-height (1.75), with task descriptions limited to (70ch); home supporting copy uses (60ch). Smaller contextual copy uses (14–15px).
 - **Label:** form labels follow the recorded label role. Shared nav is (12px), brand title (16px / 750), metadata (12px), and actions (14px / 650). Inputs use (14px) on desktop and (16px) on phones. Counts and years use tabular numerals.
 
-**The Two Voices Rule.** Use Manrope for the opening title, tasks, labels, records and numbers. Reserve Bodoni Moda for home section headlines.
+**The One Typeface Rule.** Use Manrope for every heading, task, label, record and number; display headings use weight 700. Do not reintroduce serif headings.
 
 ## Layout
 
