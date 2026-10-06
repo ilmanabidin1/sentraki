@@ -24,7 +24,7 @@ Keberhasilan perbaikan berarti pengguna mudah menemukan KI yang relevan, memaham
 - Pemantauan paten: melihat jumlah granted, dalam proses, serta status lainnya menurut tahun pengajuan melalui halaman khusus `/status-paten`.
 - Pengajuan: dosen/peneliti mengisi formulir pendaftaran KI; pengajuan menunggu tinjauan sebelum publikasi.
 - Kolaborasi: dari detail KI, mitra dapat mengajukan minat. Tantangan industri menyediakan alur pemasangan kebutuhan riset dan pengajuan solusi.
-- Layanan pendukung: materi pembelajaran KI, tanya-jawab, konsultasi, dan unduhan formulir/pedoman.
+- Layanan pendukung: katalog modul resmi EKII–DJKI pada Akademi KI, pencarian/filter materi, detail dan tautan PDF asli, tanya-jawab, konsultasi, dan unduhan formulir/pedoman.
 - Admin: meninjau data pengajuan dari dasbor yang memerlukan login.
 
 Alur di atas bersumber dari implementasi repository. Ketersediaan operasional layanan dan integrasi pihak luar harus diverifikasi tersendiri sebelum diklaim kepada pengunjung.

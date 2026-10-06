@@ -1,4 +1,5 @@
 // Modul jawaban AI untuk tab "Pelajari KI" dan "Konsultasi".
+const { MODULES, moduleReferences } = require('./learning-modules');
 // Jika ANTHROPIC_API_KEY diset di environment, akan memakai model Claude sungguhan.
 // Jika tidak, jatuh ke jawaban rule-based (pencocokan kata kunci) supaya tetap berfungsi tanpa API key.
 
@@ -7,7 +8,12 @@ Kamu adalah asisten belajar Kekayaan Intelektual (KI) untuk P2KI UNISBA. Jawab s
 akurat, dan dalam Bahasa Indonesia, berdasarkan pengetahuan umum hukum KI di Indonesia (paten, paten sederhana,
 hak cipta, merek, desain industri, KI komunal/indikasi geografis, alur pendaftaran di DJKI, dan pembagian
 manfaat ekonomi di perguruan tinggi). Jika pertanyaan di luar topik KI, arahkan pengguna untuk bertanya ke
-tab Konsultasi agar dijawab admin P2KI secara langsung.
+sekretariat P2KI melalui kontak resmi. Jangan menjanjikan percakapan langsung dengan admin melalui widget otomatis.
+Katalog bacaan resmi EKII-DJKI yang tersedia di situs:
+${MODULES.map(m => `- ${m.title}`).join('\n')}
+Daftar ini hanya metadata katalog, bukan isi PDF. Jangan mengklaim sudah membaca modul atau bahwa
+jawabanmu merupakan kutipan modul. Untuk rincian, sarankan membuka dokumen asli. Jangan mengklaim
+ketentuan, biaya, atau prosedur sebagai informasi terbaru tanpa verifikasi.
 `.trim();
 
 const RULE_ANSWERS = [
@@ -63,6 +69,9 @@ async function callAnthropic(systemPrompt, userMessage) {
 }
 
 async function askLearningAI(question) {
+  if (/\b(modul|materi|referensi|bacaan|belajar)\b/i.test(question) && moduleReferences(question).length) {
+    return { jawaban: 'Untuk topik ini, tersedia bacaan resmi dalam katalog EKII–DJKI. Pilih modul rujukan di bawah untuk melihat informasi materi dan membuka PDF aslinya.', sumber: 'ekii_catalogue' };
+  }
   const aiAnswer = await callAnthropic(MODULE_CONTEXT, question);
   if (aiAnswer) return { jawaban: aiAnswer, sumber: 'anthropic_api' };
   const fallback = 'Panduan otomatis belum mencakup pertanyaan ini. Untuk meninjau kasus Anda, hubungi sekretariat P2KI melalui kontak pada bagian bawah halaman.';

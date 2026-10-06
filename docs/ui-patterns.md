@@ -14,6 +14,8 @@ Pertahankan identitas navy/emas, lambang Unisba, logo LPPM, dan sprite `public/i
 - Formulir publik menerima `values` dan `fieldErrors` dari validator. Partial `views/partials/form-errors.ejs` memakai pemetaan `fieldIds`; tiap error juga muncul dekat field dengan `aria-describedby`. Gunakan escaping EJS untuk nilai dari pengguna.
 - Chat menunggu konfirmasi HTTP sebelum menampilkan terkirim. Error mempertahankan pesan dalam layar dan menyediakan retry pada pesan yang sama.
 
-Setelah mengedit CSS atau JS, jalankan `npm run build`: minifier menggabungkan `style.css` + `premium.css` sesuai urutan cascade, menghasilkan `style.min.css` dan memperbarui hash URL CSS/JS. Commit sumber dan hasil build bersama agar deployment tanpa devDependencies tetap bisa melayani aset. Server mengompresi aset publik; HTML per sesi tidak dikompresi.
+Setelah mengedit CSS atau JS, jalankan `npm run build`: minifier menggabungkan `style.css` + `premium.css` + `academy.css` sesuai urutan cascade, menghasilkan `style.min.css` dan memperbarui hash URL CSS/JS. Commit sumber dan hasil build bersama agar deployment tanpa devDependencies tetap bisa melayani aset. Server mengompresi aset publik; HTML per sesi tidak dikompresi.
+
+Akademi KI memakai katalog terkurasi di `src/learning-modules.js`, pencarian/filter melalui GET, dan halaman detail `/pelajari-ki/:id`. Tautan PDF mengarah ke EKII; dokumen tidak dimuat sebelum pengguna memilihnya. Perbedaan pengantar editorial dan isi sumber dicatat di `docs/learning-sources.md`.
 
 Gunakan viewport desktop, tablet, dan ponsel untuk validasi. Ukuran viewport tidak membuktikan gesture atau performa perangkat fisik. Klaim integrasi, SLA, verifikasi, dan kesiapan lisensi harus berasal dari bukti operasional, bukan dekorasi UI.

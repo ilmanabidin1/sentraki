@@ -56,6 +56,12 @@ typography:
     fontWeight: 650
     lineHeight: 1.4
     letterSpacing: "-0.02em"
+  catalogue-heading:
+    fontFamily: "Manrope, system-ui, sans-serif"
+    fontSize: "24px"
+    fontWeight: 650
+    lineHeight: 1.3
+    letterSpacing: "-0.02em"
   body:
     fontFamily: "Manrope, system-ui, sans-serif"
     fontSize: "16px"
@@ -183,6 +189,7 @@ Both Latin WOFF2 files are served locally with `font-display: swap`. Origins and
 - **Headline:** the frontmatter headline role governs home section titles; phone sections use (2rem). The closing title has its own observed scale, `clamp(2.2rem, 4vw, 4rem)` with line-height (1.1), becoming (2.5rem) on phones.
 - **Page title:** the task-page role uses Manrope, keeping editorial scale away from forms and filters.
 - **Title:** service and journey headings use (20px) and line-height (1.4); the service title becomes (17px) on phones. Their weight inherits the heading rule (650). Portfolio record titles instead use weight (600), `clamp(1.3rem, 2.2vw, 2rem)` and line-height (1.4).
+- **Catalogue heading:** Academy section headings use (24px / 650); module titles use (20px), descriptions (16px), and edition metadata (13.5px). The catalogue inherits the same navy/gold palette and reading surfaces.
 - **Body:** base text follows the frontmatter role. Descriptions use line-height (1.75), with task descriptions limited to (70ch); home supporting copy uses (60ch). Smaller contextual copy uses (14–15px).
 - **Label:** form labels follow the recorded label role. Shared nav is (12px), brand title (16px / 750), metadata (12px), and actions (14px / 650). Inputs use (14px) on desktop and (16px) on phones. Counts and years use tabular numerals.
 

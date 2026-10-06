@@ -161,7 +161,7 @@ function toggleModule(i) {
 }
 
 // AI Assistant Chat Widget
-async function chatRequest(url, payload) {
+async function chatRequest(url, payload, onData) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 30000);
   try {
@@ -174,6 +174,7 @@ async function chatRequest(url, payload) {
     if (!res.ok) throw new Error(data.error || 'Permintaan belum berhasil. Silakan coba lagi.');
     const answer = url === '/api/ai-tanya' ? data.jawaban : data.reply;
     if (typeof answer !== 'string' || !answer.trim()) throw new Error('Jawaban belum tersedia. Silakan coba lagi.');
+    if (onData) onData(data);
     return answer;
   } catch (error) {
     if (error.name === 'AbortError') throw new Error('Server belum memberi konfirmasi. Periksa koneksi sebelum mencoba lagi.');
@@ -242,7 +243,17 @@ async function askAI(question) {
     loadingMsg.classList.add('ai-loading');
     loadingMsg.querySelector('.bubble').textContent = 'Sedang menyiapkan jawaban…';
     try {
-      loadingMsg.querySelector('.bubble').textContent = await chatRequest('/api/ai-tanya', { question: q });
+      let references = [];
+      const bubble = loadingMsg.querySelector('.bubble');
+      bubble.textContent = await chatRequest('/api/ai-tanya', { question: q }, data => { references = data.referensi || []; });
+      const valid = Array.isArray(references) ? references.filter(r => r && typeof r.id === 'string' && /^[a-z0-9-]+$/.test(r.id) && typeof r.title === 'string').slice(0, 3) : [];
+      if (valid.length) {
+        const sources = document.createElement('div');
+        sources.className = 'ai-module-references';
+        const label = document.createElement('strong'); label.textContent = 'Modul rujukan'; sources.appendChild(label);
+        valid.forEach(ref => { const link = document.createElement('a'); link.href = `/pelajari-ki/${ref.id}`; link.textContent = ref.title; sources.appendChild(link); });
+        bubble.appendChild(sources);
+      }
     } catch (err) {
       retryControl(loadingMsg.querySelector('.bubble'), err, deliver);
     } finally {
