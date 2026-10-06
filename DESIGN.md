@@ -33,11 +33,11 @@ colors:
   rose-50: "#fff1f2"
 typography:
   display:
-    fontFamily: "'Bodoni Moda', Georgia, serif"
-    fontSize: "clamp(3.2rem, 7.7vw, 6rem)"
-    fontWeight: 400
-    lineHeight: 1.04
-    letterSpacing: "-0.015em"
+    fontFamily: "Manrope, system-ui, sans-serif"
+    fontSize: "clamp(3.2rem, 7vw, 6rem)"
+    fontWeight: 700
+    lineHeight: 1.08
+    letterSpacing: "-0.035em"
   headline:
     fontFamily: "'Bodoni Moda', Georgia, serif"
     fontSize: "clamp(2rem, 3.5vw, 3.5rem)"
@@ -142,7 +142,7 @@ The home page is expressive through scale, whitespace and finite movement. Direc
 
 **Key Characteristics:**
 - Institutional navy and restrained champagne gold.
-- Bodoni Moda for home display; Manrope for interface and data.
+- Manrope 700 for the modern home opening; Bodoni Moda for section headlines; Manrope for interface and data.
 - Ruled records, lightly rounded controls and factual Indonesian copy.
 - Finite, cancellable animation with a static reduced-motion path.
 
@@ -171,21 +171,22 @@ The palette combines deep blue-black institutional surfaces with warm champagne 
 
 ## Typography
 
-**Display Font:** Bodoni Moda (Georgia, serif fallback), regular (400).
+**Opening Display Font:** Manrope (system-ui, sans-serif fallback), bold (700).
+**Section Display Font:** Bodoni Moda (Georgia, serif fallback), regular (400).
 **Body Font:** Manrope (system-ui, sans-serif fallback), variable weights (400–800).
 
 Both Latin WOFF2 files are served locally with `font-display: swap`. Origins and OFL license files are recorded in `public/fonts/README.md`; they are not runtime Google Fonts dependencies.
 
 ### Hierarchy
 
-- **Display:** the frontmatter display role governs the desktop opening. At tablet width it becomes `clamp(3.2rem, 9vw, 5.5rem)`; at phone width `clamp(2.8rem, 11.6vw, 4rem)` with line-height (1.1). At widths up to (360px), it is (2.65rem). These are home-specific adaptations.
+- **Display:** the frontmatter display role governs the modern sans opening, as requested by the owner. At tablet width it becomes `clamp(3.2rem, 9vw, 5.5rem)`; at phone width `clamp(2.8rem, 11.6vw, 4rem)` with line-height (1.1). At widths up to (360px), it is (2.375rem). These are home-specific adaptations.
 - **Headline:** the frontmatter headline role governs home section titles; phone sections use (2rem). The closing title has its own observed scale, `clamp(2.2rem, 4vw, 4rem)` with line-height (1.1), becoming (2.5rem) on phones.
 - **Page title:** the task-page role uses Manrope, keeping editorial scale away from forms and filters.
 - **Title:** service and journey headings use (20px) and line-height (1.4); the service title becomes (17px) on phones. Their weight inherits the heading rule (650). Portfolio record titles instead use weight (600), `clamp(1.3rem, 2.2vw, 2rem)` and line-height (1.4).
 - **Body:** base text follows the frontmatter role. Descriptions use line-height (1.75), with task descriptions limited to (70ch); home supporting copy uses (60ch). Smaller contextual copy uses (14–15px).
 - **Label:** form labels follow the recorded label role. Shared nav is (12px), brand title (16px / 750), metadata (12px), and actions (14px / 650). Inputs use (14px) on desktop and (16px) on phones. Counts and years use tabular numerals.
 
-**The Two Voices Rule.** Reserve Bodoni Moda for the home editorial display; use Manrope for tasks, labels, records and numbers.
+**The Two Voices Rule.** Use Manrope for the opening title, tasks, labels, records and numbers. Reserve Bodoni Moda for home section headlines.
 
 ## Layout
 

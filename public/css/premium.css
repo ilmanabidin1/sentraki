@@ -69,7 +69,7 @@ h1,h2,h3,h4 { font-weight:650; }
 /* Large editorial typography, then the catalogue in its working form. */
 .atlas-container { width:min(100% - 96px,1280px); margin-inline:auto; }
 .atlas-opening { color:var(--text-on-dark); background:var(--navy-950); padding:72px 0 40px; overflow:hidden; }
-.atlas-title { font:400 clamp(3.2rem,7.7vw,6rem)/1.04 var(--font-display); letter-spacing:-.015em; color:var(--text-on-dark); margin:0 0 34px; }
+.atlas-title { font:700 clamp(3.2rem,7vw,6rem)/1.08 var(--font-ui); letter-spacing:-.035em; color:var(--text-on-dark); margin:0 0 34px; }
 .atlas-title span { display:block; }
 .atlas-title span:last-child { color:var(--gold-300); padding-inline-start:18%; }
 .atlas-introduction { display:flex; justify-content:space-between; align-items:flex-end; gap:32px; margin-bottom:36px; }
@@ -234,7 +234,7 @@ h1,h2,h3,h4 { font-weight:650; }
   .premium-closing>.atlas-container { grid-template-columns:1fr; gap:32px; }
   .premium-closing h2 { font-size:2.5rem; }
 }
-@media (max-width:360px) { .brand-subtitle { display:none; } .atlas-title { font-size:2.65rem; } .portfolio-tab svg { display:none; } }
+@media (max-width:360px) { .brand-subtitle { display:none; } .atlas-title { font-size:2.375rem; } .portfolio-tab svg { display:none; } }
 @media (hover:none) { .ki-modern-card:hover { transform:none; } }
 @media (prefers-reduced-motion:reduce) {
   .atlas-register:hover svg,.premium-text-link:hover svg,.service-index-row:hover .service-arrow,.ki-modern-card:hover { transform:none; }

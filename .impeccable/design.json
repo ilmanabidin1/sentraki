@@ -594,7 +594,7 @@
     "overview": "The Academic Atlas is a descriptive name for the implemented visual world, not a claim that the owner approved this wording. Sentra KI combines a deep institutional frame, champagne gold accents, white reading surfaces and an editorial serif with a precise interface sans. Official Unisba and LPPM marks keep their supplied proportions; custom square-ended SVG linework carries the service identity.\n\nThe home page is expressive through scale, whitespace and finite movement. Directory, detail and registration interfaces keep a quieter density suited to reading, filtering and form completion. The balanced motion prominence is an implementation assumption; the optional owner preference remained unanswered. This document records the finished code, with source tokens taking precedence over earlier plans.",
     "keyCharacteristics": [
       "Institutional navy and restrained champagne gold.",
-      "Bodoni Moda for home display; Manrope for interface and data.",
+      "Manrope 700 for the modern home opening; Bodoni Moda for section headlines; Manrope for interface and data.",
       "Ruled records, lightly rounded controls and factual Indonesian copy.",
       "Finite, cancellable animation with a static reduced-motion path."
     ],
@@ -606,7 +606,7 @@
       },
       {
         "name": "The Two Voices Rule",
-        "body": "Reserve Bodoni Moda for the home editorial display; use Manrope for tasks, labels, records and numbers.",
+        "body": "Use Manrope for the opening title, tasks, labels, records and numbers. Reserve Bodoni Moda for home section headlines.",
         "section": "typography"
       },
       {
