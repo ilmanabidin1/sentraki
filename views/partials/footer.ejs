@@ -27,7 +27,7 @@
             <li><a href="/daftarkan-ki">Daftarkan Inovasi Baru</a></li>
             <li><a href="/unduhan">Unduh Formulir &amp; SOP</a></li>
             <li><a href="/unduhan#royalti">Panduan Bagi Hasil Royalti</a></li>
-            <li><a href="/pelajari-ki">Akademi KI &amp; AI Assistant</a></li>
+            <li><a href="/pelajari-ki">Akademi KI</a></li>
             <li><a href="/konsultasi">Panduan Konsultasi Otomatis</a></li>
           </ul>
         </div>
@@ -76,6 +76,7 @@
     </div>
   </footer>
 </div>
-<script src="/js/main.js?v=bca542cef9" defer></script>
+<% if (typeof showAssistant === 'undefined' || showAssistant) { %><%- include('assistant') %><% } %>
+<script src="/js/main.js?v=391e6d6bb6" defer></script>
 </body>
 </html>

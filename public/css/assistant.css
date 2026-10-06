@@ -1,0 +1,40 @@
+/* A quiet, user-opened companion on public pages. */
+.ki-assistant { position:fixed; right:24px; bottom:calc(20px + env(safe-area-inset-bottom,0px) + var(--chat-keyboard,0px)); z-index:1200; width:min(384px,calc(100vw - 32px)); display:flex; flex-direction:column; align-items:flex-end; gap:12px; pointer-events:none; }
+.ki-assistant>* { pointer-events:auto; }
+.navigation-open .ki-assistant { visibility:hidden; }
+.ki-chat-launcher { display:flex; align-items:center; justify-content:center; gap:12px; min-height:56px; padding:14px 20px; border-radius:28px; background:var(--gold-300); color:var(--navy-950); box-shadow:0 10px 28px rgba(8,15,26,.20); font-size:14px; font-weight:750; transition:background-color 180ms,transform 180ms; }
+.ki-chat-launcher:hover { background:var(--gold-400); transform:translateY(-2px); }
+.ki-chat-launcher[aria-expanded=true] { background:var(--navy-900); color:#fff; }
+.ki-chat-panel { width:100%; height:min(600px,calc(var(--chat-height,100dvh) - 116px)); display:flex; flex-direction:column; background:#fff; color:var(--navy-900); border-radius:20px; overflow:hidden; box-shadow:0 18px 48px rgba(8,15,26,.26); }
+.ki-chat-header { display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--navy-950); color:var(--gold-300); flex-shrink:0; }
+.ki-chat-header h2 { font-size:18px; line-height:1.4; color:#fff; margin:0; }
+.ki-chat-header p { font-size:11px; color:#c0cede; margin:2px 0 0; }
+.ki-chat-header button { display:grid; place-items:center; margin-left:auto; width:44px; height:44px; background:transparent; color:#fff; border-radius:12px; }
+.ki-chat-header button:hover { background:rgba(255,255,255,.10); }
+.ki-chat-log { flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; padding:20px 16px; display:flex; flex-direction:column; gap:18px; scrollbar-width:thin; scrollbar-color:#a5b4c7 #f6f7f9; }
+.ki-chat-message { max-width:94%; flex-shrink:0; overflow-wrap:anywhere; }
+.ki-chat-message.user { align-self:flex-end; }
+.ki-chat-author { display:block; font-size:11px; color:#5a6b80; margin:0 8px 5px; }
+.ki-chat-message.user .ki-chat-author { text-align:right; }
+.ki-chat-message .bubble { font-size:14px; line-height:1.65; white-space:pre-wrap; padding:12px 14px; border-radius:16px; background:#f0f3f7; color:#101e30; }
+.ki-chat-message.user .bubble { background:var(--navy-900); color:#fff; border-bottom-right-radius:4px; }
+.ki-chat-message.bot .bubble { border-bottom-left-radius:4px; }
+.ki-chat-message.is-error .bubble { background:#fff0f1; color:#8e2639; }
+.ki-chat-message .chat-retry { display:block; margin-top:10px; min-height:44px; background:#fff; color:#8e2639; border:1px solid #cc8090; }
+.ki-chat-message .ai-module-references { white-space:normal; }
+.ki-chat-message .ai-module-references a { color:#205485; }
+.ki-chat-prompts { display:flex; gap:6px; padding:8px 16px; overflow:auto; scrollbar-width:thin; flex-shrink:0; }
+.ki-chat-prompts button { min-height:38px; flex-shrink:0; padding:8px 10px; background:#f0f3f7; color:var(--navy-900); border-radius:10px; font-size:12px; font-weight:650; }
+.ki-chat-prompts button:hover { background:#e4eaf2; }
+.ki-chat-form { display:flex; align-items:flex-end; gap:8px; padding:12px 16px; border-top:1px solid #dde3ec; flex-shrink:0; }
+.ki-chat-form textarea { min-width:0; flex:1; resize:none; padding:10px 12px; border:1px solid #a5b4c7; border-radius:12px; background:#fff; color:#101e30; font-size:16px; line-height:1.4; max-height:120px; caret-color:#205485; }
+.ki-chat-form textarea::placeholder { color:#5a6b80; }
+.ki-chat-form button { display:grid; place-items:center; min-width:44px; height:44px; border-radius:12px; color:#080f1a; background:var(--gold-300); }
+.ki-chat-form button:hover { background:var(--gold-400); }
+.ki-assistant button:disabled { cursor:wait; opacity:.55; transform:none; }
+.ki-chat-note { flex-shrink:0; margin:0; padding:0 16px 12px; font-size:10px; line-height:1.5; color:#5a6b80; }
+.ki-assistant :focus-visible { outline:2px solid #ac7622; outline-offset:3px; }
+.ki-chat-header :focus-visible { outline-color:var(--gold-300); }
+.ki-assistant.keyboard-open .ki-chat-prompts,.ki-assistant.keyboard-open .ki-chat-note { display:none; }
+@media(max-width:640px) { .ki-assistant { right:16px; bottom:calc(16px + env(safe-area-inset-bottom,0px) + var(--chat-keyboard,0px)); } .ki-chat-launcher { width:56px; padding:14px; } .ki-chat-launcher span { display:none; } .ki-chat-panel { height:min(600px,calc(var(--chat-height,100dvh) - 108px)); } }
+@media(prefers-reduced-motion:reduce) { .ki-chat-launcher { transition:none; } .ki-chat-launcher:hover { transform:none; } }

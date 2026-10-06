@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
       drawer.setAttribute('aria-hidden', 'false');
       toggleBtn && toggleBtn.setAttribute('aria-expanded', 'true');
       document.body.style.overflow = 'hidden';
+      document.body.classList.add('navigation-open');
       closeBtn?.focus();
     }
   }
@@ -35,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
       drawer.setAttribute('aria-hidden', 'true');
       toggleBtn && toggleBtn.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
+      document.body.classList.remove('navigation-open');
       drawer.inert = true;
       background.forEach(el => { el.inert = false; });
       if (wasOpen) returnFocus?.focus();
@@ -86,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dirFilters.open = false;
   }
   document.getElementById('formErrors')?.focus();
+  initFloatingAssistant();
   initHomeSearch();
   initPremiumMotion();
 });
@@ -294,9 +297,91 @@ function retryControl(container, error, retry) {
   container.appendChild(button);
 }
 
+let aiBusy = false;
+function setAIbusy(busy) {
+  aiBusy = busy;
+  document.getElementById('kiChatSend').disabled = busy;
+  document.querySelectorAll('[data-ai-prompt]').forEach(button => { button.disabled = busy; });
+  document.querySelectorAll('.ki-chat-panel .chat-retry').forEach(button => { button.disabled = busy; });
+  document.getElementById('aiLog').setAttribute('aria-busy', String(busy));
+}
+
+function appendAIMessage(role, text, references = []) {
+  const row = document.createElement('div');
+  row.className = `ki-chat-message ${role === 'user' ? 'user' : 'bot'}`;
+  const author = document.createElement('span'); author.className = 'ki-chat-author';
+  author.textContent = role === 'user' ? 'Anda' : 'Asisten KI';
+  const bubble = document.createElement('div'); bubble.className = 'bubble'; bubble.textContent = text;
+  row.append(author, bubble);
+  const valid = Array.isArray(references) ? references.filter(r => r && typeof r.id === 'string' && /^[a-z0-9-]+$/.test(r.id) && typeof r.title === 'string').slice(0, 3) : [];
+  if (valid.length) {
+    const sources = document.createElement('div'); sources.className = 'ai-module-references';
+    const label = document.createElement('strong'); label.textContent = 'Modul rujukan'; sources.append(label);
+    valid.forEach(ref => { const link = document.createElement('a'); link.href = `/pelajari-ki/${ref.id}`; link.textContent = ref.title; sources.append(link); });
+    bubble.append(sources);
+  }
+  const log = document.getElementById('aiLog'); log.append(row); log.scrollTop = log.scrollHeight;
+  return row;
+}
+
+function initFloatingAssistant() {
+  const root = document.getElementById('kiAssistant');
+  if (!root) return;
+  const toggle = document.getElementById('kiChatToggle'), panel = document.getElementById('kiChatPanel');
+  const close = document.getElementById('kiChatClose'), input = document.getElementById('aiInput');
+  let loaded = false, returnFocus;
+  function fit() {
+    if (panel.hidden) return;
+    const view = window.visualViewport;
+    root.style.setProperty('--chat-height', `${view?.height || window.innerHeight}px`);
+    root.style.setProperty('--chat-keyboard', `${view ? Math.max(0, window.innerHeight - view.height - view.offsetTop) : 0}px`);
+    root.classList.toggle('keyboard-open', !!view && window.innerHeight - view.height > 120);
+  }
+  async function load() {
+    setAIbusy(true);
+    try {
+      const response = await fetch('/api/ai-chat');
+      if (!response.ok) throw new Error('History unavailable');
+      const data = await response.json();
+      if (!Array.isArray(data.messages)) throw new Error('Invalid history');
+      for (const turn of data.messages.slice(-12)) {
+        if (turn && ['user', 'assistant'].includes(turn.role) && typeof turn.content === 'string') appendAIMessage(turn.role, turn.content, turn.referensi);
+      }
+      document.getElementById('kiChatNote').textContent = `${data.enabled ? 'Asisten AI' : 'Panduan otomatis'} · Rujuk dokumen resmi untuk keputusan KI.`;
+    } catch {
+      appendAIMessage('assistant', 'Riwayat chat belum bisa dimuat. Anda tetap dapat mengirim pertanyaan.');
+    } finally { setAIbusy(false); }
+  }
+  function open() {
+    if (!panel.hidden) return;
+    returnFocus = document.activeElement;
+    panel.hidden = false; toggle.setAttribute('aria-expanded', 'true'); toggle.setAttribute('aria-label', 'Minimalkan Asisten KI');
+    toggle.querySelector('span').textContent = 'Minimalkan';
+    fit(); close.focus();
+    if (!loaded) { loaded = true; load(); }
+  }
+  function hide() {
+    panel.hidden = true; toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Buka Asisten KI');
+    toggle.querySelector('span').textContent = 'Asisten KI'; root.style.removeProperty('--chat-keyboard'); root.classList.remove('keyboard-open');
+    returnFocus?.focus();
+  }
+  toggle.addEventListener('click', () => panel.hidden ? open() : hide());
+  close.addEventListener('click', hide);
+  root.addEventListener('keydown', event => { if (event.key === 'Escape' && !panel.hidden) { event.preventDefault(); hide(); } });
+  document.querySelectorAll('[data-open-assistant]').forEach(button => button.addEventListener('click', open));
+  document.querySelectorAll('[data-ai-prompt]').forEach(button => button.addEventListener('click', () => askAI(button.dataset.aiPrompt)));
+  document.getElementById('kiChatForm').addEventListener('submit', event => { event.preventDefault(); sendAIQuestion(); });
+  input.addEventListener('keydown', event => {
+    if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) { event.preventDefault(); sendAIQuestion(); }
+  });
+  window.visualViewport?.addEventListener('resize', fit);
+  window.visualViewport?.addEventListener('scroll', fit);
+  window.addEventListener('resize', fit);
+}
+
 async function sendAIQuestion() {
   const input = document.getElementById('aiInput');
-  if (!input) return;
+  if (!input || aiBusy) return;
   const q = input.value.trim();
   if (!q) return;
   input.value = '';
@@ -304,64 +389,23 @@ async function sendAIQuestion() {
 }
 
 async function askAI(question) {
-  const q = (question || '').trim();
-  if (!q) return;
-  const log = document.getElementById('aiLog');
-  if (!log) return;
-
-  // Append user bubble
-  const userMsg = document.createElement('div');
-  userMsg.className = 'ai-msg user';
-  userMsg.innerHTML = `
-    <div class="msg-avatar-mini user">Anda</div>
-    <div class="msg-bubble-wrap">
-      <div class="msg-author">Anda</div>
-      <div class="bubble"></div>
-    </div>
-  `;
-  userMsg.querySelector('.bubble').textContent = q;
-  log.appendChild(userMsg);
-  log.scrollTop = log.scrollHeight;
-
-  // Append typing indicator
-  const loadingId = 'loading-' + Date.now();
-  const loadingMsg = document.createElement('div');
-  loadingMsg.className = 'ai-msg bot ai-loading';
-  loadingMsg.id = loadingId;
-  loadingMsg.innerHTML = `
-    <div class="msg-avatar-mini"><svg class="sk-icon" width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#assistant"/></svg></div>
-    <div class="msg-bubble-wrap">
-      <div class="msg-author">Asisten AI Sentra KI</div>
-      <div class="bubble">
-        <span class="typing-dots">
-          <span></span><span></span><span></span>
-        </span>
-      </div>
-    </div>
-  `;
-  log.appendChild(loadingMsg);
-  log.scrollTop = log.scrollHeight;
-
+  const q = (question || '').trim().slice(0, 2000);
+  if (!q || aiBusy || !document.getElementById('aiLog')) return;
+  appendAIMessage('user', q);
+  const row = appendAIMessage('assistant', 'Sedang menyiapkan jawaban…');
   async function deliver() {
-    loadingMsg.classList.add('ai-loading');
-    loadingMsg.querySelector('.bubble').textContent = 'Sedang menyiapkan jawaban…';
+    if (aiBusy) return;
+    setAIbusy(true); row.classList.remove('is-error');
+    row.querySelector('.bubble').textContent = 'Sedang menyiapkan jawaban…';
     try {
       let references = [];
-      const bubble = loadingMsg.querySelector('.bubble');
-      bubble.textContent = await chatRequest('/api/ai-tanya', { question: q }, data => { references = data.referensi || []; });
-      const valid = Array.isArray(references) ? references.filter(r => r && typeof r.id === 'string' && /^[a-z0-9-]+$/.test(r.id) && typeof r.title === 'string').slice(0, 3) : [];
-      if (valid.length) {
-        const sources = document.createElement('div');
-        sources.className = 'ai-module-references';
-        const label = document.createElement('strong'); label.textContent = 'Modul rujukan'; sources.appendChild(label);
-        valid.forEach(ref => { const link = document.createElement('a'); link.href = `/pelajari-ki/${ref.id}`; link.textContent = ref.title; sources.appendChild(link); });
-        bubble.appendChild(sources);
-      }
-    } catch (err) {
-      retryControl(loadingMsg.querySelector('.bubble'), err, deliver);
+      const answer = await chatRequest('/api/ai-tanya', { question:q }, data => { references = data.referensi || []; });
+      row.remove(); appendAIMessage('assistant', answer, references);
+    } catch (error) {
+      row.classList.add('is-error'); retryControl(row.querySelector('.bubble'), error, deliver);
     } finally {
-      loadingMsg.classList.remove('ai-loading');
-      log.scrollTop = log.scrollHeight;
+      setAIbusy(false);
+      const log = document.getElementById('aiLog'); log.scrollTop = log.scrollHeight;
     }
   }
   await deliver();

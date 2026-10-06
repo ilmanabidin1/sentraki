@@ -46,7 +46,11 @@ test('module requests use verified catalogue references without claiming to read
   const refs = moduleReferences('Modul apa untuk belajar paten?');
   assert.equal(refs.length, 3);
   assert.ok(refs.every(ref => MODULES.find(m => m.id === ref.id).topics.includes('paten')));
-  const answer = await askLearningAI('Modul apa untuk belajar paten?');
-  assert.equal(answer.sumber, 'ekii_catalogue');
-  assert.match(answer.jawaban, /PDF aslinya/);
+  const key = process.env.OPENROUTER_API_KEY;
+  delete process.env.OPENROUTER_API_KEY;
+  try {
+    const answer = await askLearningAI('Modul apa untuk belajar paten?');
+    assert.equal(answer.sumber, 'ekii_catalogue');
+    assert.match(answer.jawaban, /PDF aslinya/);
+  } finally { if (key !== undefined) process.env.OPENROUTER_API_KEY = key; }
 });

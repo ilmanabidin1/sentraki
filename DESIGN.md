@@ -233,6 +233,10 @@ The home opening includes `public/images/unisba-innovation-banner-v1.webp`, an i
 
 The owner explicitly requested iOS-style glassmorphism for home search. Its navy translucent surface has a light refractive edge, 24px backdrop blur and a white translucent action; fallback surfaces remain solid navy when blur is unsupported. This material is confined to the search and suggestions. The popup overlays following content and remains scrollable on short screens. The combobox reads a bounded public-only suggestion endpoint after a 220ms debounce, provides keyboard selection, and keeps normal GET search available when JavaScript or suggestions fail.
 
+### Floating assistant
+
+A user-opened companion sits at bottom right on public pages. The 56px champagne launcher opens a nonmodal, 384px-wide panel, bounded by the viewport; phones use a 56px icon launcher and a panel with 16px side margins. Navy header, white transcript, and warm send control share the site typography and icon pack. The transcript scrolls independently; the page remains usable. Escape closes the panel and restores focus. Visual viewport events keep the composer reachable above the mobile keyboard. Hide the companion while the navigation drawer is open. No initial chat network request, unsolicited popup, or persistent animation.
+
 ### Buttons
 
 Primary home actions use the frontmatter navy variant with a minimum height (48px), a slate-navy hover and an active scale of (.98). Header gold actions have a minimum height (44px), champagne surface and darker-navy text. The closing section reuses the primary home action dimensions with gold colors. Existing task action variants inherit their base padding but receive the same navy surface override.

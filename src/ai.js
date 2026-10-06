@@ -1,7 +1,6 @@
-// Modul jawaban AI untuk tab "Pelajari KI" dan "Konsultasi".
+// Shared P2KI assistant: server-only OpenRouter integration.
 const { MODULES, moduleReferences } = require('./learning-modules');
-// Jika ANTHROPIC_API_KEY diset di environment, akan memakai model Claude sungguhan.
-// Jika tidak, jatuh ke jawaban rule-based (pencocokan kata kunci) supaya tetap berfungsi tanpa API key.
+const OPENROUTER_MODEL = 'deepseek/deepseek-v4.1-flash';
 
 const MODULE_CONTEXT = `
 Kamu adalah asisten belajar Kekayaan Intelektual (KI) untuk P2KI UNISBA. Jawab singkat (maks 4 kalimat),
@@ -38,48 +37,51 @@ function ruleBasedAnswer(question, bank, fallback) {
   return match ? match.a : fallback;
 }
 
-async function callAnthropic(systemPrompt, userMessage) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+async function callOpenRouter(systemPrompt, userMessage, history = []) {
+  const apiKey = process.env.OPENROUTER_API_KEY?.trim();
   if (!apiKey) return null;
-
+  const turns = Array.isArray(history) ? history.filter(m => m && ['user', 'assistant'].includes(m.role) && typeof m.content === 'string').slice(-12).map(m => ({ role:m.role, content:m.content.slice(0, 6000) })) : [];
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      signal: AbortSignal.timeout(20000),
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 300,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: userMessage }]
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      signal: AbortSignal.timeout(25000),
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', Authorization:`Bearer ${apiKey}` },
+      body:JSON.stringify({
+        model:OPENROUTER_MODEL, max_tokens:900, temperature:0.3,
+        reasoning:{ enabled:false },
+        messages:[{ role:'system', content:systemPrompt }, ...turns, { role:'user', content:userMessage }]
       })
     });
-    if (!response.ok) return null;
+    if (!response.ok) {
+      console.error(`OpenRouter request failed (HTTP ${response.status})`);
+      const error = new Error(response.status === 429 ? 'Asisten AI sedang sibuk. Tunggu sebentar lalu coba lagi.' : 'Asisten AI belum dapat terhubung. Coba lagi nanti atau hubungi sekretariat P2KI.');
+      error.status = response.status === 429 ? 429 : 503;
+      throw error;
+    }
     const data = await response.json();
-    const textBlock = (data.content || []).find(b => b.type === 'text');
-    return textBlock ? textBlock.text.trim() : null;
-  } catch (err) {
-    console.error('Anthropic API error:', err.message);
-    return null;
+    const answer = data.choices?.[0]?.message?.content;
+    if (typeof answer !== 'string' || !answer.trim()) throw new Error('Empty response');
+    return answer.trim().slice(0, 12000);
+  } catch (error) {
+    if (error.status) throw error;
+    const unavailable = new Error('Jawaban AI belum tersedia. Periksa koneksi dan coba lagi.');
+    unavailable.status = 503;
+    throw unavailable;
   }
 }
 
-async function askLearningAI(question) {
+async function askLearningAI(question, history = []) {
+  const aiAnswer = await callOpenRouter(MODULE_CONTEXT, question, history);
+  if (aiAnswer) return { jawaban: aiAnswer, sumber: 'openrouter_api' };
   if (/\b(modul|materi|referensi|bacaan|belajar)\b/i.test(question) && moduleReferences(question).length) {
     return { jawaban: 'Untuk topik ini, tersedia bacaan resmi dalam katalog EKII–DJKI. Pilih modul rujukan di bawah untuk melihat informasi materi dan membuka PDF aslinya.', sumber: 'ekii_catalogue' };
   }
-  const aiAnswer = await callAnthropic(MODULE_CONTEXT, question);
-  if (aiAnswer) return { jawaban: aiAnswer, sumber: 'anthropic_api' };
   const fallback = 'Panduan otomatis belum mencakup pertanyaan ini. Untuk meninjau kasus Anda, hubungi sekretariat P2KI melalui kontak pada bagian bawah halaman.';
   return { jawaban: ruleBasedAnswer(question, RULE_ANSWERS, fallback), sumber: 'rule_based' };
 }
 
 async function autoReplyConsult(message) {
-  const aiAnswer = await callAnthropic(
+  const aiAnswer = await callOpenRouter(
     'Kamu adalah asisten otomatis panduan KI UNISBA, bukan staf manusia. Jangan menjanjikan pengecekan status, tindak lanjut, integrasi, atau layanan yang tidak kamu akses. Balas singkat dan profesional dalam Bahasa Indonesia.',
     message
   );
@@ -88,4 +90,4 @@ async function autoReplyConsult(message) {
   return ruleBasedAnswer(message, RULE_CONSULT, fallback);
 }
 
-module.exports = { askLearningAI, autoReplyConsult };
+module.exports = { askLearningAI, autoReplyConsult, callOpenRouter, OPENROUTER_MODEL };

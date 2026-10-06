@@ -38,7 +38,7 @@ Alur di atas bersumber dari implementasi repository. Ketersediaan operasional la
 - Navigasi atas dan bagian bawah halaman harus memenuhi lebar halaman dengan isi yang tetap terbaca di desktop dan ponsel.
 - Hindari biaya render yang tidak membantu tugas pengguna, efek terus-menerus, dan dependensi visual berat. Klaim peningkatan performa harus didukung pengukuran; perubahan kode lokal tidak membuktikan kecepatan hosting.
 - Login SISFO masih berupa demonstrasi, bukan SSO yang terhubung ke sistem universitas.
-- Tanya-jawab menggunakan aturan lokal secara default; API AI bersifat opsional. Jangan mengklaim semua jawaban berasal dari model AI atau konsultasi langsung manusia tanpa bukti.
+- Asisten KI tersedia lewat tombol floating di pojok kanan bawah semua halaman publik, tertutup hingga diklik. Dengan `OPENROUTER_API_KEY`, chat memakai `deepseek/deepseek-v4.1-flash`; konteks dan riwayat dibatasi 12 pesan per sesi. Akademi KI tetap berfokus pada modul. Tanpa key, tampilkan mode panduan otomatis; kegagalan provider tidak boleh diganti diam-diam dengan jawaban lokal yang mengaku AI. Tidak ada staf manusia di balik widget.
 - Kode seeding saat ini tidak membuat tantangan industri contoh. Kebutuhan yang dikirim melalui formulir menunggu tinjauan sebelum publikasi. Dokumen unduhan masih perlu dikonfirmasi sebagai dokumen resmi sebelum digunakan.
 
 ## Brand Commitments

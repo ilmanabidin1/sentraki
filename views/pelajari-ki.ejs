@@ -1,10 +1,10 @@
-<%- include('partials/head', { title: 'Pelajari KI & Asisten AI' }) %>
+<%- include('partials/head', { title: 'Akademi KI' }) %>
 <%- include('partials/nav', { active: 'pelajari' }) %>
 
 <main id="mainContent" tabindex="-1" class="page-container academy-page">
   <header class="academy-header">
     <div><h1 class="page-title">Akademi Kekayaan Intelektual</h1><p class="page-desc">Pilih materi dari katalog modul resmi EKII–DJKI untuk mempelajari kekayaan intelektual, dari pengenalan hingga bacaan lanjutan.</p></div>
-    <div class="academy-header-links"><a class="premium-text-link" href="#asisten-ki">Tanya panduan KI</a><a class="premium-text-link" href="<%= catalogueUrl %>" target="_blank" rel="noopener noreferrer">Katalog resmi EKII <svg class="sk-icon" width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#external"/></svg></a></div>
+    <div class="academy-header-links"><button type="button" class="premium-text-link" data-open-assistant>Tanya Asisten KI</button><a class="premium-text-link" href="<%= catalogueUrl %>" target="_blank" rel="noopener noreferrer">Katalog resmi EKII <svg class="sk-icon" width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#external"/></svg></a></div>
   </header>
 
   <section class="academy-start" aria-labelledby="start-title">
@@ -29,53 +29,6 @@
     <p class="academy-source-note">Judul, edisi, dan tautan dokumen mengacu pada katalog EKII. Pengantar singkat disusun oleh Sentra KI untuk membantu memilih bacaan. PDF lengkap dibuka dari situs resmi DJKI; edisi yang tercantum mengikuti sumber aslinya.</p>
   </section>
 
-  <!-- MODERN AI ASSISTANT WIDGET -->
-  <section class="ai-assistant-card" id="asisten-ki" aria-labelledby="assistant-title" tabindex="-1">
-
-    <div class="ai-card-header">
-      <div class="ai-avatar-badge">
-        <svg width="20" height="20" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=1a3db9681d#assistant"/></svg>
-      </div>
-      <div class="ai-header-text">
-        <h2 class="ai-title" id="assistant-title">Tanya Asisten AI Sentra KI</h2>
-        <p class="ai-desc">Tanyakan panduan umum KI. Referensi modul yang sesuai ditampilkan bersama jawaban; asisten tidak menggantikan isi dokumen resmi.</p>
-      </div>
-    </div>
-
-    <!-- PROMPT CHIPS -->
-    <div class="ai-prompt-chips">
-      <span class="prompt-chip-label">Pilihan Cepat:</span>
-      <button type="button" class="ai-chip-btn" onclick="askAI('Apa bedanya paten biasa dan paten sederhana?')">Beda Paten Biasa &amp; Sederhana?</button>
-      <button type="button" class="ai-chip-btn" onclick="askAI('Modul apa untuk belajar hak cipta?')">Modul Hak Cipta?</button>
-      <button type="button" class="ai-chip-btn" onclick="askAI('Apa saja syarat invensi agar bisa dipatenkan?')">Syarat Invensi Paten?</button>
-      <button type="button" class="ai-chip-btn" onclick="askAI('Bagaimana pembagian royalti lisensi untuk inventor kampus?')">Pembagian Royalti Inventor?</button>
-    </div>
-
-    <!-- CHAT LOG -->
-    <div class="ai-chat-log" id="aiLog" role="log" aria-live="polite">
-      <div class="ai-msg bot">
-        <div class="msg-avatar-mini"><svg class="sk-icon" width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#assistant"/></svg></div>
-        <div class="msg-bubble-wrap">
-          <div class="msg-author">Asisten AI Sentra KI</div>
-          <div class="bubble">
-            Assalamu'alaikum! Selamat datang di Pusat Edukasi Sentra KI UNISBA. Silakan ajukan pertanyaan seputar perlindungan karya intelektual Anda, atau pilih salah satu topik cepat di atas.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CHAT INPUT -->
-    <div class="ai-input-bar">
-      <input type="text" id="aiInput" class="ai-text-input" placeholder="Tuliskan pertanyaan seputar KI..." aria-label="Pertanyaan untuk Asisten AI" onkeydown="if(event.key==='Enter'){sendAIQuestion();}">
-      <button type="button" class="btn-ai-send" onclick="sendAIQuestion()" aria-label="Kirim Pertanyaan">
-        <svg width="18" height="18" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=1a3db9681d#send"/></svg>
-      </button>
-    </div>
-
-    <div class="ai-disclaimer-note" id="aiDisclaimer">
-      <span><%= aiEnabled ? 'Terhubung ke model cerdas AI Sentra KI.' : 'Panduan otomatis berbasis kata kunci.' %> Jawaban bersifat edukasi &amp; konsultatif.</span>
-    </div>
-  </section>
 </main>
 
 <%- include('partials/footer') %>

@@ -6,6 +6,8 @@ Icon pack P2KI memakai grid 32 × 32, stroke 2.2, dan ujung/sambungan membulat. 
 
 Pencarian beranda adalah combobox dengan saran dari `/api/ki/suggestions`, hanya untuk KI yang tayang. Gunakan debounce 220 ms, batalkan request lama, dan abaikan respons yang sudah usang. Buat teks hasil melalui DOM `textContent`; jangan memasukkan data hasil ke HTML mentah. Enter tanpa pilihan tetap membuka direktori; Escape, blur keluar form, atau klik di luar menutup saran. Lapisan kaca hanya pada pencarian dan popup, dengan fallback solid untuk browser tanpa backdrop-filter.
 
+Asisten KI adalah disclosure nonmodal di pojok kanan bawah, dengan panel tersembunyi sampai pengguna membuka tombol. Gunakan ikon dari sprite, tutup dengan Escape dan kembalikan fokus ke pemicu. Halaman tetap dapat digunakan ketika chat terbuka. Riwayat hanya untuk sesi aktif; GET riwayat baru berjalan saat panel pertama kali dibuka. API key OpenRouter hanya di server; model tetap `deepseek/deepseek-v4.1-flash`. Endpoint mempertahankan CSRF, rate limit, konteks yang terbatas, dan error provider yang jelas. Jangan mengembalikan key atau error mentah provider ke browser.
+
 - Permukaan: `--bg-page`, `--bg-card`, `--bg-subtle`. Teks pada permukaan terang memakai `--text-heading`, `--text-body`, `--text-muted`, atau `--text-subtle` (warna terakhir juga harus lolos kontras).
 - Permukaan gelap: `--text-white`, `--text-on-dark`, dan `--text-on-dark-muted`. Jangan memakai token permukaan sebagai warna teks.
 - Status: hijau untuk granted, amber untuk proses, rose untuk ditolak/ditarik, dengan label teks. Pada chip interaktif gunakan tingkat 700 bersama teks putih saat hover.

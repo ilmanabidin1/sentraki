@@ -7,6 +7,8 @@ const Database = require('better-sqlite3');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+// Railway terminates HTTPS at its edge; preserve secure session cookies and CSRF.
+if (process.env.RAILWAY_ENVIRONMENT_ID) app.set('trust proxy', 1);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -43,6 +45,11 @@ app.use(session({
 // CSRF: generate token per-session, verifikasi pada semua POST.
 const { csrf, verifyCsrf } = require('./src/middleware/csrf');
 app.use(csrf);
+app.use((req, res, next) => {
+  res.locals.aiEnabled = !!process.env.OPENROUTER_API_KEY?.trim();
+  res.locals.showAssistant = !req.path.startsWith('/admin');
+  next();
+});
 app.use((req, res, next) => {
   if (req.method === 'POST') return verifyCsrf(req, res, next);
   next();

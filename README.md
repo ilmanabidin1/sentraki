@@ -2,7 +2,7 @@
 
 Website lengkap (bukan mockup) untuk Pusat Pengembangan dan Pelayanan Kekayaan Intelektual
 (P2KI) UNISBA: direktori KI berbasis data riil, link-and-match dengan industri (gaya Innoget),
-akademi belajar KI dengan asisten AI, dan konsultasi langsung dengan admin P2KI.
+akademi belajar KI, asisten AI floating, dan panduan konsultasi otomatis.
 
 Dibangun dengan pola yang sama seperti proyek KolabRiset: **Node.js (Express) + PostgreSQL**,
 siap deploy ke **Railway**.
@@ -18,9 +18,9 @@ siap deploy ke **Railway**.
   (data tersimpan ke database, bukan simulasi)
 - **Unduhan** — SOP pendaftaran KI, kerangka pembagian manfaat ekonomi, dan formulir dalam bentuk
   PDF sungguhan (saat ini masih dokumen placeholder — lihat catatan di bawah)
-- **Pelajari KI** — modul belajar dari materi pelatihan DJKI + widget tanya-jawab AI
-  (rule-based secara default, atau tersambung ke Claude sungguhan jika `ANTHROPIC_API_KEY` diisi)
-- **Konsultasi** — chat dengan "Admin P2KI", pesan tersimpan per sesi ke database
+- **Pelajari KI** — katalog modul resmi EKII–DJKI. Asisten KI tersedia lewat tombol floating
+  pada seluruh halaman publik, dengan konteks percakapan per sesi.
+- **Konsultasi** — panduan chat otomatis, pesan tersimpan per sesi ke database
 - **Dasbor Admin** — login terpisah, menampilkan KPI dan tabel pengajuan real-time dari database
 
 ## Struktur Proyek
@@ -30,7 +30,7 @@ p2ki-web/
 ├── server.js              # entry point
 ├── src/
 │   ├── db.js               # koneksi PostgreSQL
-│   ├── ai.js                # logika AI (rule-based + opsional Anthropic API)
+│   ├── ai.js                # logika AI (OpenRouter DeepSeek + panduan lokal tanpa key)
 │   ├── middleware/auth.js   # proteksi login admin
 │   └── routes/              # semua route Express
 ├── views/                   # template EJS
@@ -77,7 +77,7 @@ Default (untuk development): `admin` / `admin123` — **wajib diganti** lewat en
 4. Di tab **Variables** pada service web, tambahkan:
    - `ADMIN_USERNAME`, `ADMIN_PASSWORD` — ganti dari default
    - `SESSION_SECRET` — string acak yang panjang
-   - `ANTHROPIC_API_KEY` — opsional, jika ingin AI Q&A tersambung ke Claude sungguhan
+   - `OPENROUTER_API_KEY` — kunci OpenRouter untuk model `deepseek/deepseek-v4.1-flash`
 5. Setelah deploy pertama berhasil, jalankan seeding data riil sekali lewat Railway CLI:
    ```
    railway run node scripts/seed.js
@@ -107,8 +107,9 @@ git push -u origin main
 - **Data Tantangan Industri** berisi 6 contoh ilustratif (bukan data riil), karena fitur
   link-and-match ini baru diusulkan dan belum punya data sungguhan dari industri.
 - **AI Q&A dan Konsultasi** berjalan dengan jawaban rule-based (pencocokan kata kunci) secara
-  default. Isi `ANTHROPIC_API_KEY` di environment variable untuk mengaktifkan jawaban dari model
-  Claude sungguhan.
+  default. Isi `OPENROUTER_API_KEY` di environment Railway untuk model `deepseek/deepseek-v4.1-flash`.
+  Key tetap di server; error provider ditampilkan sebagai kegagalan yang dapat dicoba lagi.
+  Tanpa key tersedia panduan kata kunci. Riwayat chat disimpan per sesi (maksimum 12 pesan konteks).
 - **Autentikasi admin** masih sederhana (satu akun dari environment variable, tanpa hashing).
   Untuk production yang lebih serius, pertimbangkan tabel `admin_users` dengan password ter-hash
   (bcrypt) dan/atau SSO sungguhan ke SISFO.
