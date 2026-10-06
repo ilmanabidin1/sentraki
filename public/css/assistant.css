@@ -11,6 +11,7 @@
 .ki-chat-header p { font-size:11px; color:#c0cede; margin:2px 0 0; }
 .ki-chat-header button { display:grid; place-items:center; margin-left:auto; width:44px; height:44px; background:transparent; color:#fff; border-radius:12px; }
 .ki-chat-header button:hover { background:rgba(255,255,255,.10); }
+.ki-chat-header #kiChatClose { margin-left:0; }
 .ki-chat-log { flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; padding:20px 16px; display:flex; flex-direction:column; gap:18px; scrollbar-width:thin; scrollbar-color:#a5b4c7 #f6f7f9; }
 .ki-chat-message { max-width:94%; flex-shrink:0; overflow-wrap:anywhere; }
 .ki-chat-message.user { align-self:flex-end; }
@@ -20,6 +21,8 @@
 .ki-chat-message.user .bubble { background:var(--navy-900); color:#fff; border-bottom-right-radius:4px; }
 .ki-chat-message.bot .bubble { border-bottom-left-radius:4px; }
 .ki-chat-message.is-error .bubble { background:#fff0f1; color:#8e2639; }
+.ki-chat-message.is-streaming .bubble::after { content:''; display:inline-block; width:3px; height:1em; margin-left:4px; vertical-align:-2px; background:currentColor; animation:ki-stream-caret 800ms steps(2,end) infinite; }
+@keyframes ki-stream-caret { 50% { opacity:0; } }
 .ki-chat-message .chat-retry { display:block; margin-top:10px; min-height:44px; background:#fff; color:#8e2639; border:1px solid #cc8090; }
 .ki-chat-message .ai-module-references { white-space:normal; }
 .ki-chat-message .ai-module-references a { color:#205485; }
@@ -38,3 +41,4 @@
 .ki-assistant.keyboard-open .ki-chat-prompts,.ki-assistant.keyboard-open .ki-chat-note { display:none; }
 @media(max-width:640px) { .ki-assistant { right:16px; bottom:calc(16px + env(safe-area-inset-bottom,0px) + var(--chat-keyboard,0px)); } .ki-chat-launcher { width:56px; padding:14px; } .ki-chat-launcher span { display:none; } .ki-chat-panel { height:min(600px,calc(var(--chat-height,100dvh) - 108px)); } }
 @media(prefers-reduced-motion:reduce) { .ki-chat-launcher { transition:none; } .ki-chat-launcher:hover { transform:none; } }
+@media(prefers-reduced-motion:reduce) { .ki-chat-message.is-streaming .bubble::after { animation:none; } }

@@ -3,6 +3,7 @@
     <header class="ki-chat-header">
       <svg class="sk-icon" width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#assistant"/></svg>
       <div><h2 id="kiChatTitle">Asisten KI</h2><p>P2KI UNISBA</p></div>
+      <button id="kiChatReset" type="button" aria-label="Percakapan baru" title="Mulai percakapan baru"><svg class="sk-icon" width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#reset"/></svg></button>
       <button id="kiChatClose" type="button" aria-label="Tutup chat"><svg class="sk-icon" width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#close"/></svg></button>
     </header>
     <div class="ki-chat-log" id="aiLog" role="log" aria-live="polite" aria-relevant="additions text">
@@ -18,7 +19,7 @@
       <textarea id="aiInput" rows="2" maxlength="2000" placeholder="Tulis pertanyaan Anda…" required></textarea>
       <button type="submit" id="kiChatSend" aria-label="Kirim pertanyaan"><svg class="sk-icon" width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#send"/></svg></button>
     </form>
-    <p class="ki-chat-note" id="kiChatNote"><%= typeof aiEnabled !== 'undefined' && aiEnabled ? 'Asisten AI' : 'Panduan otomatis' %> · Rujuk dokumen resmi untuk keputusan KI.</p>
+    <p class="ki-chat-note" id="kiChatNote"><%= typeof aiEnabled !== 'undefined' && aiEnabled ? 'Asisten AI' : 'Panduan otomatis' %> · Chat hanya di halaman ini. Rujuk dokumen resmi untuk keputusan KI.</p>
   </section>
   <button class="ki-chat-launcher" id="kiChatToggle" type="button" aria-expanded="false" aria-controls="kiChatPanel" aria-label="Buka Asisten KI">
     <svg class="sk-icon" width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#assistant"/></svg><span>Asisten KI</span>

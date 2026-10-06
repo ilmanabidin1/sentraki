@@ -46,6 +46,7 @@ app.use(session({
 const { csrf, verifyCsrf } = require('./src/middleware/csrf');
 app.use(csrf);
 app.use((req, res, next) => {
+  delete req.session.aiHistory;
   res.locals.aiEnabled = !!process.env.OPENROUTER_API_KEY?.trim();
   res.locals.showAssistant = !req.path.startsWith('/admin');
   next();

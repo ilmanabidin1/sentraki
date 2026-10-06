@@ -19,7 +19,7 @@ siap deploy ke **Railway**.
 - **Unduhan** — SOP pendaftaran KI, kerangka pembagian manfaat ekonomi, dan formulir dalam bentuk
   PDF sungguhan (saat ini masih dokumen placeholder — lihat catatan di bawah)
 - **Pelajari KI** — katalog modul resmi EKII–DJKI. Asisten KI tersedia lewat tombol floating
-  pada seluruh halaman publik, dengan konteks percakapan per sesi.
+  pada seluruh halaman publik, dengan konteks sementara di memori halaman dan jawaban streaming.
 - **Konsultasi** — panduan chat otomatis, pesan tersimpan per sesi ke database
 - **Dasbor Admin** — login terpisah, menampilkan KPI dan tabel pengajuan real-time dari database
 
@@ -109,7 +109,9 @@ git push -u origin main
 - **AI Q&A dan Konsultasi** berjalan dengan jawaban rule-based (pencocokan kata kunci) secara
   default. Isi `OPENROUTER_API_KEY` di environment Railway untuk model `deepseek/deepseek-v4.1-flash`.
   Key tetap di server; error provider ditampilkan sebagai kegagalan yang dapat dicoba lagi.
-  Tanpa key tersedia panduan kata kunci. Riwayat chat disimpan per sesi (maksimum 12 pesan konteks).
+  Tanpa key tersedia panduan kata kunci. Chat asisten tidak disimpan ke sesi server atau database. Maksimum 12 pesan konteks
+  dikirim oleh halaman aktif; reload, pindah halaman, atau Percakapan baru mengosongkannya.
+  Respons OpenRouter diteruskan lewat SSE agar teks terlihat saat sedang dihasilkan.
 - **Autentikasi admin** masih sederhana (satu akun dari environment variable, tanpa hashing).
   Untuk production yang lebih serius, pertimbangkan tabel `admin_users` dengan password ter-hash
   (bcrypt) dan/atau SSO sungguhan ke SISFO.

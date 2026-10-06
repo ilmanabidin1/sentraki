@@ -235,7 +235,7 @@ The owner explicitly requested iOS-style glassmorphism for home search. Its navy
 
 ### Floating assistant
 
-A user-opened companion sits at bottom right on public pages. The 56px champagne launcher opens a nonmodal, 384px-wide panel, bounded by the viewport; phones use a 56px icon launcher and a panel with 16px side margins. Navy header, white transcript, and warm send control share the site typography and icon pack. The transcript scrolls independently; the page remains usable. Escape closes the panel and restores focus. Visual viewport events keep the composer reachable above the mobile keyboard. Hide the companion while the navigation drawer is open. No initial chat network request, unsolicited popup, or persistent animation.
+A user-opened companion sits at bottom right on public pages. The 56px champagne launcher opens a nonmodal, 384px-wide panel, bounded by the viewport; phones use a 56px icon launcher and a panel with 16px side margins. Navy header, white transcript, and warm send control share the site typography and icon pack. The transcript scrolls independently; the page remains usable. Escape closes the panel and restores focus. Visual viewport events keep the composer reachable above the mobile keyboard. Hide the companion while the navigation drawer is open. No initial chat network request or unsolicited popup. Streaming content is painted at most once per frame; the caret blinks only during a live response and stops under reduced motion. The new-conversation control cancels the stream and clears the transcript. Transcript and context live only in page memory; pagehide also clears the DOM to prevent restoration by BFCache.
 
 ### Buttons
 

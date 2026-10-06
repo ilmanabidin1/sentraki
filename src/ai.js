@@ -1,6 +1,11 @@
 // Shared P2KI assistant: server-only OpenRouter integration.
 const { MODULES, moduleReferences } = require('./learning-modules');
 const OPENROUTER_MODEL = 'deepseek/deepseek-v4.1-flash';
+const { readSSE } = require('../public/js/event-stream');
+
+function normalizeChatHistory(history) {
+  return Array.isArray(history) ? history.filter(m => m && ['user','assistant'].includes(m.role) && typeof m.content === 'string' && m.content.trim()).slice(-12).map(m => ({ role:m.role, content:m.content.slice(0, 1800) })) : [];
+}
 
 const MODULE_CONTEXT = `
 Kamu adalah asisten belajar Kekayaan Intelektual (KI) untuk P2KI UNISBA. Jawab singkat (maks 4 kalimat),
@@ -40,7 +45,7 @@ function ruleBasedAnswer(question, bank, fallback) {
 async function callOpenRouter(systemPrompt, userMessage, history = []) {
   const apiKey = process.env.OPENROUTER_API_KEY?.trim();
   if (!apiKey) return null;
-  const turns = Array.isArray(history) ? history.filter(m => m && ['user', 'assistant'].includes(m.role) && typeof m.content === 'string').slice(-12).map(m => ({ role:m.role, content:m.content.slice(0, 6000) })) : [];
+  const turns = normalizeChatHistory(history);
   try {
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       signal: AbortSignal.timeout(25000),
@@ -90,4 +95,47 @@ async function autoReplyConsult(message) {
   return ruleBasedAnswer(message, RULE_CONSULT, fallback);
 }
 
-module.exports = { askLearningAI, autoReplyConsult, callOpenRouter, OPENROUTER_MODEL };
+async function streamLearningAI(question, history, { signal, onStart, onDelta }) {
+  const key = process.env.OPENROUTER_API_KEY?.trim();
+  if (!key) {
+    const result = await askLearningAI(question, history);
+    onStart(); onDelta(result.jawaban);
+    return result;
+  }
+  let answer = '', completed = false;
+  try {
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method:'POST', signal:AbortSignal.any([signal, AbortSignal.timeout(60000)]),
+      headers:{ 'Content-Type':'application/json', Authorization:`Bearer ${key}` },
+      body:JSON.stringify({ model:OPENROUTER_MODEL, stream:true, max_tokens:900, temperature:0.3, reasoning:{ enabled:false },
+        messages:[{ role:'system', content:MODULE_CONTEXT }, ...normalizeChatHistory(history), { role:'user', content:question }] })
+    });
+    if (!response.ok) {
+      const error = new Error(response.status === 429 ? 'Asisten AI sedang sibuk. Coba lagi sebentar.' : 'Asisten AI belum dapat terhubung. Coba lagi nanti.');
+      error.status = response.status === 429 ? 429 : 503;
+      throw error;
+    }
+    onStart();
+    for await (const event of readSSE(response.body)) {
+      if (event.data === '[DONE]') { completed = true; break; }
+      const chunk = JSON.parse(event.data);
+      if (chunk.error || chunk.choices?.some(choice => choice.finish_reason === 'error')) throw new Error('Provider stream failed');
+      const text = chunk.choices?.[0]?.delta?.content;
+      if (typeof text === 'string' && text) {
+        answer += text;
+        if (answer.length > 12000) throw new Error('Response too long');
+        onDelta(text);
+      }
+    }
+    if (!completed || !answer.trim()) throw new Error('Incomplete stream');
+    return { jawaban:answer, sumber:'openrouter_api' };
+  } catch (error) {
+    if (signal.aborted) throw error;
+    if (error.status) throw error;
+    const interrupted = new Error('Jawaban AI terputus atau belum selesai. Silakan coba lagi.');
+    interrupted.status = 503;
+    throw interrupted;
+  }
+}
+
+module.exports = { askLearningAI, autoReplyConsult, callOpenRouter, streamLearningAI, normalizeChatHistory, OPENROUTER_MODEL };

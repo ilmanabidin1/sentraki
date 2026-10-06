@@ -297,7 +297,8 @@ function retryControl(container, error, retry) {
   container.appendChild(button);
 }
 
-let aiBusy = false;
+let aiBusy = false, aiVersion = 0, activeAIRequest;
+let aiTurns = [];
 function setAIbusy(busy) {
   aiBusy = busy;
   document.getElementById('kiChatSend').disabled = busy;
@@ -313,6 +314,12 @@ function appendAIMessage(role, text, references = []) {
   author.textContent = role === 'user' ? 'Anda' : 'Asisten KI';
   const bubble = document.createElement('div'); bubble.className = 'bubble'; bubble.textContent = text;
   row.append(author, bubble);
+  addAIReferences(bubble, references);
+  const log = document.getElementById('aiLog'); log.append(row); log.scrollTop = log.scrollHeight;
+  return row;
+}
+
+function addAIReferences(bubble, references) {
   const valid = Array.isArray(references) ? references.filter(r => r && typeof r.id === 'string' && /^[a-z0-9-]+$/.test(r.id) && typeof r.title === 'string').slice(0, 3) : [];
   if (valid.length) {
     const sources = document.createElement('div'); sources.className = 'ai-module-references';
@@ -320,8 +327,6 @@ function appendAIMessage(role, text, references = []) {
     valid.forEach(ref => { const link = document.createElement('a'); link.href = `/pelajari-ki/${ref.id}`; link.textContent = ref.title; sources.append(link); });
     bubble.append(sources);
   }
-  const log = document.getElementById('aiLog'); log.append(row); log.scrollTop = log.scrollHeight;
-  return row;
 }
 
 function initFloatingAssistant() {
@@ -329,7 +334,8 @@ function initFloatingAssistant() {
   if (!root) return;
   const toggle = document.getElementById('kiChatToggle'), panel = document.getElementById('kiChatPanel');
   const close = document.getElementById('kiChatClose'), input = document.getElementById('aiInput');
-  let loaded = false, returnFocus;
+  let returnFocus;
+  const greeting = document.getElementById('aiLog').firstElementChild.cloneNode(true);
   function fit() {
     if (panel.hidden) return;
     const view = window.visualViewport;
@@ -337,36 +343,27 @@ function initFloatingAssistant() {
     root.style.setProperty('--chat-keyboard', `${view ? Math.max(0, window.innerHeight - view.height - view.offsetTop) : 0}px`);
     root.classList.toggle('keyboard-open', !!view && window.innerHeight - view.height > 120);
   }
-  async function load() {
-    setAIbusy(true);
-    try {
-      const response = await fetch('/api/ai-chat');
-      if (!response.ok) throw new Error('History unavailable');
-      const data = await response.json();
-      if (!Array.isArray(data.messages)) throw new Error('Invalid history');
-      for (const turn of data.messages.slice(-12)) {
-        if (turn && ['user', 'assistant'].includes(turn.role) && typeof turn.content === 'string') appendAIMessage(turn.role, turn.content, turn.referensi);
-      }
-      document.getElementById('kiChatNote').textContent = `${data.enabled ? 'Asisten AI' : 'Panduan otomatis'} · Rujuk dokumen resmi untuk keputusan KI.`;
-    } catch {
-      appendAIMessage('assistant', 'Riwayat chat belum bisa dimuat. Anda tetap dapat mengirim pertanyaan.');
-    } finally { setAIbusy(false); }
-  }
   function open() {
     if (!panel.hidden) return;
     returnFocus = document.activeElement;
     panel.hidden = false; toggle.setAttribute('aria-expanded', 'true'); toggle.setAttribute('aria-label', 'Minimalkan Asisten KI');
     toggle.querySelector('span').textContent = 'Minimalkan';
     fit(); close.focus();
-    if (!loaded) { loaded = true; load(); }
   }
-  function hide() {
+  function hide(restoreFocus = true) {
     panel.hidden = true; toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Buka Asisten KI');
     toggle.querySelector('span').textContent = 'Asisten KI'; root.style.removeProperty('--chat-keyboard'); root.classList.remove('keyboard-open');
-    returnFocus?.focus();
+    if (restoreFocus) returnFocus?.focus();
   }
   toggle.addEventListener('click', () => panel.hidden ? open() : hide());
   close.addEventListener('click', hide);
+  function resetChat(focus = false) {
+    aiVersion++; activeAIRequest?.abort(); aiTurns = [];
+    document.getElementById('aiLog').replaceChildren(greeting.cloneNode(true));
+    input.value = ''; setAIbusy(false); if (focus) input.focus();
+  }
+  document.getElementById('kiChatReset').addEventListener('click', () => resetChat(true));
+  window.addEventListener('pagehide', () => { resetChat(); hide(false); });
   root.addEventListener('keydown', event => { if (event.key === 'Escape' && !panel.hidden) { event.preventDefault(); hide(); } });
   document.querySelectorAll('[data-open-assistant]').forEach(button => button.addEventListener('click', open));
   document.querySelectorAll('[data-ai-prompt]').forEach(button => button.addEventListener('click', () => askAI(button.dataset.aiPrompt)));
@@ -388,24 +385,81 @@ async function sendAIQuestion() {
   await askAI(q);
 }
 
+async function streamAIRequest(payload, onDelta, controller) {
+  const timeout = setTimeout(() => controller.abort(), 75000);
+  try {
+    const response = await fetch('/api/ai-tanya', {
+      method:'POST', signal:controller.signal,
+      headers:{ 'Content-Type':'application/json', Accept:'text/event-stream', 'x-csrf-token':csrfToken() },
+      body:JSON.stringify(payload)
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || 'Jawaban belum dapat diproses. Coba lagi nanti.');
+    }
+    let answer = '', finished = false, metadata;
+    for await (const event of P2KIEvents.readSSE(response.body)) {
+      const data = JSON.parse(event.data);
+      if (data.type === 'error') throw new Error(data.message || 'Jawaban AI terputus. Silakan coba lagi.');
+      if (data.type === 'delta' && typeof data.text === 'string') {
+        answer += data.text;
+        if (answer.length > 12000) throw new Error('Jawaban terlalu panjang. Ajukan pertanyaan yang lebih spesifik.');
+        onDelta(data.text);
+      }
+      if (data.type === 'done') { finished = true; metadata = data; break; }
+    }
+    if (!finished || !answer.trim()) throw new Error('Jawaban terputus sebelum selesai. Silakan coba lagi.');
+    return { jawaban:answer, referensi:metadata.referensi || [], sumber:metadata.sumber };
+  } catch (error) {
+    if (error.name === 'AbortError') throw new Error('Jawaban belum selesai. Silakan coba lagi.');
+    throw error;
+  } finally { clearTimeout(timeout); }
+}
+
 async function askAI(question) {
   const q = (question || '').trim().slice(0, 2000);
   if (!q || aiBusy || !document.getElementById('aiLog')) return;
+  const context = aiTurns.map(turn => ({ ...turn }));
   appendAIMessage('user', q);
   const row = appendAIMessage('assistant', 'Sedang menyiapkan jawaban…');
   async function deliver() {
     if (aiBusy) return;
-    setAIbusy(true); row.classList.remove('is-error');
-    row.querySelector('.bubble').textContent = 'Sedang menyiapkan jawaban…';
+    const version = aiVersion, controller = new AbortController();
+    activeAIRequest = controller;
+    setAIbusy(true); row.classList.remove('is-error'); row.classList.add('is-streaming');
+    const bubble = row.querySelector('.bubble');
+    bubble.textContent = 'Sedang menyiapkan jawaban…';
+    let partial = '', frame;
+    function paint() {
+      frame = null;
+      if (version !== aiVersion) return;
+      const log = document.getElementById('aiLog');
+      const nearBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 80;
+      bubble.textContent = partial || 'Sedang menyiapkan jawaban…';
+      if (nearBottom) log.scrollTop = log.scrollHeight;
+    }
     try {
-      let references = [];
-      const answer = await chatRequest('/api/ai-tanya', { question:q }, data => { references = data.referensi || []; });
-      row.remove(); appendAIMessage('assistant', answer, references);
+      const result = await streamAIRequest({ question:q, history:context }, text => {
+        if (version !== aiVersion) return;
+        partial += text;
+        if (!frame) frame = requestAnimationFrame(paint);
+      }, controller);
+      if (version !== aiVersion) return;
+      if (frame) cancelAnimationFrame(frame);
+      partial = result.jawaban; paint(); addAIReferences(bubble, result.referensi);
+      aiTurns = [...aiTurns, { role:'user', content:q.slice(0, 1800) }, { role:'assistant', content:result.jawaban.slice(0, 1800) }].slice(-12);
     } catch (error) {
-      row.classList.add('is-error'); retryControl(row.querySelector('.bubble'), error, deliver);
+      if (version !== aiVersion) return;
+      if (frame) cancelAnimationFrame(frame);
+      row.classList.add('is-error');
+      retryControl(bubble, { message:partial ? `${partial}\n\nJawaban belum lengkap. ${error.message}` : error.message }, deliver);
     } finally {
-      setAIbusy(false);
-      const log = document.getElementById('aiLog'); log.scrollTop = log.scrollHeight;
+      if (frame) cancelAnimationFrame(frame);
+      if (version === aiVersion) {
+        row.classList.remove('is-streaming'); setAIbusy(false);
+        activeAIRequest = null;
+        const log = document.getElementById('aiLog'); log.scrollTop = log.scrollHeight;
+      }
     }
   }
   await deliver();
