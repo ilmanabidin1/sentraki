@@ -3,7 +3,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const CleanCSS = require('clean-css');
 const root = path.join(__dirname, '..');
-const css = fs.readFileSync(path.join(root, 'public/css/style.css'), 'utf8');
+const css = ['style.css', 'premium.css'].map(file => fs.readFileSync(path.join(root, 'public/css', file), 'utf8')).join('\n');
 const result = new CleanCSS({ level: 1 }).minify(css);
 if (result.errors.length) throw new Error(result.errors.join('\n'));
 fs.writeFileSync(path.join(root, 'public/css/style.min.css'), result.styles);

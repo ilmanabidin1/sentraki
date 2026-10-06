@@ -27,7 +27,7 @@
   <form class="modern-form-card" method="POST" action="/daftarkan-ki">
     <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
 
-    <div class="form-grid-2">
+    <div>
       <div class="form-group">
         <label class="form-label" for="fNama">Nama Inventor Utama <span class="required-mark">*</span></label>
         <input type="text" class="form-input" name="nama" id="fNama" placeholder="Contoh: Dr. Nama Inventor, M.T." required value="<%= fv.nama || '' %>" maxlength="200" aria-invalid="<%= !!fe.nama %>" <%- fe.nama ? 'aria-describedby="fNama-error"' : '' %>>

@@ -9,3 +9,7 @@ data/p2ki.db-shm
 *.db
 *.db-shm
 *.db-wal
+
+# Local design review captures and machine preferences
+.impeccable/review/
+.impeccable/config.local.json

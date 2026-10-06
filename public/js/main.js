@@ -86,7 +86,67 @@ document.addEventListener('DOMContentLoaded', () => {
     dirFilters.open = false;
   }
   document.getElementById('formErrors')?.focus();
+  initPremiumMotion();
 });
+
+// Lembar inovasi: finite choreography, no autoplay or persistent animation loop.
+function initPremiumMotion() {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const running = new Set();
+  function animate(element, frames, options = {}) {
+    if (!element || reduced.matches || !element.animate || document.hidden) return;
+    const animation = element.animate(frames, { duration: 600, easing: 'cubic-bezier(.16,1,.3,1)', ...options });
+    running.add(animation);
+    animation.finished.catch(() => {}).finally(() => running.delete(animation));
+  }
+  function stopMotion() { running.forEach(animation => animation.cancel()); running.clear(); }
+  reduced.addEventListener('change', event => { if (event.matches) stopMotion(); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stopMotion(); });
+
+  const title = document.querySelector('.atlas-title');
+  if (title) {
+    title.querySelectorAll('span').forEach((line, index) => animate(line,
+      [{ clipPath: 'inset(0 0 100% 0)', transform: 'translateY(16px)' }, { clipPath: 'inset(0)', transform: 'translateY(0)' }],
+      { duration: 650, delay: index * 100 }));
+    animate(document.querySelector('.atlas-search'), [{ opacity: .65, transform: 'translateY(12px)' }, { opacity: 1, transform: 'translateY(0)' }], { delay: 140, duration: 550 });
+  }
+
+  const controls = document.querySelector('.portfolio-controls');
+  if (controls) {
+    const tabs = [...controls.querySelectorAll('[role="tab"]')];
+    const panels = tabs.map(tab => document.getElementById(tab.getAttribute('aria-controls')));
+    let selected = 0;
+    function select(index, focus = false) {
+      if (index === selected && !focus) return;
+      selected = index;
+      tabs.forEach((tab, i) => { tab.setAttribute('aria-selected', String(i === index)); tab.tabIndex = i === index ? 0 : -1; panels[i].hidden = i !== index; });
+      if (focus) tabs[index].focus();
+      panels[index].getAnimations?.().forEach(animation => animation.cancel());
+      animate(panels[index], [{ opacity: .5, transform: 'translateX(14px)' }, { opacity: 1, transform: 'translateX(0)' }], { duration: 350 });
+    }
+    tabs.forEach((tab, i) => {
+      panels[i].hidden = i !== 0;
+      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('keydown', event => {
+        const next = event.key === 'ArrowRight' ? (i + 1) % tabs.length : event.key === 'ArrowLeft' ? (i + tabs.length - 1) % tabs.length : event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : null;
+        if (next !== null) { event.preventDefault(); select(next, true); }
+      });
+    });
+    controls.hidden = false;
+  }
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        observer.unobserve(entry.target);
+        if (!reduced.matches) animate(entry.target, [{ opacity: .65, transform: 'translateY(14px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 450 });
+      }
+    }, { threshold: .12 });
+    document.querySelectorAll('.premium-services .premium-section-heading, .journey-list, .premium-closing h2').forEach(element => observer.observe(element));
+    window.addEventListener('pagehide', () => { observer.disconnect(); stopMotion(); }, { once: true });
+  }
+}
 
 // Learning Modules Accordion
 function toggleModule(i) {

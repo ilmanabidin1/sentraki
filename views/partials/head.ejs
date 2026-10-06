@@ -5,7 +5,9 @@
 <title><%= typeof title !== 'undefined' ? title + ' — Sentra KI UNISBA' : 'Sentra KI UNISBA — Pusat Pengembangan & Pelayanan KI LPPM' %></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Sentra KI UNISBA - Pusat Pengembangan dan Pelayanan Kekayaan Intelektual LPPM Universitas Islam Bandung. Direktori Paten, Hak Cipta, Merek, dan Desain Industri terintegrasi.">
-<link rel="stylesheet" href="/css/style.min.css?v=b9fc9d2468">
+<link rel="preload" href="/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+<% if (typeof home !== 'undefined' && home) { %><link rel="preload" href="/fonts/bodoni-moda-latin.woff2" as="font" type="font/woff2" crossorigin><% } %>
+<link rel="stylesheet" href="/css/style.min.css?v=69c422022e">
 <meta name="csrf-token" content="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
 </head>
 <body>
