@@ -225,6 +225,10 @@ Thin square-ended rules and SVG linework supply the distinctive geometry. The sh
 
 ## Components
 
+### Home banner artwork
+
+The home opening includes `public/images/unisba-innovation-banner-v1.webp`, an illustrative Indonesian academic scene with women in hijab and an academic in peci. It is generated artwork, not a verified campus photograph. Its exact prompt and origin are recorded alongside the asset. The decorative image sits behind live HTML text; navy overlays protect heading and body contrast, and the registration link has its own opaque navy surface. Do not add text or redraw official logos inside the raster. The WebP asset is about 104 KB and has explicit dimensions; use the existing crop rules for desktop and mobile.
+
 ### Buttons
 
 Primary home actions use the frontmatter navy variant with a minimum height (48px), a slate-navy hover and an active scale of (.98). Header gold actions have a minimum height (44px), champagne surface and darker-navy text. The closing section reuses the primary home action dimensions with gold colors. Existing task action variants inherit their base padding but receive the same navy surface override.
