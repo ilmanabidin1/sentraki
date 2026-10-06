@@ -178,7 +178,7 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-ui); font-weight:700; }
 .footer-p2ki-mark { position:relative; width:164px; height:102px; overflow:hidden; margin-bottom:20px; }
 .footer-p2ki-mark img { position:absolute; width:164px; height:164px; max-width:none; top:-14px; left:0; }
 .footer-institution-logos { display:flex; align-items:center; gap:24px; margin-top:24px; }
-.footer-logo-unisba.institution-logo-white { width:58px; height:58px; background:none; border-radius:0; padding:0; filter:brightness(0) invert(1); }
+.footer-logo-unisba.institution-logo-white { width:100px; height:100px; background:none; border-radius:0; padding:0; filter:brightness(0) invert(1); }
 .footer-institution-logos .footer-logo-lppm { width:130px; height:91px; flex-shrink:0; background:none; border-radius:0; padding:0; }
 .auth-logo { width:200px; height:200px; object-fit:contain; }
 .about-p2ki-logo { display:block; width:200px; height:200px; object-fit:contain; margin:0 auto 24px; }
