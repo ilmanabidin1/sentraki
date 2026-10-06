@@ -86,8 +86,111 @@ document.addEventListener('DOMContentLoaded', () => {
     dirFilters.open = false;
   }
   document.getElementById('formErrors')?.focus();
+  initHomeSearch();
   initPremiumMotion();
 });
+
+function initHomeSearch() {
+  const input = document.getElementById('atlas-search-input');
+  if (!input) return;
+  const form = input.form;
+  const shell = form.parentElement;
+  const popup = document.getElementById('atlas-suggestions');
+  const results = document.getElementById('atlas-search-results');
+  const status = document.getElementById('atlas-search-status');
+  const all = document.getElementById('atlas-search-all');
+  const kinds = { Paten:'patent', 'Hak Cipta':'copyright', Merek:'trademark', 'Desain Industri':'design', 'KI Komunal':'communal' };
+  let timer, request, revision = 0, active = -1, options = [];
+  let cachedQuery = '', cachedItems;
+  function select(index) {
+    active = index;
+    options.forEach((option, i) => option.setAttribute('aria-selected', String(i === index)));
+    if (index < 0) input.removeAttribute('aria-activedescendant');
+    else { input.setAttribute('aria-activedescendant', options[index].id); options[index].scrollIntoView({ block:'nearest' }); }
+  }
+  function clear() {
+    results.replaceChildren(); options = []; select(-1);
+  }
+  function close() {
+    clearTimeout(timer); request?.abort(); revision++;
+    popup.hidden = true;
+    input.setAttribute('aria-expanded', 'false');
+    select(-1);
+  }
+  function open(q, message) {
+    all.href = `/direktori?${new URLSearchParams({ q })}`;
+    all.textContent = `Lihat semua hasil untuk “${q}”`;
+    status.textContent = message;
+    popup.hidden = false;
+    input.setAttribute('aria-expanded', 'true');
+  }
+  function render(q, items) {
+    clear();
+    for (const [index, item] of items.entries()) {
+      const option = document.createElement('a');
+      option.id = `atlas-search-option-${index}`;
+      option.className = 'atlas-search-option';
+      option.href = `/direktori/${item.id}`;
+      option.role = 'option'; option.tabIndex = -1;
+      option.setAttribute('aria-selected', 'false');
+      const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      icon.setAttribute('class', 'sk-icon'); icon.setAttribute('viewBox', '0 0 32 32'); icon.setAttribute('aria-hidden', 'true');
+      const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      use.setAttribute('href', `/icons/sentra-ki.svg?v=1a3db9681d#${kinds[item.jenis] || 'collection'}`);
+      icon.append(use);
+      const copy = document.createElement('span'); copy.className = 'atlas-search-copy';
+      const title = document.createElement('strong'); title.textContent = item.judul;
+      const meta = document.createElement('span');
+      meta.textContent = [item.jenis, item.inventor, item.tahun].filter(Boolean).join(' · ');
+      copy.append(title, meta); option.append(icon, copy);
+      option.addEventListener('pointerenter', () => select(index));
+      results.append(option); options.push(option);
+    }
+    open(q, items.length ? `${items.length} saran tersedia. Gunakan tombol panah untuk memilih.` : 'Belum ada KI yang cocok. Coba kata atau nama inventor lain.');
+  }
+  async function load(q, ticket) {
+    request = new AbortController();
+    try {
+      const response = await fetch(`/api/ki/suggestions?${new URLSearchParams({ q })}`, { signal:request.signal });
+      if (!response.ok) throw new Error('Search unavailable');
+      const data = await response.json();
+      if (!Array.isArray(data.items) || data.items.some(item => !Number.isSafeInteger(item.id) || typeof item.judul !== 'string')) throw new Error('Invalid search results');
+      if (ticket !== revision) return;
+      cachedQuery = q; cachedItems = data.items;
+      render(q, data.items);
+    } catch (error) {
+      if (error.name === 'AbortError' || ticket !== revision) return;
+      clear(); open(q, 'Saran belum dapat dimuat. Tekan Enter atau buka semua hasil untuk melanjutkan.');
+    }
+  }
+  function search() {
+    clearTimeout(timer); request?.abort();
+    const ticket = ++revision, q = input.value.trim().slice(0, 200);
+    clear();
+    if (q.length < 2 || input.matches(':disabled')) { close(); return; }
+    if (q === cachedQuery && cachedItems) { render(q, cachedItems); return; }
+    open(q, 'Mencari KI…');
+    timer = setTimeout(() => load(q, ticket), 220);
+  }
+  input.addEventListener('input', event => { if (!event.isComposing) search(); });
+  input.addEventListener('compositionstart', close);
+  input.addEventListener('compositionend', search);
+  input.addEventListener('focus', search);
+  input.addEventListener('keydown', event => {
+    if (event.isComposing) return;
+    if (event.key === 'Escape') { event.preventDefault(); close(); }
+    if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && !popup.hidden && options.length) {
+      event.preventDefault();
+      select(event.key === 'ArrowDown' ? (active + 1) % options.length : active <= 0 ? options.length - 1 : active - 1);
+    }
+    if (event.key === 'Enter' && !popup.hidden && active >= 0) {
+      event.preventDefault(); options[active].click();
+    }
+  });
+  form.addEventListener('submit', close);
+  document.addEventListener('pointerdown', event => { if (!shell.contains(event.target)) close(); });
+  shell.addEventListener('focusout', () => requestAnimationFrame(() => { if (!shell.contains(document.activeElement)) close(); }));
+}
 
 // Lembar inovasi: finite choreography, no autoplay or persistent animation loop.
 function initPremiumMotion() {

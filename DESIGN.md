@@ -219,7 +219,7 @@ The reviewed home, directory and registration surfaces express depth through nav
 
 ## Shapes
 
-Controls have lightly rounded corners; task cards and forms use the larger recorded radii. The inherited token named `full` now resolves to (8px), so it describes softly rectangular badges rather than pills. Search uses (8px), its internal action (5px), standard premium actions (6px), fields (10px), directory cards and portfolio marks (12px), and form containers (16px).
+Controls have lightly rounded corners; task cards and forms use the larger recorded radii. The inherited token named `full` now resolves to (8px), so it describes softly rectangular badges rather than pills. The owner-requested glass search uses (32px), or (26px) on phones, with a (24px) internal action and suggestion popup; standard premium actions (6px), fields (10px), directory cards and portfolio marks (12px), and form containers (16px).
 
 Fine rules frame the content; the P2KI icon pack uses a 32-unit grid, round caps and joins and stroke-width (2.2). Category icons have distinct recognizable silhouettes; patent uses an invention bulb inside its application document. The pack preview and individual SVG exports are rebuilt from the shared sprite. Official logos retain their original artwork and aspect ratios.
 
@@ -228,6 +228,10 @@ Fine rules frame the content; the P2KI icon pack uses a 32-unit grid, round caps
 ### Home banner artwork
 
 The home opening includes `public/images/unisba-innovation-banner-v1.webp`, an illustrative Indonesian academic scene with women in hijab and an academic in peci. It is generated artwork, not a verified campus photograph. Its exact prompt and origin are recorded alongside the asset. The decorative image sits behind live HTML text; navy overlays protect heading and body contrast, and the registration link has its own opaque navy surface. Do not add text or redraw official logos inside the raster. The WebP asset is about 104 KB and has explicit dimensions; use the existing crop rules for desktop and mobile.
+
+### Home search
+
+The owner explicitly requested iOS-style glassmorphism for home search. Its navy translucent surface has a light refractive edge, 24px backdrop blur and a white translucent action; fallback surfaces remain solid navy when blur is unsupported. This material is confined to the search and suggestions. The popup overlays following content and remains scrollable on short screens. The combobox reads a bounded public-only suggestion endpoint after a 220ms debounce, provides keyboard selection, and keeps normal GET search available when JavaScript or suggestions fail.
 
 ### Buttons
 

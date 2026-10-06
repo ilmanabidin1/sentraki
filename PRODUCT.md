@@ -46,6 +46,7 @@ Alur di atas bersumber dari implementasi repository. Ketersediaan operasional la
 - Nama utama: P2KI UNISBA, singkatan dari Pusat Pengembangan dan Pelayanan Kekayaan Intelektual. Sentra KI tetap boleh digunakan sebagai nama alternatif; unit berada di bawah LPPM Universitas Islam Bandung.
 - Gunakan logo P2KI terbaru yang diberikan pemilik produk: versi glossy pada area gelap, versi biru-emas pada area terang. Derivatif web transparan ada di `public/brand/`.
 - Seluruh judul menggunakan Manrope seperti “Inovasi kampus. Solusi nyata.”; pemilik produk menolak penggunaan kembali judul serif/old-school.
+- Pencarian beranda memakai glassmorphism seperti iOS sesuai arahan pemilik. Ketik minimal dua karakter untuk menampilkan saran KI yang sudah tayang; hasil dapat diklik atau dipilih dengan panah dan Enter. Pencarian direktori biasa tetap tersedia.
 - Gunakan lambang universitas yang diberikan pemilik produk: `public/images-lambang-unisba.png`.
 - Gunakan logo LPPM yang diberikan pemilik produk: `public/logo-lppm-unisba.jpeg`. Pertahankan bentuk dan proporsi aslinya, tampilkan tinta putih tanpa bidang biru pada area gelap. Lambang Unisba yang transparan juga ditampilkan putih pada area gelap.
 - Pemilik produk menolak ikon emoji dan tampilan yang terasa generik hasil AI. Gunakan ikon SVG khusus untuk Sentra KI; sistem yang tersedia ada di `public/icons/sentra-ki.svg`. Icon pack digambar ulang dengan stroke 2.2 dan sudut membulat; pemilik menolak ikon bersudut tajam yang sebelumnya sulit dikenali.

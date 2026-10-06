@@ -23,6 +23,14 @@ function buildPdkiSearchUrl(item) {
 }
 
 const { directoryData } = require('../directory-filters');
+const { searchSuggestions } = require('../search-suggestions');
+
+router.get('/api/ki/suggestions', async (req, res, next) => {
+  try {
+    res.set('Cache-Control', 'no-store');
+    res.json(await searchSuggestions(pool, req.query.q));
+  } catch (err) { next(err); }
+});
 
 router.get('/direktori', async (req, res, next) => {
   try {
