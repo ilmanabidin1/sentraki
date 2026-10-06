@@ -142,7 +142,7 @@ components:
 
 **Creative North Star: "The Academic Atlas"**
 
-The Academic Atlas is a descriptive name for the implemented visual world, not a claim that the owner approved this wording. P2KI UNISBA (Sentra KI) combines a deep institutional frame, champagne gold accents, white reading surfaces and one modern sans family across all headings and interface text. The owner-supplied P2KI marks lead the identity; Unisba and LPPM marks keep their original shapes; custom square-ended SVG linework carries the service identity.
+The Academic Atlas is a descriptive name for the implemented visual world, not a claim that the owner approved this wording. P2KI UNISBA (Sentra KI) combines a deep institutional frame, champagne gold accents, white reading surfaces and one modern sans family across all headings and interface text. The owner-supplied P2KI marks lead the identity; Unisba and LPPM marks keep their original shapes; custom rounded SVG pictograms carries the service identity.
 
 The home page is expressive through scale, whitespace and finite movement. Directory, detail and registration interfaces keep a quieter density suited to reading, filtering and form completion. The balanced motion prominence is an implementation assumption; the optional owner preference remained unanswered. This document records the finished code, with source tokens taking precedence over earlier plans.
 
@@ -221,7 +221,7 @@ The reviewed home, directory and registration surfaces express depth through nav
 
 Controls have lightly rounded corners; task cards and forms use the larger recorded radii. The inherited token named `full` now resolves to (8px), so it describes softly rectangular badges rather than pills. Search uses (8px), its internal action (5px), standard premium actions (6px), fields (10px), directory cards and portfolio marks (12px), and form containers (16px).
 
-Thin square-ended rules and SVG linework supply the distinctive geometry. The shared icon stroke uses square caps, miter joins and stroke-width (1.8). Official logos retain their original aspect ratios; circular white supports around the Unisba emblem do not change the logo artwork.
+Fine rules frame the content; the P2KI icon pack uses a 32-unit grid, round caps and joins and stroke-width (2.2). Category icons have distinct recognizable silhouettes; patent uses an invention bulb inside its application document. The pack preview and individual SVG exports are rebuilt from the shared sprite. Official logos retain their original artwork and aspect ratios.
 
 ## Components
 
@@ -235,7 +235,7 @@ Primary home actions use the frontmatter navy variant with a minimum height (48p
 
 ### Text Links
 
-Premium text actions have a minimum height (44px), weight (650), underline offset (7px) and square-ended SVG arrows. Hover advances the arrow by (4px) over (250ms); reduced motion suppresses that transform.
+Premium text actions have a minimum height (44px), weight (650), underline offset (7px) and rounded SVG arrows. Hover advances the arrow by (4px) over (250ms); reduced motion suppresses that transform.
 
 ### Chips
 

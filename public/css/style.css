@@ -4426,8 +4426,8 @@ input, select, textarea {
   .patent-summary-card { padding: 20px 16px; }
 }
 
-/* Sentra KI linework: shared geometry, no icon fonts or runtime library. */
-.sk-icon { fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:square; stroke-linejoin:miter; flex-shrink:0; vertical-align:middle; }
+/* P2KI icon pack: shared geometry, no icon fonts or runtime library. */
+.sk-icon { fill:none; stroke:currentColor; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; vertical-align:middle; }
 .brand-title span { margin-left:4px; }
 .hero-artwork-bg { opacity:.05; }
 .mobile-toggle { color:#fff; }

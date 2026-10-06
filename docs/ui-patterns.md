@@ -2,6 +2,8 @@
 
 Pertahankan identitas navy/emas, lambang Unisba, logo LPPM, dan sprite `public/icons/sentra-ki.svg`. Sistem visual aktual dicatat di `DESIGN.md`. CSS dasar berada di `public/css/style.css`, kemudian ditimpa `public/css/premium.css`; tidak ada framework UI baru.
 
+Icon pack P2KI memakai grid 32 × 32, stroke 2.2, dan ujung/sambungan membulat. Gunakan symbol yang tersedia, beserta label teks untuk jenis KI dan status. `npm run build` memperbarui hash sprite, galeri `/icons/preview.html`, dan ZIP berisi SVG individual; jangan mengedit hasil ekspor secara terpisah. Panduan penggunaan ada di `public/icons/README.md`.
+
 - Permukaan: `--bg-page`, `--bg-card`, `--bg-subtle`. Teks pada permukaan terang memakai `--text-heading`, `--text-body`, `--text-muted`, atau `--text-subtle` (warna terakhir juga harus lolos kontras).
 - Permukaan gelap: `--text-white`, `--text-on-dark`, dan `--text-on-dark-muted`. Jangan memakai token permukaan sebagai warna teks.
 - Status: hijau untuk granted, amber untuk proses, rose untuk ditolak/ditarik, dengan label teks. Pada chip interaktif gunakan tingkat 700 bersama teks putih saat hover.

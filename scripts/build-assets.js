@@ -3,6 +3,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const CleanCSS = require('clean-css');
 const root = path.join(__dirname, '..');
+require('./build-icons')(root);
 const css = ['style.css', 'premium.css', 'academy.css'].map(file => fs.readFileSync(path.join(root, 'public/css', file), 'utf8')).join('\n');
 const result = new CleanCSS({ level: 1 }).minify(css);
 if (result.errors.length) throw new Error(result.errors.join('\n'));

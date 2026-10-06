@@ -4,12 +4,12 @@
 <main id="mainContent" tabindex="-1" class="page-container academy-page">
   <header class="academy-header">
     <div><h1 class="page-title">Akademi Kekayaan Intelektual</h1><p class="page-desc">Pilih materi dari katalog modul resmi EKII–DJKI untuk mempelajari kekayaan intelektual, dari pengenalan hingga bacaan lanjutan.</p></div>
-    <div class="academy-header-links"><a class="premium-text-link" href="#asisten-ki">Tanya panduan KI</a><a class="premium-text-link" href="<%= catalogueUrl %>" target="_blank" rel="noopener noreferrer">Katalog resmi EKII <svg class="sk-icon" width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#external"/></svg></a></div>
+    <div class="academy-header-links"><a class="premium-text-link" href="#asisten-ki">Tanya panduan KI</a><a class="premium-text-link" href="<%= catalogueUrl %>" target="_blank" rel="noopener noreferrer">Katalog resmi EKII <svg class="sk-icon" width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#external"/></svg></a></div>
   </header>
 
   <section class="academy-start" aria-labelledby="start-title">
     <div><h2 id="start-title">Mulai dari kebutuhan Anda.</h2><p>Kenali dasar KI, dalami bidang riset Anda, lalu lanjutkan ke referensi yang lebih khusus.</p></div>
-    <nav class="academy-start-links" aria-label="Rekomendasi awal belajar"><a href="/pelajari-ki/ki-lat-pemula"><span>Baru mengenal KI</span><strong>Modul Ki-lat untuk Pemula</strong><svg class="sk-icon" width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#right"/></svg></a><a href="/pelajari-ki/paten-dasar-2020"><span>Riset dan invensi</span><strong>Dasar bidang paten</strong><svg class="sk-icon" width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#right"/></svg></a><a href="/pelajari-ki/hak-cipta-dasar-2020"><span>Karya dan materi ajar</span><strong>Dasar bidang hak cipta</strong><svg class="sk-icon" width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#right"/></svg></a></nav>
+    <nav class="academy-start-links" aria-label="Rekomendasi awal belajar"><a href="/pelajari-ki/ki-lat-pemula"><span>Baru mengenal KI</span><strong>Modul Ki-lat untuk Pemula</strong><svg class="sk-icon" width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#right"/></svg></a><a href="/pelajari-ki/paten-dasar-2020"><span>Riset dan invensi</span><strong>Dasar bidang paten</strong><svg class="sk-icon" width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#right"/></svg></a><a href="/pelajari-ki/hak-cipta-dasar-2020"><span>Karya dan materi ajar</span><strong>Dasar bidang hak cipta</strong><svg class="sk-icon" width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#right"/></svg></a></nav>
   </section>
 
   <section class="academy-catalogue" aria-labelledby="catalogue-title">
@@ -18,13 +18,13 @@
       <input type="hidden" name="topik" value="<%= query.topic %>">
       <div class="academy-search-field"><label for="moduleSearch">Cari materi</label><input class="form-input" id="moduleSearch" type="search" name="q" maxlength="200" value="<%= query.q %>" placeholder="Judul atau topik, misalnya paten"></div>
       <div><label for="moduleLevel">Tingkat materi</label><select class="form-select" id="moduleLevel" name="tingkat"><option value="">Semua tingkat</option><% ['Pemula', 'Dasar', 'Lanjut'].forEach(level => { %><option value="<%= level %>" <%= query.level === level ? 'selected' : '' %>><%= level %></option><% }) %></select></div>
-      <button class="premium-button" type="submit">Cari modul <svg class="sk-icon" width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#search"/></svg></button>
+      <button class="premium-button" type="submit">Cari modul <svg class="sk-icon" width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#search"/></svg></button>
     </form>
     <nav class="academy-topics" aria-label="Filter topik modul"><a href="<%= filterUrl({ topik: '' }) %>" class="academy-topic <%= !query.topic ? 'active' : '' %>" <%- !query.topic ? 'aria-current="page"' : '' %>>Semua topik <span><%= contextualTotal %></span></a><% topics.forEach(topic => { %><a href="<%= filterUrl({ topik: topic.id }) %>" class="academy-topic <%= query.topic === topic.id ? 'active' : '' %>" <%- query.topic === topic.id ? 'aria-current="page"' : '' %>><%= topic.label %> <span><%= topicCounts[topic.id] %></span></a><% }) %></nav>
     <div class="academy-results"><p>Menampilkan <strong><%= modules.length %></strong> dari <%= totalModules %> modul</p><% if (hasActiveFilter) { %><a href="/pelajari-ki">Hapus filter</a><% } %></div>
     <% if (!modules.length) { %><div class="academy-empty"><h3>Materi belum ditemukan</h3><p>Coba kata kunci lain atau hapus filter untuk melihat seluruh modul.</p><a class="premium-button" href="/pelajari-ki">Lihat semua modul</a></div><% } %>
     <div class="academy-module-grid"><% modules.forEach(m => { %>
-      <article class="academy-module-card" id="modul-<%= m.id %>"><div class="academy-module-mark"><svg class="sk-icon" width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#<%= m.icon %>"/></svg><span><%= m.topicLabels.join(' / ') %></span></div><div class="academy-module-meta"><span>PDF · DJKI</span><% if (m.edition) { %><span>Edisi <%= m.edition %></span><% } %><% if (m.level) { %><span><%= m.level %></span><% } %></div><h3><a href="/pelajari-ki/<%= m.id %>"><%= m.title %></a></h3><p><%= m.description %></p><div class="academy-module-actions"><a class="premium-text-link" href="/pelajari-ki/<%= m.id %>">Lihat modul <svg class="sk-icon" width="16" height="16" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#right"/></svg></a><a class="academy-pdf-link" href="<%= m.pdfUrl %>" target="_blank" rel="noopener noreferrer" aria-label="Buka PDF <%= m.title %> di tab baru">Buka PDF <svg class="sk-icon" width="16" height="16" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#external"/></svg></a></div></article>
+      <article class="academy-module-card" id="modul-<%= m.id %>"><div class="academy-module-mark"><svg class="sk-icon" width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#<%= m.icon %>"/></svg><span><%= m.topicLabels.join(' / ') %></span></div><div class="academy-module-meta"><span>PDF · DJKI</span><% if (m.edition) { %><span>Edisi <%= m.edition %></span><% } %><% if (m.level) { %><span><%= m.level %></span><% } %></div><h3><a href="/pelajari-ki/<%= m.id %>"><%= m.title %></a></h3><p><%= m.description %></p><div class="academy-module-actions"><a class="premium-text-link" href="/pelajari-ki/<%= m.id %>">Lihat modul <svg class="sk-icon" width="16" height="16" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#right"/></svg></a><a class="academy-pdf-link" href="<%= m.pdfUrl %>" target="_blank" rel="noopener noreferrer" aria-label="Buka PDF <%= m.title %> di tab baru">Buka PDF <svg class="sk-icon" width="16" height="16" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#external"/></svg></a></div></article>
     <% }) %></div>
     <p class="academy-source-note">Judul, edisi, dan tautan dokumen mengacu pada katalog EKII. Pengantar singkat disusun oleh Sentra KI untuk membantu memilih bacaan. PDF lengkap dibuka dari situs resmi DJKI; edisi yang tercantum mengikuti sumber aslinya.</p>
   </section>
@@ -34,7 +34,7 @@
 
     <div class="ai-card-header">
       <div class="ai-avatar-badge">
-        <svg width="20" height="20" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#assistant"/></svg>
+        <svg width="20" height="20" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=1a3db9681d#assistant"/></svg>
       </div>
       <div class="ai-header-text">
         <h2 class="ai-title" id="assistant-title">Tanya Asisten AI Sentra KI</h2>
@@ -54,7 +54,7 @@
     <!-- CHAT LOG -->
     <div class="ai-chat-log" id="aiLog" role="log" aria-live="polite">
       <div class="ai-msg bot">
-        <div class="msg-avatar-mini"><svg class="sk-icon" width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#assistant"/></svg></div>
+        <div class="msg-avatar-mini"><svg class="sk-icon" width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#assistant"/></svg></div>
         <div class="msg-bubble-wrap">
           <div class="msg-author">Asisten AI Sentra KI</div>
           <div class="bubble">
@@ -68,7 +68,7 @@
     <div class="ai-input-bar">
       <input type="text" id="aiInput" class="ai-text-input" placeholder="Tuliskan pertanyaan seputar KI..." aria-label="Pertanyaan untuk Asisten AI" onkeydown="if(event.key==='Enter'){sendAIQuestion();}">
       <button type="button" class="btn-ai-send" onclick="sendAIQuestion()" aria-label="Kirim Pertanyaan">
-        <svg width="18" height="18" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#send"/></svg>
+        <svg width="18" height="18" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=1a3db9681d#send"/></svg>
       </button>
     </div>
 

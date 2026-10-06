@@ -16,7 +16,7 @@
       </div>
       <div class="page-header-action">
         <a href="/status-paten" class="btn-patent-insight">
-          <svg width="16" height="16" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#analytics"/></svg>
+          <svg width="16" height="16" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=1a3db9681d#analytics"/></svg>
           <span>Pantau status paten &rarr;</span>
         </a>
       </div>
@@ -50,13 +50,13 @@
       <details class="filter-disclosure" id="directoryFilters" open>
         <summary class="filter-disclosure-summary">
           <div class="summary-left">
-            <svg width="16" height="16" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#filter"/></svg>
+            <svg width="16" height="16" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=1a3db9681d#filter"/></svg>
             <span>Filter Pencarian</span>
           </div>
           <% if (hasActiveFilter) { %>
             <span class="filter-active-indicator">Aktif</span>
           <% } %>
-          <svg class="disclosure-chevron sk-icon" width="16" height="16" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#down"/></svg>
+          <svg class="disclosure-chevron sk-icon" width="16" height="16" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#down"/></svg>
         </summary>
 
         <form class="filter-box" method="GET" action="/direktori" id="filterForm">
@@ -139,7 +139,7 @@
           <% if (hasActiveFilter) { %>
             <div class="filter-reset-wrap">
               <a class="btn-reset-filters" href="/direktori">
-                <svg width="14" height="14" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#reset"/></svg>
+                <svg width="14" height="14" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=1a3db9681d#reset"/></svg>
                 <span>Reset Semua Filter</span>
               </a>
             </div>
@@ -157,7 +157,7 @@
           <% activeFilters.forEach(filter => { %>
             <a href="<%= filter.url %>" class="filter-chip-item" aria-label="Hapus filter <%= filter.label %>">
               <span><%= filter.label %></span>
-              <svg width="12" height="12" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#close"/></svg>
+              <svg width="12" height="12" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=1a3db9681d#close"/></svg>
             </a>
           <% }) %>
           <a href="/direktori" class="filter-chip-clear-all">Hapus Semua</a>
@@ -194,7 +194,7 @@
         <% if (items.length === 0) { %>
           <div class="empty-state-card">
             <div class="empty-state-icon">
-              <svg width="36" height="36" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#search-empty"/></svg>
+              <svg width="36" height="36" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=1a3db9681d#search-empty"/></svg>
             </div>
             <h3 class="empty-state-title">Tidak Ada Inovasi yang Cocok</h3>
             <p class="empty-state-desc">Kombinasi kata kunci atau filter yang Anda pilih tidak menghasilkan data. Coba kurangi filter atau atur ulang pencarian.</p>
@@ -220,11 +220,11 @@
 
             <div class="card-meta-list">
               <div class="meta-item">
-                <svg width="14" height="14" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#user"/></svg>
+                <svg width="14" height="14" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=1a3db9681d#user"/></svg>
                 <span class="meta-inventor"><%= item.inventor %></span>
               </div>
               <div class="meta-item">
-                <svg width="14" height="14" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#home"/></svg>
+                <svg width="14" height="14" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=1a3db9681d#home"/></svg>
                 <span class="meta-fakultas"><%= item.fakultas %></span>
               </div>
               <div class="meta-item meta-tags-row">
@@ -242,7 +242,7 @@
             <div class="card-action-footer">
               <a href="/direktori/<%= item.id %>" class="card-link-detail">
                 <span>Lihat Detail</span>
-                <svg width="12" height="12" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#chevron-right"/></svg>
+                <svg width="12" height="12" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=1a3db9681d#chevron-right"/></svg>
               </a>
               <a href="/ajukan-minat?ki=<%= item.id %>" class="card-btn-action">
                 <span>Ajukan Minat</span>
@@ -257,7 +257,7 @@
         <nav class="pagination-bar" aria-label="Navigasi Halaman">
           <% if (page > 1) { %>
             <a class="page-nav-btn" href="/direktori?<%= baseQueryString %>&page=<%= page - 1 %>" aria-label="Halaman Sebelumnya">
-              <svg width="14" height="14" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#chevron-left"/></svg>
+              <svg width="14" height="14" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=1a3db9681d#chevron-left"/></svg>
               <span>Sebelumnya</span>
             </a>
           <% } %>
@@ -278,7 +278,7 @@
           <% if (page < totalPages) { %>
             <a class="page-nav-btn" href="/direktori?<%= baseQueryString %>&page=<%= page + 1 %>" aria-label="Halaman Berikutnya">
               <span>Berikutnya</span>
-              <svg width="14" height="14" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#chevron-right"/></svg>
+              <svg width="14" height="14" class="sk-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/icons/sentra-ki.svg?v=1a3db9681d#chevron-right"/></svg>
             </a>
           <% } %>
         </nav>

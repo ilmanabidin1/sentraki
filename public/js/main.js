@@ -226,7 +226,7 @@ async function askAI(question) {
   loadingMsg.className = 'ai-msg bot ai-loading';
   loadingMsg.id = loadingId;
   loadingMsg.innerHTML = `
-    <div class="msg-avatar-mini"><svg class="sk-icon" width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=91db9cf6f1#assistant"/></svg></div>
+    <div class="msg-avatar-mini"><svg class="sk-icon" width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><use href="/icons/sentra-ki.svg?v=1a3db9681d#assistant"/></svg></div>
     <div class="msg-bubble-wrap">
       <div class="msg-author">Asisten AI Sentra KI</div>
       <div class="bubble">

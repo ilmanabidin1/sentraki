@@ -48,7 +48,7 @@ Alur di atas bersumber dari implementasi repository. Ketersediaan operasional la
 - Seluruh judul menggunakan Manrope seperti “Inovasi kampus. Solusi nyata.”; pemilik produk menolak penggunaan kembali judul serif/old-school.
 - Gunakan lambang universitas yang diberikan pemilik produk: `public/images-lambang-unisba.png`.
 - Gunakan logo LPPM yang diberikan pemilik produk: `public/logo-lppm-unisba.jpeg`. Pertahankan bentuk dan proporsi aslinya, tampilkan tinta putih tanpa bidang biru pada area gelap. Lambang Unisba yang transparan juga ditampilkan putih pada area gelap.
-- Pemilik produk menolak ikon emoji dan tampilan yang terasa generik hasil AI. Gunakan ikon SVG khusus untuk Sentra KI; sistem yang tersedia ada di `public/icons/sentra-ki.svg`.
+- Pemilik produk menolak ikon emoji dan tampilan yang terasa generik hasil AI. Gunakan ikon SVG khusus untuk Sentra KI; sistem yang tersedia ada di `public/icons/sentra-ki.svg`. Icon pack digambar ulang dengan stroke 2.2 dan sudut membulat; pemilik menolak ikon bersudut tajam yang sebelumnya sulit dikenali.
 - Bahasa layanan adalah bahasa Indonesia. Gunakan istilah KI yang jelas dan konsisten; jelaskan istilah status yang berpotensi membingungkan.
 
 ## Evidence on Hand
