@@ -227,7 +227,7 @@ Fine rules frame the content; the P2KI icon pack uses a 32-unit grid, round caps
 
 ### Home banner artwork
 
-The home opening includes `public/images/unisba-innovation-banner-v1.webp`, an illustrative Indonesian academic scene with women in hijab and an academic in peci. It is generated artwork, not a verified campus photograph. Its exact prompt and origin are recorded alongside the asset. The decorative image sits behind live HTML text; navy overlays protect heading and body contrast, and the registration link has its own opaque navy surface. Do not add text or redraw official logos inside the raster. The WebP asset is about 104 KB and has explicit dimensions; use the existing crop rules for desktop and mobile.
+The home opening includes `public/images/unisba-innovation-banner-v1.webp`, an illustrative Indonesian academic scene with women in hijab and an academic in peci. It is generated artwork, not a verified campus photograph. Its exact prompt and origin are recorded alongside the asset. The decorative image sits behind live HTML text; navy overlays protect heading and body contrast. The banner has no registration action over the artwork; registration remains available in the header and service links. Do not add text or redraw official logos inside the raster. The WebP asset is about 104 KB and has explicit dimensions; use the existing crop rules for desktop and mobile.
 
 ### Home search
 
@@ -265,7 +265,7 @@ The dark institutional header uses compact Manrope text and a fine gold rule on 
 
 ### Lembar inovasi
 
-The signature portfolio shows real server records. With JavaScript, one leaf is visible and selection is user-controlled through click, ArrowLeft/ArrowRight, Home and End, with synchronized selected state and roving tab focus. Without JavaScript the control strip stays hidden and the server-rendered records remain visible.
+The signature portfolio shows real server records. Its three known applications use square editorial illustrations matching the banner palette and ink linework; each illustration is attached by exact application number, labelled as a theme illustration, and does not claim to represent an actual product design. Images are local WebP assets, lazy-loaded with explicit dimensions. Unknown future applications retain the category icon rather than receiving an unrelated illustration. With JavaScript, one leaf is visible and selection is user-controlled through click, ArrowLeft/ArrowRight, Home and End, with synchronized selected state and roving tab focus. Without JavaScript the control strip stays hidden and the server-rendered records remain visible.
 
 Motion is finite: the two title lines run (650ms) with a (100ms) stagger, so the last completes at (750ms); the search runs (550ms) after (140ms). Portfolio changes take (350ms). Selected supporting sections reveal once over (450ms), then leave the observer. Typical state feedback is (180–300ms); this is not an assertion that every effect is under (250ms). Cross-document view transitions opt in where supported and use (180ms). Reduced motion disables CSS animation/transitions and smooth scrolling, skips scripted animation and removes the documented hover movement. Scripted animations cancel when the preference changes or the page becomes hidden; pagehide disconnects the reveal observer.
 

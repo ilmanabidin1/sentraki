@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db');
+const { withFeaturedIllustration } = require('../featured-illustrations');
 
 router.get('/', async (req, res, next) => {
   try {
@@ -19,7 +20,7 @@ router.get('/', async (req, res, next) => {
         grantedPatenDI: grantedPatenDIRes.rows[0].n,
         fakultas: fakultasRes.rows[0].n
       },
-      featured: featuredRes.rows
+      featured: featuredRes.rows.map(withFeaturedIllustration)
     });
   } catch (err) { next(err); }
 });

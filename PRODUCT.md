@@ -71,3 +71,5 @@ Alur di atas bersumber dari implementasi repository. Ketersediaan operasional la
 
 - Integrasi dan sumber pembaruan status paten langsung belum dikonfirmasi.
 - Target performa terukur, standar aksesibilitas formal, serta kebijakan layanan/validasi dokumen resmi belum ditetapkan oleh pemilik produk.
+
+- Favicon wajib berlatar transparan dari logo unggahan. Jangan menambahkan bidang navy/putih di belakang logo. Tombol “Daftarkan karya Anda” tidak ditampilkan di banner. Tiga invensi unggulan memakai ilustrasi tema yang mengikuti gaya banner, bukan ikon jenis KI.
